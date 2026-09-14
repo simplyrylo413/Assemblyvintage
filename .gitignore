@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.mp4
+*.zip
+*.tar.gz
+*.jpg
+*.jpeg
+*.png
+!public/assets/*.png
+!public/assets/*.jpg
+!public/assets/*.jpeg
+design-comparison.png
+implementation-desktop.png
+implementation-desktop.jpg
+implementation-desktop-final.jpg
