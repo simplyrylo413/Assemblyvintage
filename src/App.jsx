@@ -184,7 +184,7 @@ export function App() {
           </section>
           <Countdown />
           <section className="hero" data-reveal>
-            <img src="/assets/hero-indoor.jpg" alt="Stylish shoppers browsing an elevated indoor vintage market" />
+            <img src="/assets/hero-indoor-v2.jpg" alt="Stylish shoppers browsing an elevated indoor vintage market" />
             <div className="hero-caption"><span className="mini-arch" aria-hidden="true" /><p>COME FOR THE VINTAGE.<br />STAY FOR THE PEOPLE.</p></div>
             <button className="hero-register" type="button" onClick={() => setRegisterOpen(true)}>SEP 27 · DELRAY BEACH <ArrowRight size={17} /></button>
           </section>
