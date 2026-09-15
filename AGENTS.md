@@ -11,6 +11,7 @@ When implementing from a selected generated mock, treat that image as the source
 - The selected visual target is the supplied black-and-white "Up Next" Assembly homepage.
 - All event imagery must depict an indoor, elevated vintage market with stylish shoppers and vendors in a festive but shopping-focused atmosphere.
 - The client demo must include a Desktop/Mobile preview switch.
+- The production Netlify build must not show the Desktop/Mobile preview switch or a simulated device frame. It is one full-width responsive site that adapts automatically at real viewport breakpoints.
 - The past-markets area must feature the supplied event video as a clickable preview image that opens and plays in a lightbox.
 - The market reminder form must collect first name, last name, and email address.
 - The Assembly arch is always upright and above the wordmark; never place it beneath text or invert it.

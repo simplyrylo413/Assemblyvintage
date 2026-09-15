@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowRight, CaretDown, Check, Desktop, DeviceMobile, List, X } from '@phosphor-icons/react'
+import { ArrowRight, CaretDown, Check, List, X } from '@phosphor-icons/react'
 import './styles.css'
 
 const EVENT_DATE = new Date('2026-09-27T11:00:00-04:00')
@@ -112,7 +112,6 @@ function Modal({ children, label, onClose }) {
 }
 
 export function App() {
-  const [preview, setPreview] = useState(() => window.innerWidth < 640 ? 'mobile' : 'desktop')
   const [menuOpen, setMenuOpen] = useState(false)
   const [registerOpen, setRegisterOpen] = useState(false)
   const [registered, setRegistered] = useState(false)
@@ -130,7 +129,7 @@ export function App() {
     }, { threshold: 0.14 })
     nodes.forEach((node) => observer.observe(node))
     return () => observer.disconnect()
-  }, [preview])
+  }, [])
 
   const scrollTo = (id) => {
     siteRef.current?.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -143,16 +142,8 @@ export function App() {
   }
 
   return (
-    <div className="prototype-stage">
-      <aside className="preview-switcher" aria-label="Preview size">
-        <span>{preview === 'desktop' ? 'Desktop preview' : 'Mobile preview'}</span>
-        <div className="switcher-buttons">
-          <button className={preview === 'desktop' ? 'active' : ''} type="button" onClick={() => setPreview('desktop')}><Desktop size={18} weight="bold" /><span>Desktop</span></button>
-          <button className={preview === 'mobile' ? 'active' : ''} type="button" onClick={() => setPreview('mobile')}><DeviceMobile size={18} weight="bold" /><span>Mobile</span></button>
-        </div>
-      </aside>
-
-      <main className={`site-frame ${preview}`} ref={siteRef}>
+    <div className="app-shell">
+      <main className="site-frame" ref={siteRef}>
         <div className="site" id="top">
           <header className="site-header">
             <Logo />
