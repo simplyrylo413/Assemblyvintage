@@ -164,7 +164,18 @@ export function App() {
           </div>
 
           <section className="intro" id="next-market">
-            <h1><span>UP</span> <span>NEXT</span></h1>
+            <h1 aria-label="Up next">
+              <span className="intro-word" aria-hidden="true">
+                <span className="intro-letter" style={{ '--letter-index': 0 }}>U</span>
+                <span className="intro-letter" style={{ '--letter-index': 1 }}>P</span>
+              </span>
+              <span className="intro-word" aria-hidden="true">
+                <span className="intro-letter" style={{ '--letter-index': 2 }}>N</span>
+                <span className="intro-letter" style={{ '--letter-index': 3 }}>E</span>
+                <span className="intro-letter" style={{ '--letter-index': 4 }}>X</span>
+                <span className="intro-letter" style={{ '--letter-index': 5 }}>T</span>
+              </span>
+            </h1>
             <p>CURATED VINTAGE MARKETS.<br />REAL PEOPLE. BRIGHTER TOMORROWS.</p>
           </section>
           <section className="event-strip" aria-label="Upcoming event details">
