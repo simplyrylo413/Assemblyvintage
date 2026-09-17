@@ -148,7 +148,7 @@ export function App() {
           <header className="site-header">
             <Logo />
             <nav className="desktop-nav" aria-label="Primary navigation">
-              <button className="nav-next" type="button" onClick={() => scrollTo('#next-market')}>NEXT: DELRAY BEACH<br />SEP 27, 2026</button>
+              <button className="nav-next" type="button" onClick={() => scrollTo('#next-market')}>NEXT MARKET</button>
               <button type="button" onClick={() => scrollTo('#past-markets')}>PAST MARKETS</button>
               <button type="button" onClick={() => scrollTo('#vendor')}>VENDORS</button>
               <button type="button" onClick={() => scrollTo('#faq')}>FAQ</button>
@@ -178,12 +178,59 @@ export function App() {
             </h1>
             <p>CURATED VINTAGE MARKETS.<br />REAL PEOPLE. BRIGHTER TOMORROWS.</p>
           </section>
-          <section className="event-strip" aria-label="Upcoming event details">
-            <div><span>NEXT MARKET</span><strong>ASSEMBLY AT ALOFT</strong></div>
-            <div><span>WHEN</span><strong>SUNDAY, SEPTEMBER 27, 2026</strong></div>
-            <div><span>WHERE</span><strong>ALOFT DELRAY BEACH</strong><small>11 AM – 4 PM · FREE ADMISSION</small></div>
-            <button className="primary-button" type="button" onClick={() => setRegisterOpen(true)}>REGISTER FREE <ArrowRight size={17} /></button>
+
+          <section className="event-system" aria-label="Upcoming event details">
+            <div className="event-system__market">
+              <div className="event-system__heading">NEXT MARKET</div>
+              <div className="event-system__market-body">
+                <div className="event-system__count">
+                  <span>25+</span>
+                  <svg className="event-system__underline" viewBox="0 0 126 26" aria-hidden="true">
+                    <path d="M6 12 C25 8 49 9 70 8 C88 7 105 8 119 7" />
+                    <path d="M22 21 C41 16 66 17 98 14" />
+                  </svg>
+                </div>
+                <div className="event-system__seller-copy">
+                  <strong>CURATED<br />VINTAGE SELLERS</strong>
+                  <span>DESIGNER + ONE-OF-ONE PIECES</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="event-system__date">
+              <div className="event-system__heading">SUNDAY, SEPTEMBER 27, 2026</div>
+              <div className="event-system__meta">11 AM – 4 PM</div>
+              <div className="event-system__benefits event-system__benefits--two">
+                <div className="event-system__benefit">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14l-6 7v7M9 20h8M7 7h10" /></svg>
+                  <div><strong>DRINKS ON US</strong><span>FIRST HOUR</span><small>11 AM – 12 PM</small></div>
+                </div>
+                <div className="event-system__benefit event-system__benefit--divided">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v8a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2V8ZM9 9h6M9 12h6M9 15h4" /></svg>
+                  <div><strong>FREE ADMISSION</strong><small>ALL DAY</small></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="event-system__venue">
+              <div className="event-system__heading">ALOFT DELRAY BEACH</div>
+              <div className="event-system__meta event-system__location">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+                <span>DELRAY BEACH, FL</span>
+              </div>
+              <div className="event-system__benefits">
+                <div className="event-system__benefit">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14l1-5-3-4H7l-3 4 1 5ZM7 8l1-3h8l1 3M6 17v2M18 17v2" /><circle cx="8" cy="14" r="1" /><circle cx="16" cy="14" r="1" /></svg>
+                  <div><strong>FREE PARKING</strong><small>ON SITE</small></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="event-system__cta">
+              <button className="primary-button" type="button" onClick={() => setRegisterOpen(true)}>REGISTER FREE <ArrowRight size={17} /></button>
+            </div>
           </section>
+
           <Countdown />
           <section className="hero" data-reveal>
             <img src="/assets/hero-indoor-v2.jpg" alt="Stylish shoppers browsing an elevated indoor vintage market" />
