@@ -1,0 +1,21 @@
+.event-strip>div:first-child,.event-strip>div:nth-child(2),.event-strip>div:nth-child(3){align-content:start!important}
+
+.event-strip>div:first-child{display:grid!important;grid-template-rows:34px 24px 58px;row-gap:6px}
+.event-strip>div:first-child span{grid-row:1;align-self:start;margin:0!important}
+.event-strip>div:first-child strong{grid-row:2/4;align-self:start;margin:0!important;min-height:88px}
+
+.event-strip>div:nth-child(2){display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:34px 24px 58px!important;row-gap:6px;column-gap:20px;align-content:start!important}
+.event-strip>div:nth-child(2)>strong{grid-column:1/-1!important;grid-row:1/3!important;display:grid;grid-template-rows:34px 24px;align-content:start;margin:0!important;line-height:1.08}
+.event-strip>div:nth-child(2)>strong::after{align-self:start;margin:0!important;padding-top:4px}
+.event-strip>div:nth-child(2)::before,.event-strip>div:nth-child(2)::after{grid-row:3!important;align-self:start;margin:0!important;min-height:58px;padding-top:3px!important;background-position-y:4px!important}
+
+.event-strip>div:nth-child(3){display:grid!important;grid-template-rows:34px 24px 58px!important;row-gap:6px;align-content:start!important}
+.event-strip>div:nth-child(3)>strong{grid-row:1;align-self:start;margin:0!important}
+.event-strip>div:nth-child(3)>small{grid-row:2;align-self:start;margin:0!important;min-height:24px;display:flex!important;align-items:flex-start;padding-top:2px}
+.event-strip>div:nth-child(3)::after{grid-row:3;align-self:start;margin:0!important;min-height:58px;padding-top:3px!important;background-position-y:2px!important}
+
+@media(max-width:820px){
+  .event-strip>div:first-child,.event-strip>div:nth-child(2),.event-strip>div:nth-child(3){grid-template-rows:auto!important;row-gap:10px;align-content:start!important}
+  .event-strip>div:first-child span,.event-strip>div:first-child strong,.event-strip>div:nth-child(2)>strong,.event-strip>div:nth-child(2)::before,.event-strip>div:nth-child(2)::after,.event-strip>div:nth-child(3)>strong,.event-strip>div:nth-child(3)>small,.event-strip>div:nth-child(3)::after{grid-row:auto!important}
+  .event-strip>div:nth-child(2)>strong{grid-template-rows:auto auto}
+}
