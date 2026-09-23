@@ -5,9 +5,9 @@ import './styles.css'
 const EVENT_DATE = new Date('2026-09-27T11:00:00-04:00')
 
 const vendorMarkets = [
-  { id: 'aloft', name: 'Assembly at Aloft', date: 'Sep 27, 2026', location: 'Delray Beach' },
-  { id: 'palm-beach', name: 'Assembly Palm Beach', date: 'Nov 8, 2026', location: 'Palm Beach' },
-  { id: 'miami', name: 'Assembly Miami', date: 'Dec 6, 2026', location: 'Miami' },
+  { id: 'september', name: 'Aloft Hotel Delray Beach', date: 'Sep 27, 2026', location: 'Aloft Hotel Delray Beach' },
+  { id: 'october', name: 'Aloft Hotel Delray Beach', date: 'Oct 25, 2026', location: 'Aloft Hotel Delray Beach' },
+  { id: 'november', name: 'Aloft Hotel Delray Beach', date: 'Nov 15, 2026', location: 'Aloft Hotel Delray Beach' },
 ]
 
 const spaceOptions = {
@@ -123,7 +123,7 @@ function Modal({ children, label, onClose }) {
 }
 
 function VendorApplication({ onClose }) {
-  const [selectedMarkets, setSelectedMarkets] = useState(['aloft'])
+  const [selectedMarkets, setSelectedMarkets] = useState(['september'])
   const [marketMenuOpen, setMarketMenuOpen] = useState(false)
   const [spaceSize, setSpaceSize] = useState('8x10')
   const [submitted, setSubmitted] = useState(false)
@@ -400,7 +400,7 @@ export function App() {
             </div>
 
             <div className="event-system__venue">
-              <div className="event-system__heading">ALOFT DELRAY BEACH</div>
+              <div className="event-system__heading">ALOFT HOTEL DELRAY BEACH</div>
               <div className="event-system__meta event-system__location">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
                 <span>DELRAY BEACH, FL</span>
@@ -439,7 +439,7 @@ export function App() {
           <section className="hero" data-reveal>
             <img src="/assets/hero-indoor-v2.jpg" alt="Stylish shoppers browsing an elevated indoor vintage market" />
             <div className="hero-caption"><span className="mini-arch" aria-hidden="true" /><p>COME FOR THE VINTAGE.<br />STAY FOR THE PEOPLE.</p></div>
-            <button className="hero-register" type="button" onClick={() => setRegisterOpen(true)}>SEP 27 · DELRAY BEACH <ArrowRight size={17} /></button>
+            <button className="hero-register" type="button" onClick={() => setRegisterOpen(true)}>SEP 27 · ALOFT HOTEL DELRAY BEACH <ArrowRight size={17} /></button>
           </section>
 
           <section className="market-story" id="past-markets" data-reveal>
@@ -471,7 +471,7 @@ export function App() {
                 {vendorMarkets.map((market) => (
                   <article key={market.id}>
                     <h3>{market.name}</h3>
-                    <p>{market.id === 'aloft' ? 'Sunday, September 27, 2026' : market.id === 'palm-beach' ? 'Sunday, November 8, 2026' : 'Sunday, December 6, 2026'}</p>
+                    <p>{new Date(`${market.date} 12:00:00`).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>
                   </article>
                 ))}
               </div>
@@ -517,7 +517,7 @@ export function App() {
 
       {registerOpen && (
         <Modal label="Register for Assembly at Aloft" onClose={() => setRegisterOpen(false)}>
-          <div className="register-modal"><span className="mini-arch" aria-hidden="true" /><p className="eyebrow">SUNDAY, SEPTEMBER 27 · DELRAY BEACH</p><h2>{registered ? 'You’re in.' : 'Join us at Aloft.'}</h2>
+          <div className="register-modal"><span className="mini-arch" aria-hidden="true" /><p className="eyebrow">SUNDAY, SEPTEMBER 27 · ALOFT HOTEL DELRAY BEACH</p><h2>{registered ? 'You’re in.' : 'Join us at Aloft.'}</h2>
             {registered ? (
               <div className="success-message"><Check size={23} weight="bold" /> Registration received. Check your inbox if email confirmation is required.</div>
             ) : (
