@@ -283,7 +283,6 @@ export function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [registerOpen, setRegisterOpen] = useState(false)
   const [registered, setRegistered] = useState(false)
-  const [subscribed, setSubscribed] = useState(false)
   const [vendorApplicationOpen, setVendorApplicationOpen] = useState(false)
   const [faqAudience, setFaqAudience] = useState('shopper')
   const [openFaq, setOpenFaq] = useState(0)
@@ -422,19 +421,6 @@ export function App() {
             ))}
           </section>
 
-          <section className="actions" data-reveal>
-            <div className="newsletter">
-              <span className="mini-arch" aria-hidden="true" /><p className="eyebrow">NEVER MISS A MARKET</p><h2>Get the next one<br />in your inbox.</h2><p>Event announcements, first access, and market stories. No clutter.</p>
-              {subscribed ? <div className="success-message"><Check size={23} weight="bold" /> You’re on the list. See you at the market.</div> : (
-                <form onSubmit={(event) => { event.preventDefault(); setSubscribed(true) }}>
-                  <label>First name<input name="firstName" autoComplete="given-name" placeholder="First name" required /></label>
-                  <label>Last name<input name="lastName" autoComplete="family-name" placeholder="Last name" required /></label>
-                  <label className="email-field">Email address<input type="email" name="email" autoComplete="email" placeholder="you@example.com" required /></label>
-                  <button className="primary-button" type="submit">SIGN ME UP <ArrowRight size={17} /></button>
-                </form>
-              )}
-            </div>
-          </section>
           <section className="vendor-opportunity" id="vendor" data-reveal>
             <div className="vendor-opportunity__main">
               <div className="vendor-opportunity__intro">
