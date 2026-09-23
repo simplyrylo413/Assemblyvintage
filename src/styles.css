@@ -120,3 +120,8 @@ footer{min-height:310px;padding:70px 4% 35px;background:var(--coral);display:gri
   .register-modal form label:nth-child(3),.register-modal form .primary-button{grid-column:auto}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+.register-error{grid-column:1/-1;margin:0;padding:11px 13px;border:1px solid var(--ink);background:rgba(255,255,255,.62);font-size:11px;line-height:1.35;font-weight:650}
+.register-consent{grid-column:1/-1;margin:0;font-size:9px;line-height:1.45;letter-spacing:.06em;opacity:.72}
+.register-modal form .primary-button:disabled{opacity:.58;cursor:wait}

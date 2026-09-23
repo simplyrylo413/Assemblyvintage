@@ -283,6 +283,8 @@ export function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [registerOpen, setRegisterOpen] = useState(false)
   const [registered, setRegistered] = useState(false)
+  const [registrationSubmitting, setRegistrationSubmitting] = useState(false)
+  const [registrationError, setRegistrationError] = useState('')
   const [vendorApplicationOpen, setVendorApplicationOpen] = useState(false)
   const [faqAudience, setFaqAudience] = useState('shopper')
   const [openFaq, setOpenFaq] = useState(0)
@@ -307,6 +309,34 @@ export function App() {
   const changeFaqAudience = (audience) => {
     setFaqAudience(audience)
     setOpenFaq(0)
+  }
+
+  const handleRegistration = async (event) => {
+    event.preventDefault()
+    setRegistrationError('')
+    setRegistrationSubmitting(true)
+
+    const formData = new FormData(event.currentTarget)
+    const payload = {
+      firstName: String(formData.get('firstName') || '').trim(),
+      lastName: String(formData.get('lastName') || '').trim(),
+      email: String(formData.get('email') || '').trim(),
+    }
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(result.error || 'Registration failed')
+      setRegistered(true)
+    } catch (error) {
+      setRegistrationError(error instanceof Error ? error.message : 'We could not complete your registration. Please try again.')
+    } finally {
+      setRegistrationSubmitting(false)
+    }
   }
 
   return (
@@ -482,7 +512,20 @@ export function App() {
       {registerOpen && (
         <Modal label="Register for Assembly at Aloft" onClose={() => setRegisterOpen(false)}>
           <div className="register-modal"><span className="mini-arch" aria-hidden="true" /><p className="eyebrow">SUNDAY, SEPTEMBER 27 · DELRAY BEACH</p><h2>{registered ? 'You’re in.' : 'Join us at Aloft.'}</h2>
-            {registered ? <div className="success-message"><Check size={23} weight="bold" /> Your free registration is confirmed.</div> : <form onSubmit={(event) => { event.preventDefault(); setRegistered(true) }}><label>First name<input name="firstName" autoComplete="given-name" required /></label><label>Last name<input name="lastName" autoComplete="family-name" required /></label><label>Email<input type="email" name="email" autoComplete="email" required /></label><button className="primary-button" type="submit">REGISTER FREE <ArrowRight size={17} /></button></form>}
+            {registered ? (
+              <div className="success-message"><Check size={23} weight="bold" /> Registration received. Check your inbox if email confirmation is required.</div>
+            ) : (
+              <form onSubmit={handleRegistration}>
+                <label>First name<input name="firstName" autoComplete="given-name" required /></label>
+                <label>Last name<input name="lastName" autoComplete="family-name" required /></label>
+                <label>Email<input type="email" name="email" autoComplete="email" required /></label>
+                {registrationError && <p className="register-error" role="alert">{registrationError}</p>}
+                <p className="register-consent">By registering, you agree to receive email updates about Assembly events. Unsubscribe anytime.</p>
+                <button className="primary-button" type="submit" disabled={registrationSubmitting}>
+                  {registrationSubmitting ? 'REGISTERING…' : 'REGISTER FREE'} {!registrationSubmitting && <ArrowRight size={17} />}
+                </button>
+              </form>
+            )}
           </div>
         </Modal>
       )}
