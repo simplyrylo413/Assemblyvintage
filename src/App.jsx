@@ -180,23 +180,6 @@ export function App() {
           </section>
 
           <section className="event-system" aria-label="Upcoming event details">
-            <div className="event-system__market">
-              <div className="event-system__heading">NEXT MARKET</div>
-              <div className="event-system__market-body">
-                <div className="event-system__count">
-                  <span>25+</span>
-                  <svg className="event-system__underline" viewBox="0 0 126 26" aria-hidden="true">
-                    <path d="M6 12 C25 8 49 9 70 8 C88 7 105 8 119 7" />
-                    <path d="M22 21 C41 16 66 17 98 14" />
-                  </svg>
-                </div>
-                <div className="event-system__seller-copy">
-                  <strong>CURATED<br />VINTAGE SELLERS</strong>
-                  <span>DESIGNER + ONE-OF-ONE PIECES</span>
-                </div>
-              </div>
-            </div>
-
             <div className="event-system__date">
               <div className="event-system__heading">SUNDAY, SEPTEMBER 27, 2026</div>
               <div className="event-system__meta">11 AM – 4 PM</div>
@@ -222,6 +205,23 @@ export function App() {
                 <div className="event-system__benefit">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17h14l1-5-3-4H7l-3 4 1 5ZM7 8l1-3h8l1 3M6 17v2M18 17v2" /><circle cx="8" cy="14" r="1" /><circle cx="16" cy="14" r="1" /></svg>
                   <div><strong>FREE PARKING</strong><small>ON SITE</small></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="event-system__market">
+              <div className="event-system__heading">THE VINTAGE LINEUP</div>
+              <div className="event-system__market-body">
+                <div className="event-system__count">
+                  <span>25+</span>
+                  <svg className="event-system__underline" viewBox="0 0 126 26" aria-hidden="true">
+                    <path d="M6 12 C25 8 49 9 70 8 C88 7 105 8 119 7" />
+                    <path d="M22 21 C41 16 66 17 98 14" />
+                  </svg>
+                </div>
+                <div className="event-system__seller-copy">
+                  <strong>CURATED<br />VINTAGE SELLERS</strong>
+                  <span>DESIGNER + ONE-OF-ONE PIECES</span>
                 </div>
               </div>
             </div>

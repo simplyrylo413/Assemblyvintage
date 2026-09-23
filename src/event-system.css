@@ -9,7 +9,7 @@
   margin:0 4%;
   min-height:164px;
   display:grid;
-  grid-template-columns:1.18fr 1.45fr 1.16fr .78fr;
+  grid-template-columns:1.48fr 1.15fr 1.35fr .78fr;
   border-bottom:1px solid #b5b5b2;
 }
 
@@ -24,7 +24,7 @@
   align-content:start;
   border-right:1px solid #a8a8a4;
 }
-.event-system__market{padding-left:0}
+.event-system__date{padding-left:0}
 .event-system__cta{display:flex;align-items:center;padding:20px 0 20px 28px}
 .event-system__cta .primary-button{width:100%;min-height:76px;margin:0}
 
@@ -38,7 +38,7 @@
   align-items:flex-start;
   white-space:nowrap;
 }
-.event-system__market .event-system__heading{font-size:clamp(15px,1.15vw,23px)}
+.event-system__market .event-system__heading{font-size:clamp(13px,1.1vw,18px);letter-spacing:.08em}
 
 .event-system__meta{
   grid-row:2;
@@ -168,10 +168,10 @@
     --event-meta-row:22px;
     --event-detail-row:60px;
     --event-row-gap:5px;
-    grid-template-columns:1.1fr 1.55fr 1.15fr .8fr;
+    grid-template-columns:1.55fr 1.15fr 1.35fr .8fr;
   }
   .event-system__market,.event-system__date,.event-system__venue{padding-left:20px;padding-right:20px}
-  .event-system__market{padding-left:0}
+  .event-system__date{padding-left:0}
   .event-system__market-body{gap:12px}
   .event-system__seller-copy{padding-left:12px}
   .event-system__benefits--two{column-gap:12px}
@@ -196,7 +196,7 @@
     grid-template-rows:auto auto auto;
     row-gap:10px;
   }
-  .event-system__market{padding-top:0}
+  .event-system__date{padding-top:0}
   .event-system__heading{font-size:20px;white-space:normal}
   .event-system__market .event-system__heading{font-size:17px}
   .event-system__market-body{grid-row:auto;min-height:0}

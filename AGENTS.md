@@ -17,3 +17,8 @@ When implementing from a selected generated mock, treat that image as the source
 - The Assembly arch is always upright and above the wordmark; never place it beneath text or invert it.
 
 Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts/prepare-sites-build.mjs`, and `tests/sites-worker.test.mjs` intact so the same local prototype can be handed to Sites. Before a Sites handoff, run `npm run build` and `npm run test:sites`; the build must leave `dist/client/index.html`, `dist/server/index.js`, and `dist/.openai/hosting.json`.
+
+## Publish target
+
+- When Albert asks to publish or deploy Assembly Vintage without naming a destination, ask whether he means the Sites prototype (`assembly-vintage-prototype`) or the live Netlify site (`assembly-vintage`).
+- Once he names the destination, update only that target unless he asks to synchronize both.
