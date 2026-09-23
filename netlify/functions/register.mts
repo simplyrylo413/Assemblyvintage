@@ -35,6 +35,14 @@ export default async (req: Request) => {
   const lastName = clean(body.lastName, 80)
   const email = clean(body.email, 254).toLowerCase()
   const emailMarketingConsent = body.emailMarketingConsent === true
+  const eventId = clean(body.eventId, 40)
+
+  const events: Record<string, { name: string; date: string; venue: string }> = {
+    september: { name: 'Assembly Vintage Market', date: '2026-09-27', venue: 'Aloft Delray Beach' },
+    october: { name: 'Assembly Vintage Market', date: '2026-10-25', venue: 'Aloft Delray Beach' },
+    november: { name: 'Assembly Vintage Market', date: '2026-11-15', venue: 'Aloft Delray Beach' },
+  }
+  const event = events[eventId] ?? events.september
 
   if (!firstName || !lastName || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: 'Please enter a valid first name, last name, and email address.' }, 400)
@@ -61,8 +69,9 @@ export default async (req: Request) => {
           last_name: lastName,
           properties: {
             'Registration Source': 'Assembly Website',
-            'Registration Event': 'Assembly at Aloft',
-            'Registration Event Date': '2026-09-27',
+            'Registration Event': event.name,
+            'Registration Event Date': event.date,
+            'Registration Venue': event.venue,
             'Registration Submitted At': submittedAt,
             'Email Marketing Consent': emailMarketingConsent,
           },

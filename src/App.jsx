@@ -1,14 +1,62 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, CaretDown, Check, List, UploadSimple, X } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowRight, CalendarBlank, CaretDown, Check, List, MapPin, UploadSimple, X } from '@phosphor-icons/react'
 import './styles.css'
 
-const EVENT_DATE = new Date('2026-09-27T11:00:00-04:00')
-
 const vendorMarkets = [
-  { id: 'september', name: 'Aloft Delray Beach', date: 'Sunday, September 27, 2026', location: 'Aloft Delray Beach' },
-  { id: 'october', name: 'Aloft Delray Beach', date: 'Sunday, October 25, 2026', location: 'Aloft Delray Beach' },
-  { id: 'november', name: 'Aloft Delray Beach', date: 'Sunday, November 15, 2026', location: 'Aloft Delray Beach' },
+  {
+    id: 'september',
+    name: 'Aloft Delray Beach',
+    date: 'Sunday, September 27, 2026',
+    eyebrowDate: 'SUNDAY, SEPTEMBER 27',
+    shortDate: 'SEP 27',
+    startISO: '2026-09-27T11:00:00-04:00',
+    endISO: '2026-09-27T16:00:00-04:00',
+    time: '11 AM – 4 PM',
+    timeDetailed: '11:00 AM – 4:00 PM',
+    venue: 'Aloft Delray Beach',
+    location: 'Aloft Delray Beach',
+    cityState: 'Delray Beach, FL',
+    address: '202 SE 5th Ave, Delray Beach, FL',
+  },
+  {
+    id: 'october',
+    name: 'Aloft Delray Beach',
+    date: 'Sunday, October 25, 2026',
+    eyebrowDate: 'SUNDAY, OCTOBER 25',
+    shortDate: 'OCT 25',
+    startISO: '2026-10-25T11:00:00-04:00',
+    endISO: '2026-10-25T16:00:00-04:00',
+    time: '11 AM – 4 PM',
+    timeDetailed: '11:00 AM – 4:00 PM',
+    venue: 'Aloft Delray Beach',
+    location: 'Aloft Delray Beach',
+    cityState: 'Delray Beach, FL',
+    address: '202 SE 5th Ave, Delray Beach, FL',
+  },
+  {
+    id: 'november',
+    name: 'Aloft Delray Beach',
+    date: 'Sunday, November 15, 2026',
+    eyebrowDate: 'SUNDAY, NOVEMBER 15',
+    shortDate: 'NOV 15',
+    startISO: '2026-11-15T11:00:00-05:00',
+    endISO: '2026-11-15T16:00:00-05:00',
+    time: '11 AM – 4 PM',
+    timeDetailed: '11:00 AM – 4:00 PM',
+    venue: 'Aloft Delray Beach',
+    location: 'Aloft Delray Beach',
+    cityState: 'Delray Beach, FL',
+    address: '202 SE 5th Ave, Delray Beach, FL',
+  },
 ]
+
+function getNextMarket() {
+  const now = Date.now()
+  return vendorMarkets.find((market) => new Date(market.endISO).getTime() >= now) ?? vendorMarkets[vendorMarkets.length - 1]
+}
+
+const nextMarket = getNextMarket()
+const EVENT_DATE = new Date(nextMarket.startISO)
 
 const spaceOptions = {
   '8x10': { label: "8′ × 10′", price: 300 },
@@ -279,12 +327,37 @@ function VendorApplication({ onClose }) {
   )
 }
 
+function RegistrationBlueprintArt() {
+  return (
+    <div className="registration-blueprint" aria-hidden="true">
+      <svg className="registration-blueprint__hanger" viewBox="0 0 180 100">
+        <path d="M91 28c0-13 19-12 19-25 0-9-7-15-16-15-8 0-14 4-17 10" />
+        <path d="M91 28 25 68c-6 4-3 13 4 13h124c7 0 10-9 4-13L91 28Z" />
+        <path d="M30 77h122" />
+      </svg>
+      <svg className="registration-blueprint__garment" viewBox="0 0 220 360">
+        <path d="M91 16c-9 8-19 19-25 34l-17 46 32 21-14 211h109l-14-211 32-21-17-46c-6-15-16-26-25-34-16 12-45 12-61 0Z" />
+        <path d="M81 117h81M71 175h101M100 31l-19 86M143 31l19 86" />
+        <path className="dash" d="M108 118 88 327M135 118l20 209" />
+      </svg>
+      <svg className="registration-blueprint__bag" viewBox="0 0 170 210">
+        <path d="M43 72h85l20 117H22L43 72Z" />
+        <path d="M55 72c0-46 62-46 62 0" />
+        <path className="dash" d="M34 165h103M49 93h73" />
+      </svg>
+      <span className="registration-blueprint__note">STYLE<br />COMMUNITY<br />A BRIGHTER<br />TOMORROW</span>
+      <span className="registration-blueprint__script">Good people<br />wear change.</span>
+    </div>
+  )
+}
+
 export function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [registerOpen, setRegisterOpen] = useState(false)
   const [registered, setRegistered] = useState(false)
   const [registrationSubmitting, setRegistrationSubmitting] = useState(false)
   const [registrationError, setRegistrationError] = useState('')
+  const [registrationStep, setRegistrationStep] = useState('intro')
   const [vendorApplicationOpen, setVendorApplicationOpen] = useState(false)
   const [faqAudience, setFaqAudience] = useState('shopper')
   const [openFaq, setOpenFaq] = useState(0)
@@ -306,6 +379,12 @@ export function App() {
     setMenuOpen(false)
   }
 
+  const closeRegistration = () => {
+    setRegisterOpen(false)
+    setRegistrationError('')
+    if (!registered) setRegistrationStep('intro')
+  }
+
   const changeFaqAudience = (audience) => {
     setFaqAudience(audience)
     setOpenFaq(0)
@@ -322,6 +401,7 @@ export function App() {
       lastName: String(formData.get('lastName') || '').trim(),
       email: String(formData.get('email') || '').trim(),
       emailMarketingConsent: formData.get('emailMarketingConsent') === 'subscribed',
+      eventId: nextMarket.id,
     }
 
     try {
@@ -333,7 +413,7 @@ export function App() {
       const result = await response.json().catch(() => ({}))
       if (!response.ok) throw new Error(result.error || 'Registration failed')
       window.fbq?.('track', 'CompleteRegistration', {
-        content_name: 'Assembly at Aloft',
+        content_name: `Assembly Vintage — ${nextMarket.date}`,
         content_category: 'Event Registration',
         status: 'completed',
       })
@@ -385,8 +465,8 @@ export function App() {
 
           <section className="event-system" aria-label="Upcoming event details">
             <div className="event-system__date">
-              <div className="event-system__heading">SUNDAY, SEPTEMBER 27, 2026</div>
-              <div className="event-system__meta">11 AM – 4 PM</div>
+              <div className="event-system__heading">{nextMarket.date.toUpperCase()}</div>
+              <div className="event-system__meta">{nextMarket.time}</div>
               <div className="event-system__benefits event-system__benefits--two">
                 <div className="event-system__benefit">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14l-6 7v7M9 20h8M7 7h10" /></svg>
@@ -400,10 +480,10 @@ export function App() {
             </div>
 
             <div className="event-system__venue">
-              <div className="event-system__heading">ALOFT DELRAY BEACH</div>
+              <div className="event-system__heading">{nextMarket.venue.toUpperCase()}</div>
               <div className="event-system__meta event-system__location">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
-                <span>DELRAY BEACH, FL</span>
+                <span>{nextMarket.cityState.toUpperCase()}</span>
               </div>
               <div className="event-system__benefits">
                 <div className="event-system__benefit">
@@ -439,7 +519,7 @@ export function App() {
           <section className="hero" data-reveal>
             <img src="/assets/hero-indoor-v2.jpg" alt="Stylish shoppers browsing an elevated indoor vintage market" />
             <div className="hero-caption"><span className="mini-arch" aria-hidden="true" /><p>COME FOR THE VINTAGE.<br />STAY FOR THE PEOPLE.</p></div>
-            <button className="hero-register" type="button" onClick={() => setRegisterOpen(true)}>SEP 27 · ALOFT DELRAY BEACH <ArrowRight size={17} /></button>
+            <button className="hero-register" type="button" onClick={() => setRegisterOpen(true)}>{nextMarket.shortDate} · {nextMarket.venue.toUpperCase()} <ArrowRight size={17} /></button>
           </section>
 
           <section className="market-story" id="past-markets" data-reveal>
@@ -516,22 +596,64 @@ export function App() {
       </main>
 
       {registerOpen && (
-        <Modal label="Register for Assembly at Aloft" onClose={() => setRegisterOpen(false)}>
-          <div className="register-modal"><span className="mini-arch" aria-hidden="true" /><p className="eyebrow">SUNDAY, SEPTEMBER 27 · ALOFT DELRAY BEACH</p><h2>{registered ? 'You’re in.' : 'Join us at Aloft.'}</h2>
-            {registered ? (
-              <div className="success-message"><Check size={23} weight="bold" /> Registration received. Check your inbox if email confirmation is required.</div>
-            ) : (
-              <form onSubmit={handleRegistration}>
-                <label>First name<input name="firstName" autoComplete="given-name" required /></label>
-                <label>Last name<input name="lastName" autoComplete="family-name" required /></label>
-                <label>Email<input type="email" name="email" autoComplete="email" required /></label>
-                {registrationError && <p className="register-error" role="alert">{registrationError}</p>}
-                <label className="registration-opt-in"><input type="checkbox" name="emailMarketingConsent" value="subscribed" defaultChecked /><span><strong>Keep me in the vintage loop.</strong> Send me upcoming market announcements, first dibs, and other good vintage news. Unsubscribe anytime.</span></label>
-                <button className="primary-button" type="submit" disabled={registrationSubmitting}>
-                  {registrationSubmitting ? 'REGISTERING…' : 'REGISTER FREE'} {!registrationSubmitting && <ArrowRight size={17} />}
-                </button>
-              </form>
-            )}
+        <Modal label={`Register for Assembly Vintage on ${nextMarket.date}`} onClose={closeRegistration}>
+          <div className="register-modal">
+            <RegistrationBlueprintArt />
+            <div className="register-modal__content">
+              <span className="mini-arch" aria-hidden="true" />
+              <p className="eyebrow">{nextMarket.eyebrowDate} · {nextMarket.venue.toUpperCase()}</p>
+
+              {registered ? (
+                <div className="register-modal__success">
+                  <h2>You’re in.</h2>
+                  <p className="register-modal__dek">Your spot at Assembly is saved.</p>
+                  <div className="register-modal__details">
+                    <div className="register-modal__detail">
+                      <CalendarBlank size={31} weight="bold" />
+                      <div><strong>{nextMarket.date}</strong><span>{nextMarket.timeDetailed}</span></div>
+                    </div>
+                    <div className="register-modal__detail">
+                      <MapPin size={31} weight="fill" />
+                      <div><strong>{nextMarket.venue}</strong><span>{nextMarket.address}</span></div>
+                    </div>
+                  </div>
+                  <p className="register-modal__confirmation">Registration received. Check your inbox if email confirmation is required.</p>
+                  <button className="primary-button register-modal__cta" type="button" onClick={closeRegistration}>DONE <Check size={18} weight="bold" /></button>
+                </div>
+              ) : registrationStep === 'intro' ? (
+                <div className="register-modal__intro">
+                  <h2>Join us at<br />Assembly.</h2>
+                  <p className="register-modal__dek">Curated fashion. Local vendors. Good people.</p>
+                  <div className="register-modal__details">
+                    <div className="register-modal__detail">
+                      <CalendarBlank size={31} weight="bold" />
+                      <div><strong>{nextMarket.date}</strong><span>{nextMarket.timeDetailed}</span></div>
+                    </div>
+                    <div className="register-modal__detail">
+                      <MapPin size={31} weight="fill" />
+                      <div><strong>{nextMarket.venue}</strong><span>{nextMarket.address}</span></div>
+                    </div>
+                  </div>
+                  <button className="primary-button register-modal__cta" type="button" onClick={() => setRegistrationStep('form')}>REGISTER FREE <ArrowRight size={19} /></button>
+                </div>
+              ) : (
+                <div className="register-modal__form-step">
+                  <button className="register-modal__back" type="button" onClick={() => setRegistrationStep('intro')}><ArrowLeft size={16} /> EVENT DETAILS</button>
+                  <h2>Save your spot.</h2>
+                  <p className="register-modal__dek">{nextMarket.date} · {nextMarket.venue}</p>
+                  <form onSubmit={handleRegistration}>
+                    <label>First name<input name="firstName" autoComplete="given-name" required /></label>
+                    <label>Last name<input name="lastName" autoComplete="family-name" required /></label>
+                    <label>Email<input type="email" name="email" autoComplete="email" required /></label>
+                    {registrationError && <p className="register-error" role="alert">{registrationError}</p>}
+                    <label className="registration-opt-in"><input type="checkbox" name="emailMarketingConsent" value="subscribed" defaultChecked /><span><strong>Keep me in the vintage loop.</strong> Send me upcoming market announcements, first dibs, and other good vintage news. Unsubscribe anytime.</span></label>
+                    <button className="primary-button" type="submit" disabled={registrationSubmitting}>
+                      {registrationSubmitting ? 'REGISTERING…' : 'REGISTER FREE'} {!registrationSubmitting && <ArrowRight size={17} />}
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
           </div>
         </Modal>
       )}
