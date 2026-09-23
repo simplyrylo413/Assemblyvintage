@@ -332,6 +332,11 @@ export function App() {
       })
       const result = await response.json().catch(() => ({}))
       if (!response.ok) throw new Error(result.error || 'Registration failed')
+      window.fbq?.('track', 'CompleteRegistration', {
+        content_name: 'Assembly at Aloft',
+        content_category: 'Event Registration',
+        status: 'completed',
+      })
       setRegistered(true)
     } catch (error) {
       setRegistrationError(error instanceof Error ? error.message : 'We could not complete your registration. Please try again.')
