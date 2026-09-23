@@ -19,4 +19,4 @@ Netlify publishes the static site from `dist/client`.
 
 ## Vendor application destination
 
-Vendor applications are designed to post to a Google Sheets-compatible webhook. Set `VITE_VENDOR_APPLICATION_ENDPOINT` to the deployed Google Apps Script or proxy endpoint before publishing the application flow. The submitted payload includes selected events, event count, booth size, per-event price, estimated total, contact fields, categories, and uploaded booth photos.
+Vendor applications post through Netlify Functions to a Google Apps Script receiver. Set `VENDOR_APPLICATION_WEBHOOK_URL` to the deployed Apps Script `/exec` URL and `VENDOR_APPLICATION_WEBHOOK_SECRET` to the matching Apps Script `WEBHOOK_SECRET` value before publishing. Photos upload individually to the configured Drive folder, and the final application is added to Google Sheets.

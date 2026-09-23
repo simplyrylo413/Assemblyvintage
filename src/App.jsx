@@ -175,6 +175,7 @@ function VendorApplication({ onClose }) {
   const [marketMenuOpen, setMarketMenuOpen] = useState(false)
   const [spaceSize, setSpaceSize] = useState('8x10')
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
   const toggleMarket = (marketId) => {
@@ -194,22 +195,59 @@ function VendorApplication({ onClose }) {
 
     const form = event.currentTarget
     const formData = new FormData(form)
-    formData.delete('markets')
-    selectedMarkets.forEach((marketId) => formData.append('markets', marketId))
+    const photos = formData.getAll('photos').filter((photo) => photo instanceof File && photo.size > 0)
+
+    if (photos.length < 3 || photos.length > 5) {
+      setError('Upload between 3 and 5 product or booth photos.')
+      return
+    }
+
+    const oversizedPhoto = photos.find((photo) => photo.size > 4 * 1024 * 1024)
+    if (oversizedPhoto) {
+      setError(`${oversizedPhoto.name} is larger than 4 MB. Choose a smaller image.`)
+      return
+    }
 
     if (!import.meta.env.DEV) {
-      const sheetEndpoint = import.meta.env.VITE_VENDOR_APPLICATION_ENDPOINT
-      if (!sheetEndpoint) {
-        setError('Vendor applications are not connected yet. Please email hello@assemblyvintageco.com while we finish the application sheet.')
-        return
-      }
+      setSubmitting(true)
+      setError('')
       try {
-        const response = await fetch(sheetEndpoint, { method: 'POST', body: formData })
-        if (!response.ok) throw new Error('Submission failed')
-      } catch {
-        setError('We could not send the application. Please try again or email hello@assemblyvintageco.com.')
+        const photoUrls = []
+        for (const photo of photos) {
+          const uploadData = new FormData()
+          uploadData.append('photo', photo)
+          const uploadResponse = await fetch('/api/vendor-photo', { method: 'POST', body: uploadData })
+          const uploadResult = await uploadResponse.json().catch(() => ({}))
+          if (!uploadResponse.ok || !uploadResult.photo?.url) {
+            throw new Error(uploadResult.error || `We could not upload ${photo.name}.`)
+          }
+          photoUrls.push(uploadResult.photo.url)
+        }
+
+        const response = await fetch('/api/vendor-application', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            markets: selectedMarkets,
+            spaceSize,
+            businessName: formData.get('business-name'),
+            contactName: formData.get('contact-name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            website: formData.get('website'),
+            instagram: formData.get('instagram'),
+            categories: formData.getAll('categories'),
+            photoUrls,
+          }),
+        })
+        const result = await response.json().catch(() => ({}))
+        if (!response.ok) throw new Error(result.error || 'Submission failed')
+      } catch (submissionError) {
+        setError(submissionError.message || 'We could not send the application. Please try again or email assemblyvintageco@gmail.com.')
+        setSubmitting(false)
         return
       }
+      setSubmitting(false)
     }
 
     setSubmitted(true)
@@ -305,9 +343,9 @@ function VendorApplication({ onClose }) {
 
             <label className="vendor-upload">
               <span>Upload 3–5 product or booth photos</span>
-              <input type="file" name="photos" accept="image/jpeg,image/png,image/heic" multiple />
+              <input type="file" name="photos" accept="image/jpeg,image/png,image/heic,image/heif" multiple required />
               <strong><UploadSimple size={27} /> Drag and drop files here or click to upload</strong>
-              <small>JPG, PNG or HEIC. Max 10MB each.</small>
+              <small>JPG, PNG or HEIC. 3–5 photos, max 4MB each.</small>
             </label>
 
             {error && <p className="vendor-form__error" role="alert">{error}</p>}
@@ -316,8 +354,8 @@ function VendorApplication({ onClose }) {
               <strong>Estimated booth fees: ${total}</strong>
             </div>
             <div className="vendor-form__actions">
-              <button className="secondary-button" type="button" onClick={onClose}><ArrowLeft size={16} /> BACK</button>
-              <button className="primary-button" type="submit">SUBMIT APPLICATION <ArrowRight size={17} /></button>
+              <button className="secondary-button" type="button" onClick={onClose} disabled={submitting}><ArrowLeft size={16} /> BACK</button>
+              <button className="primary-button" type="submit" disabled={submitting}>{submitting ? 'UPLOADING…' : 'SUBMIT APPLICATION'} <ArrowRight size={17} /></button>
             </div>
             <p className="vendor-form__delivery">Final submissions are added to the Assembly vendor application sheet for review.</p>
           </form>
