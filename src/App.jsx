@@ -321,6 +321,7 @@ export function App() {
       firstName: String(formData.get('firstName') || '').trim(),
       lastName: String(formData.get('lastName') || '').trim(),
       email: String(formData.get('email') || '').trim(),
+      emailMarketingConsent: formData.get('emailMarketingConsent') === 'subscribed',
     }
 
     try {
@@ -520,7 +521,7 @@ export function App() {
                 <label>Last name<input name="lastName" autoComplete="family-name" required /></label>
                 <label>Email<input type="email" name="email" autoComplete="email" required /></label>
                 {registrationError && <p className="register-error" role="alert">{registrationError}</p>}
-                <p className="register-consent">By registering, you agree to receive email updates about Assembly events. Unsubscribe anytime.</p>
+                <label className="registration-opt-in"><input type="checkbox" name="emailMarketingConsent" value="subscribed" defaultChecked /><span><strong>Keep me in the vintage loop.</strong> Send me upcoming market announcements, first dibs, and other good vintage news. Unsubscribe anytime.</span></label>
                 <button className="primary-button" type="submit" disabled={registrationSubmitting}>
                   {registrationSubmitting ? 'REGISTERING…' : 'REGISTER FREE'} {!registrationSubmitting && <ArrowRight size={17} />}
                 </button>

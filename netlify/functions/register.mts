@@ -34,6 +34,7 @@ export default async (req: Request) => {
   const firstName = clean(body.firstName, 80)
   const lastName = clean(body.lastName, 80)
   const email = clean(body.email, 254).toLowerCase()
+  const emailMarketingConsent = body.emailMarketingConsent === true
 
   if (!firstName || !lastName || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: 'Please enter a valid first name, last name, and email address.' }, 400)
@@ -63,6 +64,7 @@ export default async (req: Request) => {
             'Registration Event': 'Assembly at Aloft',
             'Registration Event Date': '2026-09-27',
             'Registration Submitted At': submittedAt,
+            'Email Marketing Consent': emailMarketingConsent,
           },
         },
       },
@@ -75,47 +77,49 @@ export default async (req: Request) => {
     return json({ error: 'We could not complete your registration. Please try again.' }, 502)
   }
 
-  const subscribeResponse = await fetch(`${KLAVIYO_API}/api/profile-subscription-bulk-create-jobs/`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      data: {
-        type: 'profile-subscription-bulk-create-job',
-        attributes: {
-          profiles: {
-            data: [
-              {
-                type: 'profile',
-                attributes: {
-                  email,
-                  subscriptions: {
-                    email: {
-                      marketing: {
-                        consent: 'SUBSCRIBED',
+  if (emailMarketingConsent) {
+    const subscribeResponse = await fetch(`${KLAVIYO_API}/api/profile-subscription-bulk-create-jobs/`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        data: {
+          type: 'profile-subscription-bulk-create-job',
+          attributes: {
+            profiles: {
+              data: [
+                {
+                  type: 'profile',
+                  attributes: {
+                    email,
+                    subscriptions: {
+                      email: {
+                        marketing: {
+                          consent: 'SUBSCRIBED',
+                        },
                       },
                     },
                   },
                 },
-              },
-            ],
+              ],
+            },
           },
-        },
-        relationships: {
-          list: {
-            data: {
-              type: 'list',
-              id: listId,
+          relationships: {
+            list: {
+              data: {
+                type: 'list',
+                id: listId,
+              },
             },
           },
         },
-      },
-    }),
-  })
+      }),
+    })
 
-  if (!subscribeResponse.ok) {
-    const detail = await subscribeResponse.text()
-    console.error('Klaviyo subscription failed', subscribeResponse.status, detail)
-    return json({ error: 'We could not complete your registration. Please try again.' }, 502)
+    if (!subscribeResponse.ok) {
+      const detail = await subscribeResponse.text()
+      console.error('Klaviyo subscription failed', subscribeResponse.status, detail)
+      return json({ error: 'We could not complete your registration. Please try again.' }, 502)
+    }
   }
 
   return json({ ok: true })

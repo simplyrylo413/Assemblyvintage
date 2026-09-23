@@ -14,6 +14,7 @@ When implementing from a selected generated mock, treat that image as the source
 - The production Netlify build must not show the Desktop/Mobile preview switch or a simulated device frame. It is one full-width responsive site that adapts automatically at real viewport breakpoints.
 - The past-markets area must feature the supplied event video as a clickable preview image that opens and plays in a lightbox.
 - The market reminder form must collect first name, last name, and email address.
+- The attendee event-registration form includes a separate email-marketing consent checkbox. Keep it optional and checked by default, using the “Keep me in the vintage loop” copy; route checked submissions to Klaviyo once the integration is configured.
 - Vendor applications are destined for Google Sheets. Keep submission fields row-friendly and include selected events, space size, price per event, event count, estimated total, contact details, categories, and uploaded-photo references.
 - The vendor space options are `8′ × 10′ — $300` and `6′ × 4′ — $200`.
 - The vendor application panel stays hidden until the visitor clicks `Apply to Vend`.
