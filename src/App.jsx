@@ -1,8 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowRight, CaretDown, Check, List, X } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowRight, CaretDown, Check, List, UploadSimple, X } from '@phosphor-icons/react'
 import './styles.css'
 
 const EVENT_DATE = new Date('2026-09-27T11:00:00-04:00')
+
+const vendorMarkets = [
+  { id: 'aloft', name: 'Assembly at Aloft', date: 'Sep 27, 2026', location: 'Delray Beach' },
+  { id: 'palm-beach', name: 'Assembly Palm Beach', date: 'Nov 8, 2026', location: 'Palm Beach' },
+  { id: 'miami', name: 'Assembly Miami', date: 'Dec 6, 2026', location: 'Miami' },
+]
+
+const spaceOptions = {
+  '8x10': { label: "8′ × 10′", price: 300 },
+  '6x4': { label: "6′ × 4′", price: 200 },
+}
 
 function useCountdown() {
   const calculate = () => {
@@ -111,11 +122,169 @@ function Modal({ children, label, onClose }) {
   )
 }
 
+function VendorApplication({ onClose }) {
+  const [selectedMarkets, setSelectedMarkets] = useState(['aloft'])
+  const [marketMenuOpen, setMarketMenuOpen] = useState(false)
+  const [spaceSize, setSpaceSize] = useState('8x10')
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+
+  const toggleMarket = (marketId) => {
+    setSelectedMarkets((current) => current.includes(marketId)
+      ? current.filter((id) => id !== marketId)
+      : [...current, marketId])
+    setError('')
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    if (!selectedMarkets.length) {
+      setError('Choose at least one market before submitting.')
+      setMarketMenuOpen(true)
+      return
+    }
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    formData.delete('markets')
+    selectedMarkets.forEach((marketId) => formData.append('markets', marketId))
+
+    if (!import.meta.env.DEV) {
+      const sheetEndpoint = import.meta.env.VITE_VENDOR_APPLICATION_ENDPOINT
+      if (!sheetEndpoint) {
+        setError('Vendor applications are not connected yet. Please email hello@assemblyvintageco.com while we finish the application sheet.')
+        return
+      }
+      try {
+        const response = await fetch(sheetEndpoint, { method: 'POST', body: formData })
+        if (!response.ok) throw new Error('Submission failed')
+      } catch {
+        setError('We could not send the application. Please try again or email hello@assemblyvintageco.com.')
+        return
+      }
+    }
+
+    setSubmitted(true)
+  }
+
+  const selectedSpace = spaceOptions[spaceSize]
+  const total = selectedSpace.price * selectedMarkets.length
+
+  return (
+    <Modal label="Assembly vendor application" onClose={onClose}>
+      <div className="vendor-panel">
+        <div className="vendor-panel__topline">
+          <span>ASSEMBLY VINTAGE · APPLY TO VEND</span>
+          <span>APPLICATION</span>
+        </div>
+        <div className="vendor-panel__progress"><span /></div>
+
+        {submitted ? (
+          <div className="vendor-panel__success">
+            <span className="vendor-logo-crop" aria-hidden="true"><img src="/assets/assembly-logo-final.png" alt="" /></span>
+            <p className="eyebrow">APPLICATION RECEIVED</p>
+            <h2>Thank you.<br />We’ll be in touch.</h2>
+            <p>Your application for {selectedMarkets.length} {selectedMarkets.length === 1 ? 'market' : 'markets'} has been submitted for review and added to our vendor application sheet.</p>
+            <button className="primary-button" type="button" onClick={onClose}>CLOSE <X size={17} /></button>
+          </div>
+        ) : (
+          <form
+            className="vendor-form"
+            name="vendor-application"
+            method="POST"
+            data-netlify="true"
+            encType="multipart/form-data"
+            onSubmit={handleSubmit}
+          >
+            <input type="hidden" name="form-name" value="vendor-application" />
+            <input type="hidden" name="space-price" value={`$${selectedSpace.price}`} />
+            <input type="hidden" name="space-label" value={selectedSpace.label} />
+            <input type="hidden" name="event-count" value={selectedMarkets.length} />
+            <input type="hidden" name="selected-events" value={vendorMarkets.filter((market) => selectedMarkets.includes(market.id)).map((market) => `${market.name} — ${market.date}`).join(', ')} />
+            <input type="hidden" name="estimated-total" value={`$${total}`} />
+            <div className="vendor-panel__heading">
+              <h2>Tell us about your shop.</h2>
+              <p>Share a few details so we can get to know your business.</p>
+            </div>
+
+            <div className="vendor-form__grid">
+              <div className="vendor-field vendor-field--markets">
+                <label id="market-picker-label">Events you’re applying for *</label>
+                <button
+                  className="market-picker__trigger"
+                  type="button"
+                  aria-labelledby="market-picker-label"
+                  aria-expanded={marketMenuOpen}
+                  aria-controls="market-options"
+                  onClick={() => setMarketMenuOpen((open) => !open)}
+                >
+                  <span>{selectedMarkets.length ? `${selectedMarkets.length} ${selectedMarkets.length === 1 ? 'event' : 'events'} selected` : 'Choose events'}</span>
+                  <CaretDown size={15} weight="bold" />
+                </button>
+                {marketMenuOpen && (
+                  <div className="market-picker__options" id="market-options">
+                    {vendorMarkets.map((market) => (
+                      <label key={market.id}>
+                        <input type="checkbox" name="markets" value={market.id} checked={selectedMarkets.includes(market.id)} onChange={() => toggleMarket(market.id)} />
+                        <span>{market.name} — {market.date}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+                <small>Select all markets you’d like to join.</small>
+              </div>
+
+              <label className="vendor-field">Space size *
+                <select name="space-size" value={spaceSize} onChange={(event) => setSpaceSize(event.target.value)} required>
+                  <option value="8x10">8′ × 10′ — $300</option>
+                  <option value="6x4">6′ × 4′ — $200</option>
+                </select>
+              </label>
+              <label className="vendor-field">Business / shop name *<input name="business-name" placeholder="Your business name" required /></label>
+              <label className="vendor-field">Contact name *<input name="contact-name" autoComplete="name" placeholder="Your name" required /></label>
+              <label className="vendor-field">Email *<input type="email" name="email" autoComplete="email" placeholder="you@example.com" required /></label>
+              <label className="vendor-field">Phone *<input type="tel" name="phone" autoComplete="tel" placeholder="(123) 456-7890" required /></label>
+              <label className="vendor-field">Website<input type="url" name="website" placeholder="https://yourwebsite.com" /></label>
+              <label className="vendor-field">Instagram<input name="instagram" placeholder="@yourshop" /></label>
+            </div>
+
+            <fieldset className="vendor-categories">
+              <legend>What do you sell? *</legend>
+              {['Vintage clothing', 'Designer resale', 'Accessories', 'Home / objects', 'Other'].map((category) => (
+                <label key={category}><input type="checkbox" name="categories" value={category} /><span>{category}</span></label>
+              ))}
+            </fieldset>
+
+            <label className="vendor-upload">
+              <span>Upload 3–5 product or booth photos</span>
+              <input type="file" name="photos" accept="image/jpeg,image/png,image/heic" multiple />
+              <strong><UploadSimple size={27} /> Drag and drop files here or click to upload</strong>
+              <small>JPG, PNG or HEIC. Max 10MB each.</small>
+            </label>
+
+            {error && <p className="vendor-form__error" role="alert">{error}</p>}
+            <div className="vendor-form__summary">
+              <span>Applying for {selectedMarkets.length || 0} {selectedMarkets.length === 1 ? 'event' : 'events'} · {selectedSpace.label} space</span>
+              <strong>Estimated booth fees: ${total}</strong>
+            </div>
+            <div className="vendor-form__actions">
+              <button className="secondary-button" type="button" onClick={onClose}><ArrowLeft size={16} /> BACK</button>
+              <button className="primary-button" type="submit">SUBMIT APPLICATION <ArrowRight size={17} /></button>
+            </div>
+            <p className="vendor-form__delivery">Final submissions are added to the Assembly vendor application sheet for review.</p>
+          </form>
+        )}
+      </div>
+    </Modal>
+  )
+}
+
 export function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [registerOpen, setRegisterOpen] = useState(false)
   const [registered, setRegistered] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
+  const [vendorApplicationOpen, setVendorApplicationOpen] = useState(false)
   const [faqAudience, setFaqAudience] = useState('shopper')
   const [openFaq, setOpenFaq] = useState(0)
   const siteRef = useRef(null)
@@ -265,10 +434,31 @@ export function App() {
                 </form>
               )}
             </div>
-            <div className="vendor-callout" id="vendor">
-              <img src="/assets/vendor-moment.jpg" alt="A vintage vendor helping stylish shoppers indoors" />
-              <div><p className="eyebrow">SELL WITH ASSEMBLY</p><h2>Your rack belongs here.</h2><p>Applications are open for independent vintage sellers and collectors.</p><button type="button">APPLY TO BE A VENDOR <ArrowRight size={17} /></button></div>
+          </section>
+          <section className="vendor-opportunity" id="vendor" data-reveal>
+            <div className="vendor-opportunity__main">
+              <div className="vendor-opportunity__intro">
+                <span className="vendor-logo-crop" aria-hidden="true"><img src="/assets/assembly-logo-final.png" alt="" /></span>
+                <p className="eyebrow">BECOME AN ASSEMBLY VENDOR</p>
+                <h2>Application<br />Process With<br />Confidence.</h2>
+                <p>One application. Multiple markets. A bigger tomorrow.</p>
+                <button className="primary-button" type="button" onClick={() => setVendorApplicationOpen(true)}>APPLY TO VEND <ArrowRight size={17} /></button>
+              </div>
+              <div className="vendor-opportunity__markets">
+                <p className="eyebrow">UPCOMING MARKETS</p>
+                {vendorMarkets.map((market) => (
+                  <article key={market.id}>
+                    <h3>{market.name}</h3>
+                    <p>{market.id === 'aloft' ? 'Sunday, September 27, 2026' : market.id === 'palm-beach' ? 'Sunday, November 8, 2026' : 'Sunday, December 6, 2026'}</p>
+                  </article>
+                ))}
+              </div>
             </div>
+            <ol className="vendor-opportunity__steps">
+              <li><span>01</span><p>Choose your events</p></li>
+              <li><ArrowRight size={20} aria-hidden="true" /><span>02</span><p>Tell us about your shop</p></li>
+              <li><ArrowRight size={20} aria-hidden="true" /><span>03</span><p>Submit for review</p></li>
+            </ol>
           </section>
           <section className="faq-section" id="faq" data-reveal>
             <div className="faq-intro">
@@ -310,6 +500,7 @@ export function App() {
           </div>
         </Modal>
       )}
+      {vendorApplicationOpen && <VendorApplication onClose={() => setVendorApplicationOpen(false)} />}
     </div>
   )
 }

@@ -14,6 +14,9 @@ When implementing from a selected generated mock, treat that image as the source
 - The production Netlify build must not show the Desktop/Mobile preview switch or a simulated device frame. It is one full-width responsive site that adapts automatically at real viewport breakpoints.
 - The past-markets area must feature the supplied event video as a clickable preview image that opens and plays in a lightbox.
 - The market reminder form must collect first name, last name, and email address.
+- Vendor applications are destined for Google Sheets. Keep submission fields row-friendly and include selected events, space size, price per event, event count, estimated total, contact details, categories, and uploaded-photo references.
+- The vendor space options are `8′ × 10′ — $300` and `6′ × 4′ — $200`.
+- The vendor application panel stays hidden until the visitor clicks `Apply to Vend`.
 - The Assembly arch is always upright and above the wordmark; never place it beneath text or invert it.
 
 Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts/prepare-sites-build.mjs`, and `tests/sites-worker.test.mjs` intact so the same local prototype can be handed to Sites. Before a Sites handoff, run `npm run build` and `npm run test:sites`; the build must leave `dist/client/index.html`, `dist/server/index.js`, and `dist/.openai/hosting.json`.

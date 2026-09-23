@@ -1,80 +1,75 @@
-# Assembly Prototype — Design QA
+# Assembly Vintage Vendor Application — Design QA
 
 **Source visual truth path**
-- `/workspace/scratch/80463c7dc73d/upload/d48174f4-2919-4936-a629-34162d791bd1.png`
+- `/workspace/scratch/5190b6618973/upload/955a3d14-be28-4067-aafc-db0b91ea3c6a.png`
 
 **Implementation evidence**
-- Browser-rendered capture: `/workspace/scratch/80463c7dc73d/assembly-prototype/implementation-desktop-final.jpg`
-- Combined comparison: `/workspace/scratch/80463c7dc73d/assembly-prototype/design-comparison.png`
-- Local preview was reviewed in the connected cloud browser.
+- Browser-rendered capture: `/workspace/scratch/5190b6618973/assembly-vintage-live-checkout/vendor-implementation-desktop.png`
+- Combined comparison: `/workspace/scratch/5190b6618973/assembly-vintage-live-checkout/vendor-design-comparison.png`
+- Local preview reviewed at `http://terminal.local:4173/` in the connected cloud browser.
 
 **Viewport and normalization**
-- Source pixels: 1768 × 1258.
-- Implementation capture pixels: 1363 × 936 at a 1363 × 936 browser viewport, device scale factor 1.
-- Desktop site content measured 1312 CSS px wide with `scrollWidth === clientWidth`.
-- Mobile preview frame measured 390 CSS px wide; content measured 361 CSS px wide with `scrollWidth === clientWidth`.
-- For the full-view comparison, both images were proportionally fit to 1200 × 900 cells on a shared 2496 × 948 comparison canvas. Surrounding prototype canvas and toolbar were treated as presentation chrome, not page content.
+- Source pixels: 1240 × 731.
+- Implementation capture: 1363 × 936 pixels at a 1363 × 936 CSS viewport, device scale factor 1.
+- Combined comparison: both images were proportionally fit into 1200 × 731 cells on a 2464 × 731 canvas.
+- The source shows the panel embedded beside the section. The implementation intentionally presents the same panel as a right-side overlay because the user explicitly requested that it appear only after `Apply to Vend` is clicked.
 
 **State**
-- Desktop: default page state at the top of the next-event page.
-- Mobile: responsive preview selected, top state and newsletter form state checked.
-- Video: supplied 40.238-second event film open and autoplaying in the lightbox.
+- Desktop vendor section with the application overlay open.
+- Three events selected.
+- `6′ × 4′ — $200` selected; calculated total is $600 for three events.
 
 **Full-view comparison evidence**
-- The implementation preserves the source's defining hierarchy: upright Assembly wordmark, persistent top navigation, oversized `UP NEXT`, one-line event strip, four-unit countdown, and a full-bleed shopping image.
-- The outdoor source photograph was intentionally replaced with an elevated indoor market scene to reflect the user's event-format correction. The new image retains the source's width, crowd density, fashion focus, and warm South Florida light.
-- Desktop proportions, rules, negative space, label density, and black/cream palette visually track the selected design. The additional blue, lime, and coral sections occur below the source's core event view and support the requested clean Miami tonality.
+- The implementation preserves the source's pale-blue field, high-contrast editorial serif, small tracked labels, black rectangular CTA, left-side application message, future-event list, and numbered three-step explanation.
+- The open form maintains the source's right-side emphasis while adding the requested modal behavior, darker backdrop, and background blur to make the active task unambiguous.
+- The form width, border treatment, compact two-column density, fine rules, upload area, and black submit action closely track the selected design.
 
 **Focused region comparison evidence**
-- Header/logo: the final build uses the supplied Assembly logo asset with the gradient-ring pixels removed; the arch remains upright and above the wordmark at desktop and mobile sizes.
-- Event strip/countdown: copy order and visual priority match the source; the event is Assembly at Aloft, September 27, 2026, with no directions or add-to-calendar control.
-- Newsletter: mobile browser inspection confirmed three visible, labeled, non-overflowing inputs: First Name, Last Name, and Email Address, followed by one primary signup action.
-- Video preview: the latest-market poster presents a clear play affordance; browser inspection confirmed the uploaded H.264/AAC video loaded (`readyState: 4`), played, and reported a 40.238-second duration.
-- Icons: Phosphor icons are used for interface controls; photography and video are real raster/media assets rather than placeholders.
+- Vendor section: headline wrapping, market-list divider, event hierarchy, and numbered process closely match the source.
+- Application panel: the event selector supports multiple checked markets; the space selector visibly includes `8′ × 10′ — $300` and `6′ × 4′ — $200`.
+- Pricing summary: changing the booth size and event count updates both the selected-space label and estimated total.
+- Icons: Phosphor interface icons are used for arrows, close, dropdown, and upload affordances. The supplied Assembly logo asset is cropped to its upright arch for this section.
 
 **Findings**
 - No actionable P0, P1, or P2 findings remain.
-- [P3] The client preview toolbar and device frame are intentionally visible in demo mode. They are useful for presentation but should be hidden for a production deployment.
-- [P3] The source's desktop crop shows more of the lower content because its canvas is taller relative to width. The implementation prioritizes a true browser viewport and scroll-based reveal motion; the above-the-fold event hierarchy remains equivalent.
+- [P3] The implementation uses a full-height right-side overlay rather than the source's embedded panel. This is an intentional response to the user's request that the panel remain hidden until `Apply to Vend` is clicked.
+- [P3] Google Sheets delivery cannot be exercised locally until the Apps Script webhook or equivalent Sheets endpoint is provided. The form data model is already row-friendly and the project decision is recorded.
 
 **Required fidelity surfaces**
-- Fonts and typography: DM Sans and Instrument Serif reproduce the source's modern grotesk/editorial-serif contrast with appropriate weights, tracking, wrap behavior, and optical hierarchy.
-- Spacing and layout rhythm: desktop header, title, event, countdown, and image tracks align to a consistent 4% margin; mobile shifts to a 20 px rhythm and stacks event/form fields without horizontal overflow.
-- Colors and visual tokens: cream/black carries the source; clean Miami blue, acid-lime, and coral are restricted to distinct conversion/story sections with accessible dark text.
-- Image quality and asset fidelity: generated market photography is sharp, correctly cropped, indoor, shopping-led, and populated by styled shoppers and vendors; the supplied video is preserved as playable media.
-- Copy and content: event name, date, venue, hours, free admission, countdown, reminder signup, and vendor application hierarchy reflect the approved content decisions without redundant directions/calendar copy.
+- Fonts and typography: Instrument Serif and DM Sans preserve the editorial display/sans-serif contrast, hierarchy, tracking, and compact UI labels.
+- Spacing and layout rhythm: the section uses the source's split layout and generous blue negative space; the overlay uses a dense two-column form and becomes a single column under the mobile breakpoint.
+- Colors and visual tokens: the existing Assembly powder blue, black, cream, coral, and lime tokens remain unchanged; this section uses powder blue and black as in the source.
+- Image quality and asset fidelity: no photographic assets are required in this section. The existing supplied Assembly logo asset is used instead of a newly drawn logo.
+- Copy and content: the market names/dates, multi-event message, three-step process, booth sizes, prices, estimated total, and Google Sheets review language reflect the approved requirements.
 
 **Comparison history**
-- Iteration 1 finding [P1]: the initial implementation recreated the logo arch and wordmark with CSS/text, which was not acceptable asset fidelity.
-- Fix: extracted the supplied logo, removed the gradient-ring pixels from its alpha mask, and replaced the approximation with `/public/assets/assembly-logo-final.png`.
-- Post-fix evidence: the refreshed desktop capture and `design-comparison.png` show the supplied upright Assembly logo in the header; no colored ring is visible in the browser-rendered page.
-- Iteration 2: combined source/implementation review found no remaining actionable P0/P1/P2 differences. Indoor imagery and extended signup fields are intentional user-directed deviations.
+- Iteration 1 finding [P2]: the cropped logo showed only the lower arch stems and part of the wordmark.
+- Fix: adjusted the crop to display the complete upright arch without the wordmark.
+- Post-fix evidence: the final browser capture and combined comparison show the corrected arch at the upper-left of the vendor section.
+- Iteration 2: the combined source/implementation review found no remaining actionable P0/P1/P2 differences.
 
 **Primary interactions tested**
-- Desktop/Mobile preview switch.
-- Responsive mobile layout and no horizontal overflow.
-- Countdown updates.
-- Navigation and logo scroll-to-top behavior.
-- Registration modal opens.
-- Latest-event video preview opens and plays.
-- Newsletter exposes First Name, Last Name, and Email fields with required validation.
-- Reveal transitions render after scrolling.
+- `Apply to Vend` opens the panel; the panel is absent before the click.
+- Event selector opens and supports multiple checked markets.
+- Booth selector changes between the $300 and $200 options.
+- Fee summary recalculates using event count × selected booth price.
+- Required contact fields accept input and local submission reaches the success state.
+- Close/back controls and modal keyboard behavior are implemented.
 
 **Console errors checked**
-- No application-origin console errors or warnings were observed. The only logged errors were from the cloud-browser metadata extension and did not originate from the prototype.
+- No application-origin errors or warnings were observed. Logged errors came from the cloud-browser metadata extension and did not originate from the site.
 
 **Implementation Checklist**
-- [x] Match selected desktop event-page hierarchy.
-- [x] Use supplied logo without the gradient ring.
-- [x] Keep every arch upright and above associated text.
-- [x] Replace outdoor imagery with elevated indoor shopping scenes.
-- [x] Add live countdown and September 27 Aloft event details.
-- [x] Add clickable supplied-video preview and lightbox playback.
-- [x] Add First Name, Last Name, and Email to reminder signup.
-- [x] Verify desktop/mobile switch and responsive overflow.
+- [x] Recreate the selected blue vendor opportunity section.
+- [x] Keep the application panel hidden until the CTA is clicked.
+- [x] Add multi-event selection.
+- [x] Add `8′ × 10′ — $300` and `6′ × 4′ — $200`.
+- [x] Calculate estimated total from event count and booth price.
+- [x] Preserve mobile stacking rules.
+- [x] Record Google Sheets as the submission destination.
 - [x] Build and Sites packaging tests pass.
 
 **Follow-up Polish**
-- Hide the demo switcher automatically if this version is later published as the production site.
+- Connect the form to the provided Google Apps Script/Sheets endpoint and verify a real test row before production publication.
 
 final result: passed
