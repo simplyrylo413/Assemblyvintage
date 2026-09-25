@@ -1,9 +1,9 @@
 import { clean, json, sendToGoogle } from './_shared/vendor-google.mts'
 
 const MARKETS: Record<string, { name: string; date: string }> = {
-  aloft: { name: 'Assembly at Aloft', date: 'Sep 27, 2026' },
-  'palm-beach': { name: 'Assembly Palm Beach', date: 'Nov 8, 2026' },
-  miami: { name: 'Assembly Miami', date: 'Dec 6, 2026' },
+  september: { name: 'Aloft Delray Beach', date: 'Sunday, September 27, 2026' },
+  october: { name: 'Aloft Delray Beach', date: 'Sunday, October 25, 2026' },
+  november: { name: 'Aloft Delray Beach', date: 'Sunday, November 15, 2026' },
 }
 
 const SPACES: Record<string, { label: string; price: number }> = {
