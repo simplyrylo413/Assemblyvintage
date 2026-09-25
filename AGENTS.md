@@ -18,6 +18,9 @@ When implementing from a selected generated mock, treat that image as the source
 - Vendor applications are destined for Google Sheets. Keep submission fields row-friendly and include selected events, space size, price per event, event count, estimated total, contact details, categories, and uploaded-photo references.
 - The vendor space options are `8′ × 10′ — $300` and `6′ × 4′ — $200`.
 - The vendor application panel stays hidden until the visitor clicks `Apply to Vend`.
+- The vendor form uses the selected editorial four-section Market / Your Shop / Expectations / Agreement layout. Its main heading is `Vendor Application`, followed by Albert's approved curation paragraph beginning `We’d love to get to know your shop.` Keep that wording as approved.
+- Vendor form Polaroids depict indoor markets only; reuse `vendor-moment.jpg`, `rack-detail.jpg`, and `market-crowd.jpg`. Keep the contemporary editorial style and coral admission-ticket motif. Never show an outdoor market canopy in this flow.
+- Clearly label every vendor field Required or Optional, require 3–5 photos with three as the minimum, and keep the complete promotion commitment, important details, curation notice, and vendor agreement readable on mobile.
 - The Assembly arch is always upright and above the wordmark; never place it beneath text or invert it.
 
 Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts/prepare-sites-build.mjs`, and `tests/sites-worker.test.mjs` intact so the same local prototype can be handed to Sites. Before a Sites handoff, run `npm run build` and `npm run test:sites`; the build must leave `dist/client/index.html`, `dist/server/index.js`, and `dist/.openai/hosting.json`.

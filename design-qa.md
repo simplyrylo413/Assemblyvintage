@@ -1,75 +1,27 @@
-# Assembly Vintage Vendor Application — Design QA
+# Vendor Application design QA
 
-**Source visual truth path**
-- `/workspace/scratch/5190b6618973/upload/955a3d14-be28-4067-aafc-db0b91ea3c6a.png`
+## Evidence
 
-**Implementation evidence**
-- Browser-rendered capture: `/workspace/scratch/5190b6618973/assembly-vintage-live-checkout/vendor-implementation-desktop.png`
-- Combined comparison: `/workspace/scratch/5190b6618973/assembly-vintage-live-checkout/vendor-design-comparison.png`
-- Local preview reviewed at `http://terminal.local:4173/` in the connected cloud browser.
+- Source visual truth: `/workspace/scratch/b66dec836981/generated_images/exec-5cf64b27-eee0-4b99-9c5d-13ee76109d0a.png` (selected Option 3 desktop, 1487 × 1058 px), with approved mobile direction at `/workspace/scratch/b66dec836981/generated_images/exec-37a44e60-e3ce-47cc-beca-5a12e39796de.png` (1312 × 1199 px composite).
+- Browser-rendered implementation: `/workspace/scratch/assembly-vendor-final-desktop-1790351088620.jpg` (Market) and `/workspace/scratch/assembly-vendor-final-shop-1790351115181.jpg` (Your Shop), 1363 × 936 px at 1363 × 936 CSS px and device scale factor 1.
+- The source composite and browser capture have different canvas sizes; comparison used corresponding page content and open section rather than pixel alignment. Source and implementation were viewed together in the same comparison input. Focused inspection covered header typography, indoor collage/ticket, labels, upload counter, and the right form panel; those details were legible in the full captures, so a separate crop was unnecessary.
+- Local preview opened in the cloud browser at `terminal.local:4173`. Browser interactions checked opening the CTA, moving between all four sections, required-field errors, category and three-photo validation, selection of three local files with thumbnails, promotion notice, full vendor agreement, and preservation of entered values while navigating. No site-origin console errors were found; Chrome extension metadata errors were unrelated to the application.
 
-**Viewport and normalization**
-- Source pixels: 1240 × 731.
-- Implementation capture: 1363 × 936 pixels at a 1363 × 936 CSS viewport, device scale factor 1.
-- Combined comparison: both images were proportionally fit into 1200 × 731 cells on a 2464 × 731 canvas.
-- The source shows the panel embedded beside the section. The implementation intentionally presents the same panel as a right-side overlay because the user explicitly requested that it appear only after `Apply to Vend` is clicked.
+## Findings
 
-**State**
-- Desktop vendor section with the application overlay open.
-- Three events selected.
-- `6′ × 4′ — $200` selected; calculated total is $600 for three events.
+- **P2 — Mobile visual capture unavailable.** The chosen mobile source cannot be compared against a real 390 px rendering. The connected browser exposes no viewport resize or device emulation, and a separate wrapper route was blocked by browser policy. CSS review suggests a single column with 350 px content at 390 px width, but this is not browser evidence. Obtain a supported mobile browser capture before final visual sign-off.
+- **P3 — Intentional source changes.** The approved headline is `Vendor Application`, the full approved curation paragraph replaces the short mock text, and the three existing indoor photographs have restrained color instead of the mock's outdoor/monochrome imagery. These reflect explicit user direction. The coral ticket remains visible.
+- **P3 — Different view height.** The source mock shows the entire left navigation at 1058 px canvas height; the 936 px browser capture requires scrolling to see its last items. The modal scrolls, and all four controls are present and reachable.
 
-**Full-view comparison evidence**
-- The implementation preserves the source's pale-blue field, high-contrast editorial serif, small tracked labels, black rectangular CTA, left-side application message, future-event list, and numbered three-step explanation.
-- The open form maintains the source's right-side emphasis while adding the requested modal behavior, darker backdrop, and background blur to make the active task unambiguous.
-- The form width, border treatment, compact two-column density, fine rules, upload area, and black submit action closely track the selected design.
+## Comparison history
 
-**Focused region comparison evidence**
-- Vendor section: headline wrapping, market-list divider, event hierarchy, and numbered process closely match the source.
-- Application panel: the event selector supports multiple checked markets; the space selector visibly includes `8′ × 10′ — $300` and `6′ × 4′ — $200`.
-- Pricing summary: changing the booth size and event count updates both the selected-space label and estimated total.
-- Icons: Phosphor interface icons are used for arrows, close, dropdown, and upload affordances. The supplied Assembly logo asset is cropped to its upright arch for this section.
+1. Initial desktop capture showed the vintage ticket partly hidden by a Polaroid and a monochrome photo treatment. The next iteration raised the ticket above the photos and retained restrained warm color for a more current indoor market feel. Evidence: `/workspace/scratch/assembly-vendor-final-shop-1790351115181.jpg`.
+2. Initial validation scrolled to the form top while an invalid photo field could be lower on the page. The next iteration moved the error to the form top and scrolls/focuses the specific invalid control. The final code was rebuilt and verified through browser interaction; no production submission was made.
+3. The longer Your Shop panel initially placed its Continue button below the desktop fold. A sticky desktop footer now keeps the fee and action visible, with a normal in-flow footer on mobile to avoid covering the keyboard.
 
-**Findings**
-- No actionable P0, P1, or P2 findings remain.
-- [P3] The implementation uses a full-height right-side overlay rather than the source's embedded panel. This is an intentional response to the user's request that the panel remain hidden until `Apply to Vend` is clicked.
-- [P3] Google Sheets delivery cannot be exercised locally until the Apps Script webhook or equivalent Sheets endpoint is provided. The form data model is already row-friendly and the project decision is recorded.
+## Implementation checklist
 
-**Required fidelity surfaces**
-- Fonts and typography: Instrument Serif and DM Sans preserve the editorial display/sans-serif contrast, hierarchy, tracking, and compact UI labels.
-- Spacing and layout rhythm: the section uses the source's split layout and generous blue negative space; the overlay uses a dense two-column form and becomes a single column under the mobile breakpoint.
-- Colors and visual tokens: the existing Assembly powder blue, black, cream, coral, and lime tokens remain unchanged; this section uses powder blue and black as in the source.
-- Image quality and asset fidelity: no photographic assets are required in this section. The existing supplied Assembly logo asset is used instead of a newly drawn logo.
-- Copy and content: the market names/dates, multi-event message, three-step process, booth sizes, prices, estimated total, and Google Sheets review language reflect the approved requirements.
+- Capture a real 390 px mobile viewport in a supported browser and compare it to the approved mobile mockup.
+- Update/redeploy the Google Apps Script receiver to map all six new Sheet columns, then verify one explicitly authorized test or real application before production publishing.
 
-**Comparison history**
-- Iteration 1 finding [P2]: the cropped logo showed only the lower arch stems and part of the wordmark.
-- Fix: adjusted the crop to display the complete upright arch without the wordmark.
-- Post-fix evidence: the final browser capture and combined comparison show the corrected arch at the upper-left of the vendor section.
-- Iteration 2: the combined source/implementation review found no remaining actionable P0/P1/P2 differences.
-
-**Primary interactions tested**
-- `Apply to Vend` opens the panel; the panel is absent before the click.
-- Event selector opens and supports multiple checked markets.
-- Booth selector changes between the $300 and $200 options.
-- Fee summary recalculates using event count × selected booth price.
-- Required contact fields accept input and local submission reaches the success state.
-- Close/back controls and modal keyboard behavior are implemented.
-
-**Console errors checked**
-- No application-origin errors or warnings were observed. Logged errors came from the cloud-browser metadata extension and did not originate from the site.
-
-**Implementation Checklist**
-- [x] Recreate the selected blue vendor opportunity section.
-- [x] Keep the application panel hidden until the CTA is clicked.
-- [x] Add multi-event selection.
-- [x] Add `8′ × 10′ — $300` and `6′ × 4′ — $200`.
-- [x] Calculate estimated total from event count and booth price.
-- [x] Preserve mobile stacking rules.
-- [x] Record Google Sheets as the submission destination.
-- [x] Build and Sites packaging tests pass.
-
-**Follow-up Polish**
-- Connect the form to the provided Google Apps Script/Sheets endpoint and verify a real test row before production publication.
-
-final result: passed
+final result: blocked
