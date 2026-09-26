@@ -90,13 +90,15 @@ function Countdown() {
   const time = useCountdown()
   return (
     <section className="countdown" aria-label="Countdown to the next market">
-      <p className="countdown-label">COUNTDOWN TO<br />THE NEXT MARKET</p>
+      <p className="countdown-label">
+        <span>THE MARKET</span>
+        <span className="countdown-label__underlined">STARTS IN<img src="/assets/countdown-brush-underline.webp" alt="" aria-hidden="true" /></span>
+      </p>
       <div className="countdown-values">
         {Object.entries(time).map(([label, value]) => (
           <div className="time-unit" key={label}><span key={value} className="time-number">{String(value).padStart(2, '0')}</span><span>{label}</span></div>
         ))}
       </div>
-      <p className="countdown-note">VINTAGE BRINGS<br />GOOD PEOPLE TOGETHER.</p>
     </section>
   )
 }
@@ -296,17 +298,14 @@ export function App() {
           </div>
 
           <section className="intro" id="next-market">
-            <h1 aria-label="Up next">
-              <span className="intro-word" aria-hidden="true">
-                <span className="intro-letter" style={{ '--letter-index': 0 }}>U</span>
-                <span className="intro-letter" style={{ '--letter-index': 1 }}>P</span>
-              </span>
-              <span className="intro-word" aria-hidden="true">
-                <span className="intro-letter" style={{ '--letter-index': 2 }}>N</span>
-                <span className="intro-letter" style={{ '--letter-index': 3 }}>E</span>
-                <span className="intro-letter" style={{ '--letter-index': 4 }}>X</span>
-                <span className="intro-letter" style={{ '--letter-index': 5 }}>T</span>
-              </span>
+            <h1 aria-label="September edition">
+              {['SEPTEMBER', 'EDITION'].map((word, wordIndex) => (
+                <span className="intro-word" aria-hidden="true" key={word}>
+                  {[...word].map((letter, index) => (
+                    <span className="intro-letter" style={{ '--letter-index': index + (wordIndex ? 9 : 0) }} key={`${word}-${index}`}>{letter}</span>
+                  ))}
+                </span>
+              ))}
             </h1>
             <p>CURATED VINTAGE MARKETS.<br />REAL PEOPLE. BRIGHTER TOMORROWS.</p>
           </section>

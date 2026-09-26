@@ -17,9 +17,9 @@ button,input { font:inherit; } button,a { -webkit-tap-highlight-color:transparen
 .desktop-nav button:hover::after,.desktop-nav .nav-next::after { transform:scaleX(1); }
 .menu-button { display:none; border:0; background:none; margin-left:50px; padding:16px 0; transition:transform .3s ease; } .menu-button:hover { transform:rotate(8deg); } .mobile-menu { display:none; }
 .intro { margin:0 4%; min-height:145px; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--ink); }
-.intro h1 { margin:0; display:flex; gap:.2em; font-size:clamp(68px,8.6vw,145px); line-height:.8; letter-spacing:-.08em; }
+.intro h1 { margin:0; display:flex; gap:.22em; font-size:clamp(42px,4.8vw,76px); line-height:.9; letter-spacing:-.065em; }
 .intro-word { display:inline-flex; }
-.intro-letter { display:inline-block; will-change:opacity,filter; animation:titleLetter .82s cubic-bezier(.22,1,.36,1) both; animation-delay:calc(var(--letter-index) * .085s); }
+.intro-letter { display:inline-block; will-change:opacity,filter; animation:titleLetter .82s cubic-bezier(.22,1,.36,1) both; animation-delay:calc(var(--letter-index) * .055s); }
 .intro p { font-size:clamp(10px,.85vw,14px); line-height:1.55; letter-spacing:.16em; font-weight:600; text-align:right; }
 .event-strip { min-height:110px; margin:0 4%; display:grid; grid-template-columns:1.15fr 1.6fr 1.3fr .85fr; align-items:center; border-bottom:1px solid #b5b5b2; }
 .event-strip>div { min-height:60px; padding:6px 28px; border-right:1px solid #a8a8a4; display:flex; flex-direction:column; justify-content:center; } .event-strip>div:first-child { padding-left:0; }
@@ -28,7 +28,10 @@ button,input { font:inherit; } button,a { -webkit-tap-highlight-color:transparen
 .primary-button { min-height:58px; border:1px solid var(--ink); background:var(--ink); color:white; display:inline-flex; align-items:center; justify-content:center; gap:16px; padding:0 24px; font-size:11px; letter-spacing:.17em; font-weight:700; transition:color .3s ease,background .3s ease,transform .3s ease; }
 .primary-button:hover { color:var(--ink); background:var(--lime); transform:translateY(-2px); } .event-strip .primary-button { margin-left:28px; }
 .countdown { min-height:112px; margin:0 4%; display:grid; grid-template-columns:.9fr 3fr 1fr; align-items:center; }
-.countdown-label,.countdown-note { margin:0; font-size:11px; line-height:1.7; letter-spacing:.17em; font-weight:600; } .countdown-note { padding-left:35px; border-left:1px solid #aaa; }
+.countdown-label { margin:0; font-size:clamp(17px,1.55vw,22px); line-height:1.13; letter-spacing:.015em; font-weight:700; }
+.countdown-label>span { display:block; width:max-content; }
+.countdown-label__underlined { position:relative; }
+.countdown-label__underlined img { position:absolute; left:0; bottom:-11px; display:block; width:70px; height:auto; pointer-events:none; }
 .countdown-values { display:grid; grid-template-columns:repeat(4,1fr); }.time-unit{display:flex; flex-direction:column; align-items:center; border-left:1px solid #aaa; text-transform:uppercase; font-size:9px; letter-spacing:.22em; font-weight:700}
 .time-number{font-family:var(--serif);font-weight:400;font-size:clamp(38px,4vw,66px);line-height:.8;letter-spacing:-.02em;animation:numberTick .3s ease}
 .hero{position:relative;height:clamp(420px,43vw,700px);overflow:hidden;opacity:0;transform:translateY(30px);transition:1s cubic-bezier(.22,1,.36,1)}.hero.is-visible{opacity:1;transform:translateY(0)}
@@ -67,7 +70,7 @@ footer{min-height:310px;padding:70px 4% 35px;background:var(--coral);display:gri
   .logo{width:116px;min-height:78px;padding:7px 0 6px}
   .logo img{max-height:78px}
   .intro{min-height:190px;margin:0 20px;padding:28px 0 24px;display:grid;align-content:center;gap:20px}
-  .intro h1{flex-direction:column;gap:0;font-size:clamp(64px,20vw,92px)}
+  .intro h1{flex-direction:column;gap:0;font-size:clamp(42px,12vw,62px)}
   .intro p{font-size:8px;text-align:left}
   .event-strip{margin:0 20px;padding:24px 0;min-height:0;grid-template-columns:1fr;gap:18px}
   .event-strip>div{min-height:0;padding:0 0 17px;border:0;border-bottom:1px solid #c4c3be}
@@ -75,9 +78,8 @@ footer{min-height:310px;padding:70px 4% 35px;background:var(--coral);display:gri
   .event-strip strong{font-size:19px}
   .event-strip .primary-button{margin:0;width:100%}
   .countdown{margin:0 20px;padding:24px 0;min-height:0;grid-template-columns:1fr;gap:20px}
-  .countdown-label br{display:none}
+  .countdown-label{font-size:22px}
   .countdown-values{order:2}
-  .countdown-note{display:none}
   .time-unit{border-left:0;border-right:1px solid #aaa}
   .time-unit:last-child{border:0}
   .time-number{font-size:clamp(38px,12vw,54px)}
