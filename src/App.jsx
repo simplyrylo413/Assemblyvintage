@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, CalendarBlank, CaretDown, Check, List, MapPin, UploadSimple, X } from '@phosphor-icons/react'
 import './styles.css'
 import { VendorLookbook } from './VendorLookbook.jsx'
+import { LiquidCountdown } from './LiquidCountdown.jsx'
 
 const vendorMarkets = [
   {
@@ -88,14 +89,28 @@ function Logo() {
 
 function Countdown() {
   const time = useCountdown()
+  const countdownComplete = Object.values(time).every((value) => value === 0)
+  const liquidPreview = typeof window !== 'undefined'
+    && new URLSearchParams(window.location.search).get('liquid-preview') === '1'
+  const showLiquid = countdownComplete || liquidPreview
+
   return (
-    <section className="countdown" aria-label="Countdown to the next market">
-      <p className="countdown-label">COUNTDOWN TO<br />THE NEXT MARKET</p>
-      <div className="countdown-values">
-        {Object.entries(time).map(([label, value]) => (
-          <div className="time-unit" key={label}><span key={value} className="time-number">{String(value).padStart(2, '0')}</span><span>{label}</span></div>
-        ))}
-      </div>
+    <section
+      className={`countdown ${showLiquid ? 'countdown--liquid' : ''}`}
+      aria-label={showLiquid ? 'The market is open' : 'Countdown to the next market'}
+    >
+      <p className="countdown-label">
+        {showLiquid ? <>THE MARKET IS<br />OPEN</> : <>COUNTDOWN TO<br />THE NEXT MARKET</>}
+      </p>
+      {showLiquid ? (
+        <LiquidCountdown />
+      ) : (
+        <div className="countdown-values">
+          {Object.entries(time).map(([label, value]) => (
+            <div className="time-unit" key={label}><span key={value} className="time-number">{String(value).padStart(2, '0')}</span><span>{label}</span></div>
+          ))}
+        </div>
+      )}
       <p className="countdown-note">VINTAGE BRINGS<br />GOOD PEOPLE TOGETHER.</p>
     </section>
   )
