@@ -22,6 +22,7 @@ When implementing from a selected generated mock, treat that image as the source
 - Vendor form Polaroids depict indoor markets only; reuse `vendor-moment.jpg`, `rack-detail.jpg`, and `market-crowd.jpg`. Keep the contemporary editorial style and coral admission-ticket motif. Never show an outdoor market canopy in this flow.
 - Clearly label every vendor field Required or Optional, require 3–5 photos with three as the minimum, and keep the complete promotion commitment, important details, curation notice, and vendor agreement readable on mobile.
 - The Assembly arch is always upright and above the wordmark; never place it beneath text or invert it.
+- The Assembly header logo/brandmark must always render fully inside the header with safe top/bottom breathing room; never let the arch or wordmark appear clipped by the viewport or its container.
 
 Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts/prepare-sites-build.mjs`, and `tests/sites-worker.test.mjs` intact so the same local prototype can be handed to Sites. Before a Sites handoff, run `npm run build` and `npm run test:sites`; the build must leave `dist/client/index.html`, `dist/server/index.js`, and `dist/.openai/hosting.json`.
 
