@@ -25,7 +25,7 @@ When implementing from a selected generated mock, treat that image as the source
 - The Assembly header logo/brandmark must always render fully inside the header with safe top/bottom breathing room; never let the arch or wordmark appear clipped by the viewport or its container.
 - The small arch above `BECOME AN ASSEMBLY VENDOR` must show the complete arch with breathing room on all sides; crop only the wordmark below it.
 - The homepage heading reads `SEPTEMBER EDITION` at a moderate scale. The white countdown row reads `THE MARKET` / `STARTS IN`; keep a short coral brush underline starting under `STARTS IN`, and leave the former right-hand quote out.
-- The homepage motion combines a traveling rule under the heading, drawn event dividers, a soft-focus cascade through the date/venue/lineup, the 25+ underline before registration, a sequential countdown entrance, and a poster-style hero reveal. Trigger below-the-fold motion as it enters view, shorten delays on mobile, and honor reduced-motion settings.
+- Keep the header, event details, CTA, and countdown copy readable within roughly the first half-second after each section enters view. Use coordinated but varied motions for the heading rule, event dividers, date/venue/lineup, brush marks, clock, and poster-style hero reveal. Honor reduced-motion settings.
 
 Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts/prepare-sites-build.mjs`, and `tests/sites-worker.test.mjs` intact so the same local prototype can be handed to Sites. Before a Sites handoff, run `npm run build` and `npm run test:sites`; the build must leave `dist/client/index.html`, `dist/server/index.js`, and `dist/.openai/hosting.json`.
 

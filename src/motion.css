@@ -1,5 +1,10 @@
-/* One motion rhythm carries the heading into the market details and countdown. */
-@media (prefers-reduced-motion: no-preference) {
+/* Let the copy arrive promptly; give each surrounding element its own gesture. */
+@media (prefers-reduced-motion:no-preference) {
+  .site-header { animation-duration:.45s; }
+  .intro .intro-letter {
+    animation-duration:.43s;
+    animation-delay:calc(var(--letter-index) * .01s);
+  }
   .intro { position:relative; border-bottom-color:transparent; }
   .intro::after {
     content:"";
@@ -10,9 +15,9 @@
     height:2px;
     background:var(--ink);
     transform-origin:left;
-    animation:ruleTravel .9s cubic-bezier(.22,1,.36,1) .36s both;
+    animation:ruleTravel .48s cubic-bezier(.22,1,.36,1) .05s both;
   }
-  .intro p { animation:motionFocusIn .65s cubic-bezier(.22,1,.36,1) 1.05s both; }
+  .intro p { animation:quickFade .34s ease .08s both; }
 
   .event-system[data-event-reveal] > .event-system__date,
   .event-system[data-event-reveal] > .event-system__venue,
@@ -33,41 +38,45 @@
     transform-origin:top;
     transform:scaleY(0);
   }
-  .event-system.is-visible > .event-system__date::after { animation:gridRuleIn .56s cubic-bezier(.22,1,.36,1) .68s both; }
-  .event-system.is-visible > .event-system__venue::after { animation:gridRuleIn .56s cubic-bezier(.22,1,.36,1) .81s both; }
-  .event-system.is-visible > .event-system__market::after { animation:gridRuleIn .56s cubic-bezier(.22,1,.36,1) .94s both; }
+  .event-system.is-visible > .event-system__date::after,
+  .event-system.is-visible > .event-system__venue::after,
+  .event-system.is-visible > .event-system__market::after {
+    animation:gridRuleIn .38s cubic-bezier(.22,1,.36,1) .06s both;
+  }
 
   .event-system[data-event-reveal]:not(.is-visible) > :not(.event-system__cta) > *,
-  .event-system[data-event-reveal]:not(.is-visible) > .event-system__cta { opacity:0; transform:translateY(14px); filter:blur(6px); }
-  .event-system.is-visible > .event-system__date > * { animation:motionFocusIn .68s cubic-bezier(.22,1,.36,1) 1.1s both; }
-  .event-system.is-visible > .event-system__venue > * { animation:motionFocusIn .68s cubic-bezier(.22,1,.36,1) 1.23s both; }
-  .event-system.is-visible > .event-system__market > * { animation:motionFocusIn .68s cubic-bezier(.22,1,.36,1) 1.36s both; }
-  .event-system.is-visible > .event-system__cta { animation:motionFocusIn .58s cubic-bezier(.22,1,.36,1) 2.08s both; }
+  .event-system[data-event-reveal]:not(.is-visible) > .event-system__cta { opacity:0; }
+  .event-system.is-visible > .event-system__date > * { animation:eventUp .4s cubic-bezier(.22,1,.36,1) .04s both; }
+  .event-system.is-visible > .event-system__venue > * { animation:eventSide .4s cubic-bezier(.22,1,.36,1) .08s both; }
+  .event-system.is-visible > .event-system__market > * { animation:eventUnmask .43s cubic-bezier(.22,1,.36,1) .1s both; }
+  .event-system.is-visible > .event-system__cta { animation:eventButton .38s cubic-bezier(.22,1,.36,1) .14s both; }
   .event-system__underline path { stroke-dasharray:100; stroke-dashoffset:100; }
-  .event-system.is-visible .event-system__underline path:first-child { animation:brushDraw .52s cubic-bezier(.22,1,.36,1) 1.82s both; }
-  .event-system.is-visible .event-system__underline path:last-child { animation:brushDraw .43s cubic-bezier(.22,1,.36,1) 1.96s both; }
+  .event-system.is-visible .event-system__underline path:first-child { animation:brushDraw .38s cubic-bezier(.22,1,.36,1) .25s both; }
+  .event-system.is-visible .event-system__underline path:last-child { animation:brushDraw .34s cubic-bezier(.22,1,.36,1) .31s both; }
 
   .countdown[data-countdown-reveal]:not(.is-visible) .countdown-label,
-  .countdown[data-countdown-reveal]:not(.is-visible) .time-unit { opacity:0; transform:translateY(10px); }
-  .countdown.is-visible .countdown-label { animation:motionFocusIn .56s cubic-bezier(.22,1,.36,1) 2.08s both; }
-  .countdown.is-visible .time-unit { animation:motionFocusIn .56s cubic-bezier(.22,1,.36,1) 2.22s both; }
-  .countdown.is-visible .time-unit:nth-child(2) { animation-delay:2.3s; }
-  .countdown.is-visible .time-unit:nth-child(3) { animation-delay:2.38s; }
-  .countdown.is-visible .time-unit:nth-child(4) { animation-delay:2.46s; }
+  .countdown[data-countdown-reveal]:not(.is-visible) .time-unit { opacity:0; }
+  .countdown.is-visible .countdown-label { animation:eventSide .4s cubic-bezier(.22,1,.36,1) .06s both; }
+  .countdown.is-visible .time-unit { animation:clockReveal .42s cubic-bezier(.22,1,.36,1) .1s both; }
   .countdown-label__underlined img { clip-path:inset(0 100% 0 0); }
-  .countdown.is-visible .countdown-label__underlined img { animation:brushReveal .46s cubic-bezier(.22,1,.36,1) 2.54s both; }
+  .countdown.is-visible .countdown-label__underlined img { animation:brushReveal .34s cubic-bezier(.22,1,.36,1) .22s both; }
 
+  .hero { transform:translateY(12px); transition-duration:.55s; }
   .hero > img { clip-path:inset(100% 0 0); }
-  .hero.is-visible > img { animation:posterReveal 1s cubic-bezier(.22,1,.36,1) .12s both; }
+  .hero.is-visible > img { animation:posterReveal .68s cubic-bezier(.22,1,.36,1) .06s both; }
   .hero-caption, .hero-register { opacity:0; }
-  .hero.is-visible .hero-caption { animation:motionFocusIn .72s cubic-bezier(.22,1,.36,1) .58s both; }
-  .hero.is-visible .hero-register { animation:motionFadeIn .72s cubic-bezier(.22,1,.36,1) .77s both; }
+  .hero.is-visible .hero-caption { animation:eventUp .36s cubic-bezier(.22,1,.36,1) .13s both; }
+  .hero.is-visible .hero-register { animation:quickFade .36s ease .2s both; }
 }
 
 @keyframes ruleTravel { from { transform:scaleX(0); } to { transform:scaleX(1); } }
 @keyframes gridRuleIn { to { transform:scaleY(1); } }
-@keyframes motionFocusIn { from { opacity:0; transform:translateY(14px); filter:blur(6px); } to { opacity:1; transform:translateY(0); filter:blur(0); } }
-@keyframes motionFadeIn { from { opacity:0; filter:blur(6px); } to { opacity:1; filter:blur(0); } }
+@keyframes quickFade { from { opacity:0; } to { opacity:1; } }
+@keyframes eventUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes eventSide { from { opacity:0; transform:translateX(10px); } to { opacity:1; transform:translateX(0); } }
+@keyframes eventUnmask { from { opacity:.2; clip-path:inset(0 0 18% 0); transform:translateY(5px); } to { opacity:1; clip-path:inset(0 0 0 0); transform:translateY(0); } }
+@keyframes eventButton { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:scale(1); } }
+@keyframes clockReveal { from { opacity:0; clip-path:inset(0 0 42% 0); transform:translateY(-3px); } to { opacity:1; clip-path:inset(0 0 0 0); transform:translateY(0); } }
 @keyframes brushDraw { to { stroke-dashoffset:0; } }
 @keyframes brushReveal { to { clip-path:inset(0 0 0 0); } }
 @keyframes posterReveal { to { clip-path:inset(0 0 0 0); } }
@@ -88,19 +97,7 @@
     transform:scaleX(0);
     transform-origin:left;
   }
-  .event-system.is-visible > .event-system__date::after { animation:ruleTravel .45s ease .1s both; }
-  .event-system.is-visible > .event-system__venue::after { animation:ruleTravel .45s ease .24s both; }
-  .event-system.is-visible > .event-system__market::after { animation:ruleTravel .45s ease .38s both; }
-  .event-system.is-visible > .event-system__date > * { animation-delay:.12s; }
-  .event-system.is-visible > .event-system__venue > * { animation-delay:.26s; }
-  .event-system.is-visible > .event-system__market > * { animation-delay:.4s; }
-  .event-system.is-visible > .event-system__cta { animation-delay:1.08s; }
-  .event-system.is-visible .event-system__underline path:first-child { animation-delay:.88s; }
-  .event-system.is-visible .event-system__underline path:last-child { animation-delay:1s; }
-  .countdown.is-visible .countdown-label { animation-delay:.12s; }
-  .countdown.is-visible .time-unit { animation-delay:.27s; }
-  .countdown.is-visible .time-unit:nth-child(2) { animation-delay:.35s; }
-  .countdown.is-visible .time-unit:nth-child(3) { animation-delay:.43s; }
-  .countdown.is-visible .time-unit:nth-child(4) { animation-delay:.51s; }
-  .countdown.is-visible .countdown-label__underlined img { animation-delay:.56s; }
+  .event-system.is-visible > .event-system__date::after,
+  .event-system.is-visible > .event-system__venue::after,
+  .event-system.is-visible > .event-system__market::after { animation:ruleTravel .35s ease .06s both; }
 }
