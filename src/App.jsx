@@ -89,7 +89,7 @@ function Logo() {
 function Countdown() {
   const time = useCountdown()
   return (
-    <section className="countdown" aria-label="Countdown to the next market">
+    <section className="countdown" aria-label="Countdown to the next market" data-countdown-reveal>
       <p className="countdown-label">
         <span>THE MARKET</span>
         <span className="countdown-label__underlined">STARTS IN<img src="/assets/countdown-brush-underline.webp" alt="" aria-hidden="true" /></span>
@@ -216,7 +216,7 @@ export function App() {
   useEffect(() => {
     const root = siteRef.current
     if (!root) return undefined
-    const nodes = root.querySelectorAll('[data-reveal]')
+    const nodes = root.querySelectorAll('[data-reveal], [data-event-reveal], [data-countdown-reveal]')
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target) } })
     }, { threshold: 0.14 })
@@ -310,7 +310,7 @@ export function App() {
             <p>CURATED VINTAGE MARKETS.<br />REAL PEOPLE. BRIGHTER TOMORROWS.</p>
           </section>
 
-          <section className="event-system" aria-label="Upcoming event details">
+          <section className="event-system" aria-label="Upcoming event details" data-event-reveal>
             <div className="event-system__date">
               <div className="event-system__heading">{nextMarket.date.toUpperCase()}</div>
               <div className="event-system__meta">{nextMarket.time}</div>
@@ -346,8 +346,8 @@ export function App() {
                 <div className="event-system__count">
                   <span>25+</span>
                   <svg className="event-system__underline" viewBox="0 0 126 26" aria-hidden="true">
-                    <path d="M6 12 C25 8 49 9 70 8 C88 7 105 8 119 7" />
-                    <path d="M22 21 C41 16 66 17 98 14" />
+                    <path pathLength="100" d="M6 12 C25 8 49 9 70 8 C88 7 105 8 119 7" />
+                    <path pathLength="100" d="M22 21 C41 16 66 17 98 14" />
                   </svg>
                 </div>
                 <div className="event-system__seller-copy">
