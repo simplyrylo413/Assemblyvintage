@@ -23,6 +23,7 @@ When implementing from a selected generated mock, treat that image as the source
 - Clearly label every vendor field Required or Optional, require 3–5 photos with three as the minimum, and keep the complete promotion commitment, important details, curation notice, and vendor agreement readable on mobile.
 - The Assembly arch is always upright and above the wordmark; never place it beneath text or invert it.
 - The Assembly header logo/brandmark must always render fully inside the header with safe top/bottom breathing room; never let the arch or wordmark appear clipped by the viewport or its container.
+- The small arch above `BECOME AN ASSEMBLY VENDOR` must show the complete arch with breathing room on all sides; crop only the wordmark below it.
 - The homepage heading reads `SEPTEMBER EDITION` at a moderate scale. The white countdown row reads `THE MARKET` / `STARTS IN`; keep a short coral brush underline starting under `STARTS IN`, and leave the former right-hand quote out.
 - The homepage motion combines a traveling rule under the heading, drawn event dividers, a soft-focus cascade through the date/venue/lineup, the 25+ underline before registration, a sequential countdown entrance, and a poster-style hero reveal. Trigger below-the-fold motion as it enters view, shorten delays on mobile, and honor reduced-motion settings.
 
