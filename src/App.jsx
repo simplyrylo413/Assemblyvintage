@@ -181,18 +181,18 @@ function RegistrationBlueprintArt() {
   return (
     <div className="registration-blueprint" aria-hidden="true">
       <svg className="registration-blueprint__hanger" viewBox="0 0 180 100">
-        <path d="M91 28c0-13 19-12 19-25 0-9-7-15-16-15-8 0-14 4-17 10" />
-        <path d="M91 28 25 68c-6 4-3 13 4 13h124c7 0 10-9 4-13L91 28Z" />
-        <path d="M30 77h122" />
+        <path pathLength="1" d="M91 28c0-13 19-12 19-25 0-9-7-15-16-15-8 0-14 4-17 10" />
+        <path pathLength="1" d="M91 28 25 68c-6 4-3 13 4 13h124c7 0 10-9 4-13L91 28Z" />
+        <path pathLength="1" d="M30 77h122" />
       </svg>
       <svg className="registration-blueprint__garment" viewBox="0 0 220 360">
-        <path d="M91 16c-9 8-19 19-25 34l-17 46 32 21-14 211h109l-14-211 32-21-17-46c-6-15-16-26-25-34-16 12-45 12-61 0Z" />
-        <path d="M81 117h81M71 175h101M100 31l-19 86M143 31l19 86" />
+        <path pathLength="1" d="M91 16c-9 8-19 19-25 34l-17 46 32 21-14 211h109l-14-211 32-21-17-46c-6-15-16-26-25-34-16 12-45 12-61 0Z" />
+        <path pathLength="1" d="M81 117h81M71 175h101M100 31l-19 86M143 31l19 86" />
         <path className="dash" d="M108 118 88 327M135 118l20 209" />
       </svg>
       <svg className="registration-blueprint__bag" viewBox="0 0 170 210">
-        <path d="M43 72h85l20 117H22L43 72Z" />
-        <path d="M55 72c0-46 62-46 62 0" />
+        <path pathLength="1" d="M43 72h85l20 117H22L43 72Z" />
+        <path pathLength="1" d="M55 72c0-46 62-46 62 0" />
         <path className="dash" d="M34 165h103M49 93h73" />
       </svg>
       <span className="registration-blueprint__note">STYLE<br />COMMUNITY<br />A BRIGHTER<br />TOMORROW</span>
@@ -452,6 +452,7 @@ export function App() {
 
               {registered ? (
                 <div className="register-modal__success">
+                  <span className="register-modal__stamp" aria-hidden="true"><small>ASSEMBLY</small><strong>SPOT SAVED</strong></span>
                   <h2>You’re in.</h2>
                   <p className="register-modal__dek">Your spot at Assembly is saved.</p>
                   <div className="register-modal__details">
