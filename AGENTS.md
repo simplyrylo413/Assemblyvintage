@@ -26,6 +26,7 @@ When implementing from a selected generated mock, treat that image as the source
 - The small arch above `BECOME AN ASSEMBLY VENDOR` must show the complete arch with breathing room on all sides; crop only the wordmark below it.
 - The homepage heading reads `SEPTEMBER EDITION` at a moderate scale. The white countdown row reads `THE MARKET` / `STARTS IN`; keep a short coral brush underline starting under `STARTS IN`, and leave the former right-hand quote out.
 - On the main page, fade text and content in over one second, with the heading rule, event dividers, and brush underlines drawing over two seconds. Keep related text entering together with only slight offsets. Honor reduced-motion settings.
+- Use the supplied pale blue `#c0dceb` for every former lime accent, including registration buttons, hover treatments, play controls, modal close controls, and the mobile menu. Keep the existing other blues and coral accents distinct.
 - The registration modal animates its existing blueprint illustrations once on opening, draws a brief coral stroke under a focused form field, and stamps the successful registration. Keep the form visible immediately and all decorative entrance motion short.
 
 Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts/prepare-sites-build.mjs`, and `tests/sites-worker.test.mjs` intact so the same local prototype can be handed to Sites. Before a Sites handoff, run `npm run build` and `npm run test:sites`; the build must leave `dist/client/index.html`, `dist/server/index.js`, and `dist/.openai/hosting.json`.
