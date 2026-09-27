@@ -445,9 +445,8 @@ export function App() {
             </div>
             <div className="site-footer__bottom">
               <a className="site-footer__instagram" href="https://www.instagram.com/assemblyvintageco/" target="_blank" rel="noopener noreferrer" aria-label="Assembly Vintage on Instagram (opens in a new tab)">
-                <span className="site-footer__instagram-icon"><InstagramLogo size={25} weight="regular" aria-hidden="true" /></span>
-                <span className="site-footer__instagram-copy"><small>FOLLOW THE MARKET</small><strong>@ASSEMBLYVINTAGECO</strong></span>
-                <ArrowRight size={18} aria-hidden="true" />
+                <InstagramLogo size={23} weight="bold" aria-hidden="true" />
+                <span>INSTAGRAM</span>
               </a>
               <nav className="site-footer__links" aria-label="Footer links"><a href="#top">CONTACT</a><a href="#top">TERMS</a></nav>
               <small className="site-footer__copyright">© 2026 ASSEMBLY VINTAGE MARKET</small>
