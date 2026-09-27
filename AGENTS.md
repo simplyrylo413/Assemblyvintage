@@ -25,6 +25,7 @@ When implementing from a selected generated mock, treat that image as the source
 - The Assembly header logo/brandmark must always render fully inside the header with safe top/bottom breathing room; never let the arch or wordmark appear clipped by the viewport or its container.
 - The small arch above `BECOME AN ASSEMBLY VENDOR` must show the complete arch with breathing room on all sides; crop only the wordmark below it.
 - The homepage heading reads `SEPTEMBER EDITION` at a moderate scale. The white countdown row reads `THE MARKET` / `STARTS IN`; keep a short coral brush underline starting under `STARTS IN`, and leave the former right-hand quote out.
+- The short statement beside the `SEPTEMBER EDITION` heading reads `A CURATED VINTAGE MARKET. GOOD TASTE HAS A GATHERING PLACE. LET'S ASSEMBLE.` Arrange it over three lines.
 - On the main page, fade text and content in over one second, with the heading rule, event dividers, and brush underlines drawing over two seconds. Keep related text entering together with only slight offsets. Honor reduced-motion settings.
 - Use the supplied pale blue `#c0dceb` for every former lime accent, including registration buttons, hover treatments, play controls, modal close controls, and the mobile menu. Keep the existing other blues and coral accents distinct.
 - The footer links to `https://www.instagram.com/assemblyvintageco/` through a visible Instagram icon and handle. Keep the footer's coral background, Assembly logo, and short brand statement.

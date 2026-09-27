@@ -307,7 +307,7 @@ export function App() {
                 </span>
               ))}
             </h1>
-            <p>CURATED VINTAGE MARKETS.<br />REAL PEOPLE. BRIGHTER TOMORROWS.</p>
+            <p>A CURATED VINTAGE MARKET.<br />GOOD TASTE HAS A GATHERING PLACE.<br />LET'S ASSEMBLE.</p>
           </section>
 
           <section className="event-system" aria-label="Upcoming event details" data-event-reveal>
