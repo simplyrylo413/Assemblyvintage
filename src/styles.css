@@ -56,10 +56,11 @@ button,input { font:inherit; } button,a { -webkit-tap-highlight-color:transparen
 .site-footer__top{display:flex;align-items:flex-start;justify-content:space-between;gap:30px}
 .site-footer__top p{margin:5px 0 0;font-size:11px;line-height:1.65;letter-spacing:.16em;font-weight:700;text-align:right}
 .site-footer__bottom{padding-top:17px;border-top:1px solid rgba(17,17,17,.7);display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:clamp(25px,4vw,65px)}
-.site-footer__instagram{width:max-content;max-width:100%;display:inline-flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.13em}
-.site-footer__instagram span{border-bottom:1px solid currentColor;padding-bottom:2px}
-.site-footer__instagram>svg{flex:none;transition:transform .25s ease}
-.site-footer__instagram:hover>svg,.site-footer__instagram:focus-visible>svg{transform:rotate(-8deg) scale(1.1)}
+.site-footer__social{display:flex;align-items:center;flex-wrap:wrap;gap:12px clamp(22px,3vw,42px)}
+.site-footer__social-link{width:max-content;max-width:100%;display:inline-flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.13em}
+.site-footer__social-link span{border-bottom:1px solid currentColor;padding-bottom:2px}
+.site-footer__social-link>svg{flex:none;transition:transform .25s ease}
+.site-footer__social-link:hover>svg,.site-footer__social-link:focus-visible>svg{transform:rotate(-8deg) scale(1.1)}
 .site-footer__links{display:flex;align-items:center;gap:27px}
 .site-footer__links a{color:inherit;font-size:10px;letter-spacing:.15em;font-weight:700;text-decoration:none;border-bottom:1px solid}
 .site-footer__copyright{font-size:9px;letter-spacing:.12em;white-space:nowrap}
@@ -131,7 +132,7 @@ button,input { font:inherit; } button,a { -webkit-tap-highlight-color:transparen
   .site-footer__top{flex-direction:column;gap:18px}
   .site-footer__top p{text-align:left}
   .site-footer__bottom{grid-template-columns:1fr 1fr;gap:18px}
-  .site-footer__instagram{grid-column:1/-1}
+  .site-footer__social{grid-column:1/-1}
   .site-footer__links{padding:0;align-self:center}
   .site-footer__copyright{padding:0;align-self:center;text-align:right;white-space:normal;line-height:1.4}
   .modal-backdrop{padding:10px}

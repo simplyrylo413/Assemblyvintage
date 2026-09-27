@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, CalendarBlank, CaretDown, Check, InstagramLogo, List, MapPin, UploadSimple, X } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowRight, CalendarBlank, CaretDown, Check, EnvelopeSimple, InstagramLogo, List, MapPin, UploadSimple, X } from '@phosphor-icons/react'
 import './styles.css'
 import { VendorLookbook } from './VendorLookbook.jsx'
 
@@ -444,11 +444,15 @@ export function App() {
               <p>CURATED IN SOUTH FLORIDA.<br />BUILT FOR GOOD PEOPLE.</p>
             </div>
             <div className="site-footer__bottom">
-              <a className="site-footer__instagram" href="https://www.instagram.com/assemblyvintageco/" target="_blank" rel="noopener noreferrer" aria-label="Assembly Vintage on Instagram (opens in a new tab)">
-                <InstagramLogo size={23} weight="bold" aria-hidden="true" />
-                <span>INSTAGRAM</span>
-              </a>
-              <nav className="site-footer__links" aria-label="Footer links"><a href="#top">CONTACT</a><a href="#top">TERMS</a></nav>
+              <div className="site-footer__social">
+                <a className="site-footer__social-link" href="https://www.instagram.com/assemblyvintageco/" target="_blank" rel="noopener noreferrer" aria-label="Assembly Vintage on Instagram (opens in a new tab)">
+                  <InstagramLogo size={23} weight="bold" aria-hidden="true" /><span>INSTAGRAM</span>
+                </a>
+                <a className="site-footer__social-link" href="mailto:assemblyvintageco@gmail.com" aria-label="Email Assembly Vintage at assemblyvintageco@gmail.com">
+                  <EnvelopeSimple size={23} weight="bold" aria-hidden="true" /><span>EMAIL</span>
+                </a>
+              </div>
+              <nav className="site-footer__links" aria-label="Footer links"><a href="mailto:assemblyvintageco@gmail.com">CONTACT</a><a href="#top">TERMS</a></nav>
               <small className="site-footer__copyright">© 2026 ASSEMBLY VINTAGE MARKET</small>
             </div>
           </footer>
