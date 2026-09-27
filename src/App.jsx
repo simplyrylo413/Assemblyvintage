@@ -448,8 +448,8 @@ function HomePage() {
           <SiteHeader onNavigate={scrollTo} />
 
           <section className="intro" id="next-market">
-            <h1 aria-label="September edition">
-              {['SEPTEMBER', 'EDITION'].map((word, wordIndex) => (
+            <h1 aria-label="October edition">
+              {['OCTOBER', 'EDITION'].map((word, wordIndex) => (
                 <span className="intro-word" aria-hidden="true" key={word}>
                   {[...word].map((letter, index) => (
                     <span className="intro-letter" style={{ '--letter-index': index + (wordIndex ? 9 : 0) }} key={`${word}-${index}`}>{letter}</span>
