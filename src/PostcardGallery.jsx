@@ -13,12 +13,11 @@ const tilts = ['-4deg', '2.5deg', '-2deg', '3deg']
 const drops = ['12px', '-6px', '9px', '-3px']
 
 export function PostcardGallery() {
-  const [paused, setPaused] = useState(false)
   const [selected, setSelected] = useState(null)
   const [duration, setDuration] = useState(32)
   const stripRef = useRef(null)
   const closeRef = useRef(null)
-  const resumeRef = useRef(null)
+  const openerRef = useRef(null)
 
   useEffect(() => {
     const strip = stripRef.current
@@ -34,8 +33,7 @@ export function PostcardGallery() {
     if (selected === null) return undefined
     const handleKey = (event) => {
       if (event.key === 'Escape') {
-        setSelected(null)
-        window.requestAnimationFrame(() => resumeRef.current?.focus())
+        closePhoto()
       }
       if (event.key === 'ArrowLeft') setSelected((index) => (index + photos.length - 1) % photos.length)
       if (event.key === 'ArrowRight') setSelected((index) => (index + 1) % photos.length)
@@ -51,7 +49,7 @@ export function PostcardGallery() {
 
   const closePhoto = () => {
     setSelected(null)
-    window.requestAnimationFrame(() => resumeRef.current?.focus())
+    window.requestAnimationFrame(() => openerRef.current?.focus({ preventScroll: true }))
   }
 
   const renderStrip = (duplicate) => (
@@ -64,7 +62,7 @@ export function PostcardGallery() {
           tabIndex={duplicate ? -1 : undefined}
           aria-label={`Open gallery photo ${index + 1}: ${photo.alt}`}
           style={{ '--tilt': tilts[index], '--drop': drops[index] }}
-          onClick={() => { setPaused(true); setSelected(index) }}
+          onClick={(event) => { openerRef.current = event.currentTarget; setSelected(index) }}
         >
           <img src={photo.image} alt="" loading={duplicate ? 'lazy' : 'eager'} decoding="async" />
         </button>
@@ -73,14 +71,13 @@ export function PostcardGallery() {
   )
 
   return <>
-    <section className={`postcard-gallery${paused ? ' is-paused' : ''}`} aria-label="Assembly market photo gallery" data-reveal>
+    <section className={`postcard-gallery${selected !== null ? ' is-paused' : ''}`} aria-label="Assembly market photo gallery" data-reveal>
       <div className="postcard-gallery__viewport">
         <div className="postcard-gallery__track" style={{ '--scroll-duration': `${duration}s` }}>
           {renderStrip(false)}
           {renderStrip(true)}
         </div>
       </div>
-      {paused && <button className="postcard-gallery__resume" type="button" ref={resumeRef} onClick={() => setPaused(false)}>RESUME SCROLL <ArrowRight size={16} aria-hidden="true" /></button>}
     </section>
 
     {selected !== null && <div className="postcard-lightbox" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closePhoto() }}>

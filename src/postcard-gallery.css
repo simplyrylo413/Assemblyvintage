@@ -62,33 +62,13 @@
   object-fit: cover;
 }
 
-.postcard-gallery__resume {
-  position: absolute;
-  right: 4%;
-  bottom: clamp(40px, 5vw, 80px);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 0;
-  border: 0;
-  border-bottom: 1px solid var(--ink);
-  background: var(--paper);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .15em;
-  cursor: pointer;
-}
-
-.postcard-gallery__resume:hover svg { transform: translateX(5px); }
-.postcard-gallery__resume svg { transition: transform .25s ease; }
-
 .postcard-lightbox {
   position: fixed;
   z-index: 110;
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 34px;
+  padding: 16px;
   background: rgba(10, 10, 10, .9);
   animation: postcard-fade-in .25s ease both;
 }
@@ -98,14 +78,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(100%, 880px);
-  height: min(90dvh, 950px);
+  width: min(100%, 1200px);
+  height: min(96dvh, 1100px);
 }
 
 .postcard-lightbox__dialog > img {
   display: block;
   max-width: calc(100% - 112px);
-  max-height: calc(100% - 45px);
+  max-height: calc(100% - 24px);
   border: 8px solid white;
   border-bottom-width: 20px;
   object-fit: contain;
@@ -161,10 +141,9 @@
   .postcard-gallery { padding-bottom: 80px; }
   .postcard-gallery__viewport { padding: 40px 0 60px; }
   .postcard-gallery__card { width: 68vw; margin-right: -24px; }
-  .postcard-gallery__resume { right: 20px; bottom: 32px; }
   .postcard-lightbox { padding: 12px; }
-  .postcard-lightbox__dialog { width: 100%; height: 90dvh; }
-  .postcard-lightbox__dialog > img { max-width: calc(100% - 68px); max-height: calc(100% - 55px); border-width: 5px; border-bottom-width: 14px; }
+  .postcard-lightbox__dialog { width: 100%; height: 96dvh; }
+  .postcard-lightbox__dialog > img { max-width: calc(100% - 68px); max-height: calc(100% - 34px); border-width: 5px; border-bottom-width: 14px; }
   .postcard-lightbox__arrow { width: 35px; height: 42px; }
   .postcard-lightbox__dialog > p { font-size: 8px; white-space: nowrap; }
 }
@@ -174,5 +153,4 @@
   .postcard-gallery__track { animation: none !important; transform: none !important; will-change: auto; }
   .postcard-gallery__set:nth-child(2) { display: none; }
   .postcard-gallery__card { scroll-snap-align: center; }
-  .postcard-gallery__resume { display: none; }
 }
