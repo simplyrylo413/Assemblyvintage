@@ -82,8 +82,61 @@ function useCountdown() {
   return time
 }
 
-function Logo() {
-  return <a className="logo" href="#top" aria-label="Assembly home"><img src="/assets/assembly-logo-final.png" alt="Assembly" /></a>
+function Logo({ href = '#top' }) {
+  return <a className="logo" href={href} aria-label="Assembly home"><img src="/assets/assembly-logo-final.png" alt="Assembly" /></a>
+}
+
+const navigation = [
+  ['NEXT MARKET', '#next-market'],
+  ['PAST MARKETS', '#past-markets'],
+  ['VENDORS', '#vendor'],
+  ['FAQ', '#faq'],
+  ['ABOUT', '#about'],
+]
+
+function SiteHeader({ onNavigate, homeHref = '#top' }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const navigate = (id) => {
+    setMenuOpen(false)
+    onNavigate(id)
+  }
+
+  return <>
+    <header className="site-header">
+      <Logo href={homeHref} />
+      <nav className="desktop-nav" aria-label="Primary navigation">
+        {navigation.map(([label, id], index) => <button className={index === 0 ? 'nav-next' : undefined} type="button" onClick={() => navigate(id)} key={id}>{label}</button>)}
+      </nav>
+      <button className="menu-button" type="button" onClick={() => setMenuOpen(true)} aria-label="Open navigation"><List size={30} /></button>
+    </header>
+    <div className={`mobile-menu ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
+      <button type="button" onClick={() => setMenuOpen(false)} aria-label="Close navigation"><X size={28} /></button>
+      <nav aria-label="Mobile navigation">
+        {navigation.map(([label, id]) => <button type="button" onClick={() => navigate(id)} key={id}>{label.toLowerCase().replace(/\b\w/g, (character) => character.toUpperCase())}</button>)}
+      </nav>
+    </div>
+  </>
+}
+
+function SiteFooter({ homeHref = '#top', isTerms = false }) {
+  return <footer className="site-footer" id={isTerms ? undefined : 'about'}>
+    <div className="site-footer__top">
+      <Logo href={homeHref} />
+      <p>CURATED IN SOUTH FLORIDA.<br />BUILT FOR GOOD PEOPLE.</p>
+    </div>
+    <div className="site-footer__bottom">
+      <div className="site-footer__social">
+        <a className="site-footer__social-link" href="https://www.instagram.com/assemblyvintageco/" target="_blank" rel="noopener noreferrer" aria-label="Assembly Vintage on Instagram (opens in a new tab)">
+          <InstagramLogo size={23} weight="bold" aria-hidden="true" /><span>INSTAGRAM</span>
+        </a>
+        <a className="site-footer__social-link" href="mailto:assemblyvintageco@gmail.com" aria-label="Email Assembly Vintage at assemblyvintageco@gmail.com">
+          <EnvelopeSimple size={23} weight="bold" aria-hidden="true" /><span>EMAIL</span>
+        </a>
+      </div>
+      <nav className="site-footer__links" aria-label="Footer links"><a href="mailto:assemblyvintageco@gmail.com">CONTACT</a><a href="/terms" aria-current={isTerms ? 'page' : undefined}>TERMS</a></nav>
+      <small className="site-footer__copyright">© 2026 ASSEMBLY VINTAGE MARKET</small>
+    </div>
+  </footer>
 }
 
 function Countdown() {
@@ -201,8 +254,102 @@ function RegistrationBlueprintArt() {
   )
 }
 
+const termsSections = [
+  {
+    title: 'The site',
+    paragraphs: [
+      'These Terms & Conditions apply to your use of assemblyvintageco.com and its event registration and vendor application features. By using the site or submitting a form, you agree to these terms. If you do not agree, please do not use the site.',
+      'Use the site lawfully and provide accurate information when you register or apply. Do not interfere with the site, submit misleading material, or use its content for commercial purposes without our permission.',
+    ],
+  },
+  {
+    title: 'Events & admission',
+    paragraphs: [
+      'Each market has its own date, location, admission details, and capacity. Some events may be free and others may require a paid ticket or other admission arrangement. Check the specific event listing and checkout, if any, for the current price, mandatory fees, what is included, and any event-specific policies before you commit.',
+      'Registering your interest or submitting an attendee form does not, by itself, guarantee admission to every event. Event dates, hours, venues, programming, participating vendors, vendor count, amenities, perks, and promotions may vary or change. We will communicate material changes through the channels available to us. If an event is canceled or rescheduled, any applicable ticket terms and refund information will be provided for that event, subject to applicable law.',
+    ],
+  },
+  {
+    title: 'Vendors',
+    paragraphs: [
+      'A vendor application is a request for consideration, not a confirmed booking. Space sizes, prices, available spots, market requirements, and benefits are specific to the event and may change. We may curate the vendor mix and accept or decline applications in our discretion, subject to applicable law.',
+      'If you are selected, the event-specific vendor agreement and payment instructions provided to you will govern your participation, including deadlines, cancellation terms, and any promotional commitments. Those details are not promised by this general website page.',
+    ],
+  },
+  {
+    title: 'Perks & promotions',
+    paragraphs: [
+      'A giveaway, discount, gift, early access offer, or other promotion applies only when expressly offered for a particular event. Eligibility, quantity, timing, redemption rules, and any additional terms will be stated with that offer. An offer from one market does not automatically carry over to another.',
+    ],
+  },
+  {
+    title: 'Email & information',
+    paragraphs: [
+      'We use information you submit to respond to your inquiry, process an event registration or vendor application, and communicate about the relevant event. If you separately opt in to marketing emails, we may also send news about future markets and offers; you can unsubscribe using the instructions in those emails. Please do not send sensitive personal or payment information through an ordinary contact email.',
+    ],
+  },
+  {
+    title: 'Content & outside services',
+    paragraphs: [
+      'The Assembly name, artwork, photography, copy, and other site content belong to their respective owners. You may view and share a link to the site for personal use, but may not reproduce its content for commercial use without permission.',
+      'The site may link to third-party platforms for tickets, social media, maps, or other services. Their own terms and privacy practices apply when you use them. Purchases from individual vendors are between you and that vendor unless the applicable event or checkout expressly says otherwise.',
+    ],
+  },
+  {
+    title: 'Availability & responsibility',
+    paragraphs: [
+      'We aim to keep the site and event information accurate and available, but technical interruptions and changes can occur. To the extent allowed by law, we are not responsible for losses caused by an interruption to the site or by third-party services outside our control. Nothing in these terms limits rights or remedies that cannot legally be limited.',
+    ],
+  },
+  {
+    title: 'Updates & contact',
+    paragraphs: [
+      'We may update these terms as the site and markets evolve. The effective date below identifies the version posted here. Changes apply going forward when published, unless applicable law requires otherwise.',
+    ],
+  },
+]
+
+function TermsPage() {
+  return <div className="app-shell">
+    <main className="site-frame">
+      <div className="site" id="top">
+        <SiteHeader homeHref="/" onNavigate={(id) => { window.location.href = `/${id}` }} />
+        <div className="terms-page">
+          <div className="terms-page__intro">
+            <p className="terms-page__eyebrow">ASSEMBLY VINTAGE MARKET <span aria-hidden="true">/</span> THE DETAILS</p>
+            <h1>Terms <em>&</em><br />Conditions<span className="terms-page__period">.</span></h1>
+            <div className="terms-page__intro-bottom">
+              <p>A few clear ground rules for using our site, attending a market, and applying to vend.</p>
+              <span>EFFECTIVE SEPTEMBER 26, 2026</span>
+            </div>
+          </div>
+          <div className="terms-page__body">
+            <aside className="terms-page__side" aria-label="Terms overview">
+              <span className="mini-arch" aria-hidden="true" />
+              <p>GOOD TO<br /><em>know.</em></p>
+              <a href="/">BACK TO THE MARKET <ArrowRight size={16} aria-hidden="true" /></a>
+            </aside>
+            <div className="terms-page__sections">
+              {termsSections.map((section, index) => <section className="terms-page__section" key={section.title}>
+                <span className="terms-page__number">{String(index + 1).padStart(2, '0')}</span>
+                <div><h2>{section.title}</h2>{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  {index === termsSections.length - 1 && <p>Questions about these terms or a specific event? Email <a href="mailto:assemblyvintageco@gmail.com">assemblyvintageco@gmail.com</a>.</p>}
+                </div>
+              </section>)}
+            </div>
+          </div>
+        </div>
+        <SiteFooter homeHref="/" isTerms />
+      </div>
+    </main>
+  </div>
+}
+
 export function App() {
-  const [menuOpen, setMenuOpen] = useState(false)
+  return window.location.pathname.replace(/\/+$/, '') === '/terms' ? <TermsPage /> : <HomePage />
+}
+
+function HomePage() {
   const [registerOpen, setRegisterOpen] = useState(false)
   const [registered, setRegistered] = useState(false)
   const [registrationSubmitting, setRegistrationSubmitting] = useState(false)
@@ -224,9 +371,15 @@ export function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const id = window.location.hash
+    if (id && /^#[a-z-]+$/.test(id)) {
+      window.requestAnimationFrame(() => siteRef.current?.querySelector(id)?.scrollIntoView())
+    }
+  }, [])
+
   const scrollTo = (id) => {
     siteRef.current?.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
-    setMenuOpen(false)
   }
 
   const closeRegistration = () => {
@@ -279,23 +432,7 @@ export function App() {
     <div className="app-shell">
       <main className="site-frame" ref={siteRef}>
         <div className="site" id="top">
-          <header className="site-header">
-            <Logo />
-            <nav className="desktop-nav" aria-label="Primary navigation">
-              <button className="nav-next" type="button" onClick={() => scrollTo('#next-market')}>NEXT MARKET</button>
-              <button type="button" onClick={() => scrollTo('#past-markets')}>PAST MARKETS</button>
-              <button type="button" onClick={() => scrollTo('#vendor')}>VENDORS</button>
-              <button type="button" onClick={() => scrollTo('#faq')}>FAQ</button>
-              <button type="button" onClick={() => scrollTo('#about')}>ABOUT</button>
-            </nav>
-            <button className="menu-button" type="button" onClick={() => setMenuOpen(true)} aria-label="Open navigation"><List size={30} /></button>
-          </header>
-          <div className={`mobile-menu ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
-            <button type="button" onClick={() => setMenuOpen(false)} aria-label="Close navigation"><X size={28} /></button>
-            <nav aria-label="Mobile navigation">
-              <button type="button" onClick={() => scrollTo('#next-market')}>Next Market</button><button type="button" onClick={() => scrollTo('#past-markets')}>Past Markets</button><button type="button" onClick={() => scrollTo('#vendor')}>Vendors</button><button type="button" onClick={() => scrollTo('#faq')}>FAQ</button><button type="button" onClick={() => scrollTo('#about')}>About</button>
-            </nav>
-          </div>
+          <SiteHeader onNavigate={scrollTo} />
 
           <section className="intro" id="next-market">
             <h1 aria-label="September edition">
@@ -438,24 +575,7 @@ export function App() {
               })}
             </div>
           </section>
-          <footer className="site-footer" id="about">
-            <div className="site-footer__top">
-              <Logo />
-              <p>CURATED IN SOUTH FLORIDA.<br />BUILT FOR GOOD PEOPLE.</p>
-            </div>
-            <div className="site-footer__bottom">
-              <div className="site-footer__social">
-                <a className="site-footer__social-link" href="https://www.instagram.com/assemblyvintageco/" target="_blank" rel="noopener noreferrer" aria-label="Assembly Vintage on Instagram (opens in a new tab)">
-                  <InstagramLogo size={23} weight="bold" aria-hidden="true" /><span>INSTAGRAM</span>
-                </a>
-                <a className="site-footer__social-link" href="mailto:assemblyvintageco@gmail.com" aria-label="Email Assembly Vintage at assemblyvintageco@gmail.com">
-                  <EnvelopeSimple size={23} weight="bold" aria-hidden="true" /><span>EMAIL</span>
-                </a>
-              </div>
-              <nav className="site-footer__links" aria-label="Footer links"><a href="mailto:assemblyvintageco@gmail.com">CONTACT</a><a href="#top">TERMS</a></nav>
-              <small className="site-footer__copyright">© 2026 ASSEMBLY VINTAGE MARKET</small>
-            </div>
-          </footer>
+          <SiteFooter />
         </div>
       </main>
 
