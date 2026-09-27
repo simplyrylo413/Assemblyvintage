@@ -186,6 +186,8 @@ button,input { font:inherit; } button,a { -webkit-tap-highlight-color:transparen
 
 .register-error{grid-column:1/-1;margin:0;padding:11px 13px;border:1px solid var(--ink);background:rgba(255,255,255,.62);font-size:11px;line-height:1.35;font-weight:650}
 .register-modal form .primary-button:disabled{opacity:.58;cursor:wait}
+.register-modal form .registration-media-consent{padding:10px 12px;font-size:10px;line-height:1.35}
+.register-modal form .registration-media-consent strong{margin-bottom:2px;font-size:10px}
 
 
 /* Blueprint registration modal — selected Assembly concept */

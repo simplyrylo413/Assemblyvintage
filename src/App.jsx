@@ -284,6 +284,13 @@ const termsSections = [
     ],
   },
   {
+    title: 'Photography & recording at events',
+    paragraphs: [
+      'Assembly may photograph, film, and record audio at its markets. By checking the required consent box when registering and attending, you authorize Assembly Vintage Market to use your image, likeness, and voice from the event in its website, social media, advertising, and other promotional materials, without compensation. This consent is required to register and enter the event; if you do not consent, you cannot attend.',
+      'If you register or bring a minor, you must be that minor’s parent or legal guardian to give this consent on their behalf. Please contact us before the event with questions about photography or recording.',
+    ],
+  },
+  {
     title: 'Content & outside services',
     paragraphs: [
       'The Assembly name, artwork, photography, copy, and other site content belong to their respective owners. You may view and share a link to the site for personal use, but may not reproduce its content for commercial use without permission.',
@@ -399,11 +406,17 @@ function HomePage() {
     setRegistrationSubmitting(true)
 
     const formData = new FormData(event.currentTarget)
+    if (formData.get('mediaConsent') !== 'accepted') {
+      setRegistrationError('Please accept the required photo and video consent to register.')
+      setRegistrationSubmitting(false)
+      return
+    }
     const payload = {
       firstName: String(formData.get('firstName') || '').trim(),
       lastName: String(formData.get('lastName') || '').trim(),
       email: String(formData.get('email') || '').trim(),
       emailMarketingConsent: formData.get('emailMarketingConsent') === 'subscribed',
+      mediaConsent: true,
       eventId: nextMarket.id,
     }
 
@@ -623,6 +636,7 @@ function HomePage() {
                     <label>Email<input type="email" name="email" autoComplete="email" required /></label>
                     {registrationError && <p className="register-error" role="alert">{registrationError}</p>}
                     <label className="registration-opt-in"><input type="checkbox" name="emailMarketingConsent" value="subscribed" defaultChecked /><span><strong>Keep me in the vintage loop.</strong> Send me upcoming market announcements, first dibs, and other good vintage news. Unsubscribe anytime.</span></label>
+                    <label className="registration-opt-in registration-media-consent"><input type="checkbox" name="mediaConsent" value="accepted" required /><span><strong>Photo & video consent · required</strong>I consent to Assembly Vintage Market photographing, filming, and recording me at this event and using my image, likeness, and voice on its website, social media, and in advertising and other promotions, without compensation. If I bring a minor, I confirm I am their parent or legal guardian and consent on their behalf. I understand consent is required to register and attend.</span></label>
                     <button className="primary-button" type="submit" disabled={registrationSubmitting}>
                       {registrationSubmitting ? 'REGISTERING…' : 'REGISTER FREE'} {!registrationSubmitting && <ArrowRight size={17} />}
                     </button>

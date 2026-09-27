@@ -2,6 +2,7 @@ declare const Netlify: { env: { get(name: string): string | undefined } }
 
 const KLAVIYO_REVISION = '2026-07-15'
 const KLAVIYO_API = 'https://a.klaviyo.com'
+const MEDIA_CONSENT_VERSION = '2026-09-27'
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -35,6 +36,7 @@ export default async (req: Request) => {
   const lastName = clean(body.lastName, 80)
   const email = clean(body.email, 254).toLowerCase()
   const emailMarketingConsent = body.emailMarketingConsent === true
+  const mediaConsent = body.mediaConsent === true
   const eventId = clean(body.eventId, 40)
 
   const events: Record<string, { name: string; date: string; venue: string }> = {
@@ -46,6 +48,9 @@ export default async (req: Request) => {
 
   if (!firstName || !lastName || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: 'Please enter a valid first name, last name, and email address.' }, 400)
+  }
+  if (!mediaConsent) {
+    return json({ error: 'Photo and video consent is required to register for this event.' }, 400)
   }
 
   const headers = {
@@ -74,6 +79,9 @@ export default async (req: Request) => {
             'Registration Venue': event.venue,
             'Registration Submitted At': submittedAt,
             'Email Marketing Consent': emailMarketingConsent,
+            'Event Photo Video Consent': true,
+            'Event Photo Video Consent Version': MEDIA_CONSENT_VERSION,
+            'Event Photo Video Consent At': submittedAt,
           },
         },
       },
