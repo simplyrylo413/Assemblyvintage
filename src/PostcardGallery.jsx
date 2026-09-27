@@ -71,9 +71,9 @@ export function PostcardGallery() {
   )
 
   return <>
-    <section className={`postcard-gallery${selected !== null ? ' is-paused' : ''}`} aria-label="Assembly market photo gallery" data-reveal>
+    <section className="postcard-gallery" aria-label="Assembly market photo gallery" data-reveal>
       <div className="postcard-gallery__viewport">
-        <div className="postcard-gallery__track" style={{ '--scroll-duration': `${duration}s` }}>
+        <div className="postcard-gallery__track" style={{ '--scroll-duration': `${duration}s`, animationPlayState: selected !== null ? 'paused' : 'running' }}>
           {renderStrip(false)}
           {renderStrip(true)}
         </div>

@@ -15,10 +15,6 @@
   will-change: transform;
 }
 
-.postcard-gallery.is-paused .postcard-gallery__track {
-  animation-play-state: paused;
-}
-
 .postcard-gallery__set {
   flex: none;
   display: flex;
