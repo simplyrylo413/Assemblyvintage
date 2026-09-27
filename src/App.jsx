@@ -304,12 +304,17 @@ const termsSections = [
   {
     title: 'Updates & contact',
     paragraphs: [
-      'We may update these terms as the site and markets evolve. The effective date below identifies the version posted here. Changes apply going forward when published, unless applicable law requires otherwise.',
+      'We may update these terms as the site and markets evolve. The effective date above identifies the version posted here. Changes apply going forward when published, unless applicable law requires otherwise.',
     ],
   },
 ]
 
 function TermsPage() {
+  useEffect(() => {
+    document.title = 'Terms & Conditions | Assembly Vintage Market'
+    document.querySelector('meta[name="description"]')?.setAttribute('content', 'Terms and conditions for the Assembly Vintage Market website, event admission, vendor applications, and promotions.')
+  }, [])
+
   return <div className="app-shell">
     <main className="site-frame">
       <div className="site" id="top">
