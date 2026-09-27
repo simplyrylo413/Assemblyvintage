@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, CalendarBlank, CaretDown, Check, EnvelopeSimple, InstagramLogo, List, MapPin, UploadSimple, X } from '@phosphor-icons/react'
 import './styles.css'
 import { VendorLookbook } from './VendorLookbook.jsx'
+import { PostcardGallery } from './PostcardGallery.jsx'
 
 const vendorMarkets = [
   {
@@ -155,13 +156,6 @@ function Countdown() {
     </section>
   )
 }
-
-const galleryPhotos = [
-  { image: '/assets/market-jewelry.jpg', alt: 'Shopper trying on layered vintage jewelry' },
-  { image: '/assets/market-browsing.jpg', alt: 'Shopper browsing colorful vintage clothing' },
-  { image: '/assets/market-vintage-racks.jpg', alt: 'Shopper exploring a rack of vintage clothes at an indoor market' },
-  { image: '/assets/market-friends.jpg', alt: 'Two shoppers together at an indoor vintage market' },
-]
 
 const faqs = {
   shopper: [
@@ -516,13 +510,7 @@ function HomePage() {
             <div className="section-heading"><p>THE ASSEMBLY EXPERIENCE</p><h2>Good clothes.<br /><em>Great energy.</em></h2></div>
             <div className="story-copy"><p>More than a market, Assembly is a day out—an indoor gathering of independent vintage sellers, spirited style, and the people who make South Florida interesting.</p></div>
           </section>
-          <section className="past-grid" aria-label="Assembly market photo gallery" data-reveal>
-            {galleryPhotos.map((photo) => (
-              <figure className="market-card" key={photo.image}>
-                <img src={photo.image} alt={photo.alt} loading="lazy" decoding="async" />
-              </figure>
-            ))}
-          </section>
+          <PostcardGallery />
 
           <section className="vendor-opportunity" id="vendor" data-reveal>
             <div className="vendor-opportunity__main">
