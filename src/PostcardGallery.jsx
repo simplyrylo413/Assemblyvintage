@@ -7,10 +7,17 @@ const photos = [
   { image: '/assets/market-browsing.jpg', alt: 'Shopper browsing colorful vintage clothing' },
   { image: '/assets/market-vintage-racks.jpg', alt: 'Shopper exploring a rack of vintage clothes at an indoor market' },
   { image: '/assets/market-friends.jpg', alt: 'Two shoppers together at an indoor vintage market' },
+  { image: '/assets/market-purple-outfit.jpeg', alt: 'Shopper in a purple floral outfit browsing vintage pieces' },
+  { image: '/assets/market-pink-coat.jpeg', alt: 'Shoppers looking at a pink vintage coat at the market' },
+  { image: '/assets/market-floral-bag.jpeg', alt: 'Shopper with a floral bag browsing colorful vintage dresses' },
+  { image: '/assets/market-cream-dresses.jpeg', alt: 'Shopper browsing cream vintage dresses on a rack' },
+  { image: '/assets/market-colorful-rack.jpeg', alt: 'Shopper browsing a colorful rack of vintage clothing' },
+  { image: '/assets/market-lace-rack.jpeg', alt: 'Shopper browsing vintage clothing beside a lace dress' },
+  { image: '/assets/market-sunflower-tote.jpeg', alt: 'Shopper with a sunflower tote browsing vintage clothing' },
 ]
 
-const tilts = ['-4deg', '2.5deg', '-2deg', '3deg']
-const drops = ['12px', '-6px', '9px', '-3px']
+const tilts = ['-4deg', '2.5deg', '-2deg', '3deg', '-3deg', '2deg', '-2.5deg', '3.5deg', '-1.5deg', '2.5deg', '-3deg']
+const drops = ['12px', '-6px', '9px', '-3px', '8px', '-5px', '10px', '-6px', '7px', '-4px', '9px']
 
 export function PostcardGallery() {
   const [selected, setSelected] = useState(null)
@@ -22,7 +29,7 @@ export function PostcardGallery() {
   useEffect(() => {
     const strip = stripRef.current
     if (!strip) return undefined
-    const measure = () => setDuration(strip.getBoundingClientRect().width / 42)
+    const measure = () => setDuration(strip.getBoundingClientRect().width / 48.3)
     const observer = new ResizeObserver(measure)
     observer.observe(strip)
     measure()
@@ -64,7 +71,7 @@ export function PostcardGallery() {
           style={{ '--tilt': tilts[index], '--drop': drops[index] }}
           onClick={(event) => { openerRef.current = event.currentTarget; setSelected(index) }}
         >
-          <img src={photo.image} alt="" loading={duplicate ? 'lazy' : 'eager'} decoding="async" />
+          <img src={photo.image} alt="" loading={duplicate || index > 3 ? 'lazy' : 'eager'} decoding="async" />
         </button>
       ))}
     </div>

@@ -26,12 +26,12 @@
   position: relative;
   z-index: 1;
   flex: none;
-  width: clamp(235px, 23vw, 335px);
+  width: clamp(199.75px, 19.55vw, 284.75px);
   aspect-ratio: 3 / 4;
-  margin: 0 -31px 0 0;
+  margin: 0 -26.35px 0 0;
   padding: 0;
-  border: 9px solid white;
-  border-bottom-width: 26px;
+  border: 7.65px solid white;
+  border-bottom-width: 22.1px;
   background: white;
   box-shadow: 0 12px 20px rgba(17, 17, 17, .24);
   transform: rotate(var(--tilt)) translateY(var(--drop));
@@ -42,7 +42,7 @@
 .postcard-gallery__card:hover,
 .postcard-gallery__card:focus-visible {
   z-index: 5;
-  transform: rotate(0deg) translateY(-22px) scale(1.08);
+  transform: rotate(0deg) translateY(-22px) scale(1.2705882353);
   box-shadow: 0 24px 48px rgba(17, 17, 17, .35);
 }
 
@@ -136,7 +136,7 @@
 @media (max-width: 820px) {
   .postcard-gallery { padding-bottom: 80px; }
   .postcard-gallery__viewport { padding: 40px 0 60px; }
-  .postcard-gallery__card { width: 68vw; margin-right: -24px; }
+  .postcard-gallery__card { width: 57.8vw; margin-right: -20.4px; }
   .postcard-lightbox { padding: 12px; }
   .postcard-lightbox__dialog { width: 100%; height: 96dvh; }
   .postcard-lightbox__dialog > img { max-width: calc(100% - 68px); max-height: calc(100% - 34px); border-width: 5px; border-bottom-width: 14px; }
