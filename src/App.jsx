@@ -97,7 +97,11 @@ function SiteHeader({ onNavigate, homeHref = '#top' }) {
     <header className="site-header">
       <Logo href={homeHref} />
       <nav className="desktop-nav" aria-label="Primary navigation">
-        {navigation.map(([label, id], index) => <button className={index === 0 ? 'nav-next' : undefined} type="button" onClick={() => navigate(id)} key={id}>{label}</button>)}
+        {navigation.map(([label, id], index) => {
+          const path = window.location.pathname.replace(/\/+$/, '')
+          const active = path === '/collaborate' ? id === '/collaborate' : index === 0
+          return <button className={active ? 'nav-next' : undefined} type="button" onClick={() => navigate(id)} key={id}>{label}</button>
+        })}
       </nav>
       <button className="menu-button" type="button" onClick={() => setMenuOpen(true)} aria-label="Open navigation"><List size={30} /></button>
     </header>
