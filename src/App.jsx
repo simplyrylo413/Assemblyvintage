@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, CalendarBlank, CaretDown, Check, EnvelopeSimple,
 import './styles.css'
 import { VendorLookbook } from './VendorLookbook.jsx'
 import { PostcardGallery } from './PostcardGallery.jsx'
+import { CollaboratePage } from './CollaboratePage.jsx'
 
 const vendorMarkets = [
   {
@@ -78,12 +79,17 @@ const navigation = [
   ['VENDORS', '#vendor'],
   ['FAQ', '#faq'],
   ['ABOUT', '#about'],
+  ['COLLABORATE', '/collaborate'],
 ]
 
 function SiteHeader({ onNavigate, homeHref = '#top' }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const navigate = (id) => {
     setMenuOpen(false)
+    if (id.startsWith('/')) {
+      window.location.href = id
+      return
+    }
     onNavigate(id)
   }
 
@@ -338,7 +344,10 @@ function TermsPage() {
 }
 
 export function App() {
-  return window.location.pathname.replace(/\/+$/, '') === '/terms' ? <TermsPage /> : <HomePage />
+  const path = window.location.pathname.replace(/\/+$/, '')
+  if (path === '/terms') return <TermsPage />
+  if (path === '/collaborate') return <CollaboratePage SiteHeader={SiteHeader} SiteFooter={SiteFooter} />
+  return <HomePage />
 }
 
 function HomePage() {
