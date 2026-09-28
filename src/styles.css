@@ -11,7 +11,7 @@ button,input { font:inherit; } button,a { -webkit-tap-highlight-color:transparen
 .site-header { min-height:148px; margin:0 4%; padding:8px 0 6px; display:grid; grid-template-columns:1fr 1.2fr auto; align-items:center; border-bottom:4px solid var(--ink); animation:headerIn .9s cubic-bezier(.22,1,.36,1) both; }
 .logo { width:clamp(120px,12vw,185px); min-height:112px; padding:10px 0 8px; color:var(--ink); text-decoration:none; display:flex; align-items:center; overflow:visible; }
 .logo img { display:block; width:100%; height:auto; max-height:112px; object-fit:contain; object-position:left center; }
-.desktop-nav { display:flex; justify-content:flex-end; align-items:center; gap:clamp(24px,4vw,68px); }
+.desktop-nav { display:flex; justify-content:flex-end; align-items:center; gap:clamp(18px,3vw,50px); }
 .desktop-nav button { border:0; background:none; padding:12px 0; font-size:clamp(10px,.8vw,13px); font-weight:700; letter-spacing:.11em; text-align:left; }
 .desktop-nav button::after { content:''; display:block; height:2px; margin-top:10px; background:var(--ink); transform:scaleX(0); transform-origin:left; transition:transform .3s ease; }
 .desktop-nav button:hover::after,.desktop-nav .nav-next::after { transform:scaleX(1); }
