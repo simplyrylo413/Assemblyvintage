@@ -6,21 +6,6 @@ import { PostcardGallery } from './PostcardGallery.jsx'
 
 const vendorMarkets = [
   {
-    id: 'september',
-    name: 'Aloft Delray Beach',
-    date: 'Sunday, September 27, 2026',
-    eyebrowDate: 'SUNDAY, SEPTEMBER 27',
-    shortDate: 'SEP 27',
-    startISO: '2026-09-27T11:00:00-04:00',
-    endISO: '2026-09-27T16:00:00-04:00',
-    time: '11 AM – 4 PM',
-    timeDetailed: '11:00 AM – 4:00 PM',
-    venue: 'Aloft Delray Beach',
-    location: 'Aloft Delray Beach',
-    cityState: 'Delray Beach, FL',
-    address: '202 SE 5th Ave, Delray Beach, FL',
-  },
-  {
     id: 'october',
     name: 'Aloft Delray Beach',
     date: 'Sunday, October 25, 2026',

@@ -15,7 +15,7 @@ function Requirement({ optional = false }) {
 }
 
 export function VendorLookbook({ Modal, markets, spaces, onClose }) {
-  const [selectedMarkets, setSelectedMarkets] = useState(['september'])
+  const [selectedMarkets, setSelectedMarkets] = useState(['october'])
   const [spaceSize, setSpaceSize] = useState('8x10')
   const [activeSection, setActiveSection] = useState(0)
   const [photos, setPhotos] = useState([])

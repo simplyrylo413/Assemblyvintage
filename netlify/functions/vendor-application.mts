@@ -3,7 +3,6 @@ import { randomUUID } from 'node:crypto'
 import { clean, json, sendToGoogle } from './_shared/vendor-google.mts'
 
 const MARKETS: Record<string, { name: string; date: string }> = {
-  september: { name: 'Aloft Delray Beach', date: 'Sunday, September 27, 2026' },
   october: { name: 'Aloft Delray Beach', date: 'Sunday, October 25, 2026' },
   november: { name: 'Aloft Delray Beach', date: 'Sunday, November 15, 2026' },
 }

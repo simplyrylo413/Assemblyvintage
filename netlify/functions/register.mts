@@ -40,11 +40,12 @@ export default async (req: Request) => {
   const eventId = clean(body.eventId, 40)
 
   const events: Record<string, { name: string; date: string; venue: string }> = {
-    september: { name: 'Assembly Vintage Market', date: '2026-09-27', venue: 'Aloft Delray Beach' },
     october: { name: 'Assembly Vintage Market', date: '2026-10-25', venue: 'Aloft Delray Beach' },
     november: { name: 'Assembly Vintage Market', date: '2026-11-15', venue: 'Aloft Delray Beach' },
   }
-  const event = events[eventId] ?? events.september
+  const event = events[eventId]
+
+  if (!event) return json({ error: 'Choose an upcoming market to register.' }, 400)
 
   if (!firstName || !lastName || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: 'Please enter a valid first name, last name, and email address.' }, 400)
