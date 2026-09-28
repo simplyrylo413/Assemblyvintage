@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { ArrowRight } from '@phosphor-icons/react'
 import './collaborate.css'
 
@@ -88,6 +89,11 @@ function PitchForm() {
 }
 
 export function CollaboratePage({ SiteHeader, SiteFooter }) {
+  useEffect(() => {
+    document.title = 'Collaborate | Assembly Vintage Market'
+    document.querySelector('meta[name="description"]')?.setAttribute('content', 'Pitch a collaboration with Assembly Vintage Market. We are open to venues, stores, brands, influencers, creators, and aligned ideas.')
+  }, [])
+
   return (
     <div className="app-shell">
       <main className="site-frame">
