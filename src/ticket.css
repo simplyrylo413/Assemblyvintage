@@ -31,9 +31,9 @@
 .ticket-confirmation__details>div+div{border-left:1px solid rgba(17,17,17,.6)}
 .ticket-confirmation__details span{display:flex;flex-direction:column;gap:3px}.ticket-confirmation__details strong{font-size:12px}.ticket-confirmation__details small{font-size:10px}
 .ticket-confirmation__actions{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}.ticket-confirmation__actions a{text-decoration:none}
-.apple-wallet-button{min-height:58px;padding:0 24px;border-radius:8px;background:#000;color:#fff;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.12em}
-.apple-wallet-button:hover{transform:translateY(-2px)}
-.ticket-page__wallet{margin-top:24px;width:max-content}
+.calendar-button{min-height:58px;padding:0 24px;border:1px solid var(--ink);background:var(--accent-blue);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:12px;text-decoration:none;font-size:10px;font-weight:800;letter-spacing:.14em;transition:transform .3s ease,background .3s ease}
+.calendar-button:hover{transform:translateY(-2px);background:#fff}
+.ticket-page__calendar{margin-top:24px;width:max-content}
 .ticket-page{min-height:100vh;background:var(--paper);display:flex;flex-direction:column}
 .ticket-page__header{min-height:116px;margin:0 4%;padding:12px 0;display:flex;align-items:center;border-bottom:4px solid var(--ink)}
 .ticket-page__header a{display:block;width:clamp(120px,13vw,185px)}.ticket-page__header img{display:block;width:100%;height:auto}
