@@ -16,10 +16,10 @@ function json(body: unknown, status = 200) {
   })
 }
 
-function getTicketStore() {
-  if (Netlify.context?.deploy?.context === 'production') {
-    return getStore(TICKET_STORE, { consistency: 'strong' })
-  }
+function getTicketStore(req: Request) {
+  const host = new URL(req.url).hostname.toLowerCase()
+  const isProduction = Netlify.context?.deploy?.context === 'production' || host === 'assemblyvintageco.com' || host === 'www.assemblyvintageco.com'
+  if (isProduction) return getStore(TICKET_STORE, { consistency: 'strong' })
   return getDeployStore(TICKET_STORE)
 }
 
@@ -29,7 +29,7 @@ export default async (req: Request) => {
   const token = new URL(req.url).searchParams.get('token')?.trim().toLowerCase() || ''
   if (!/^[a-f0-9]{32}$/.test(token)) return json({ error: 'Ticket not found.' }, 404)
 
-  const store = getTicketStore()
+  const store = getTicketStore(req)
   const ticket = await store.get(`tickets/${token}`, { type: 'json' }) as {
     ticketNumber?: number
     displayNumber?: string
