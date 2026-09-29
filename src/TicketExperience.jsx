@@ -1,23 +1,13 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, CalendarBlank, Check, MapPin } from '@phosphor-icons/react'
+import { CalendarBlank, Check, DownloadSimple } from '@phosphor-icons/react'
 import './ticket.css'
-
-function qrImageUrl(ticketUrl) {
-  if (!ticketUrl) return ''
-  const params = new URLSearchParams({
-    text: ticketUrl,
-    size: '320',
-    margin: '2',
-    dark: '111111',
-    light: 'ffffff',
-    ecLevel: 'M',
-    format: 'png',
-  })
-  return `https://quickchart.io/qr?${params.toString()}`
-}
 
 function calendarUrl(event) {
   return event?.id ? `/api/calendar?event=${encodeURIComponent(event.id)}` : ''
+}
+
+function ticketImageUrl(token) {
+  return token ? `/api/ticket-image?token=${encodeURIComponent(token)}` : ''
 }
 
 function CalendarAppIcon({ event }) {
@@ -46,80 +36,95 @@ function CalendarButton({ event, className = '' }) {
   )
 }
 
-function TicketArtwork({ ticket, compact = false, qrUrl = '' }) {
-  const event = ticket?.event || {}
+async function downloadTicketPng(token) {
+  const source = ticketImageUrl(token)
+  if (!source) return
 
+  try {
+    const response = await fetch(source, { cache: 'no-store' })
+    if (!response.ok) throw new Error('Ticket image unavailable')
+
+    const svgText = await response.text()
+    const svgBlob = new Blob([svgText], { type: 'image/svg+xml' })
+    const svgObjectUrl = URL.createObjectURL(svgBlob)
+
+    try {
+      const image = new Image()
+      image.decoding = 'async'
+      image.src = svgObjectUrl
+      await image.decode()
+
+      const canvas = document.createElement('canvas')
+      canvas.width = 900
+      canvas.height = 1200
+      const context = canvas.getContext('2d')
+      if (!context) throw new Error('Could not prepare ticket image')
+
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
+
+      const png = await new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Could not export ticket image')), 'image/png', 1)
+      })
+
+      const downloadUrl = URL.createObjectURL(png)
+      const anchor = document.createElement('a')
+      anchor.href = downloadUrl
+      anchor.download = 'assembly-vintage-ticket.png'
+      document.body.appendChild(anchor)
+      anchor.click()
+      anchor.remove()
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000)
+    } finally {
+      URL.revokeObjectURL(svgObjectUrl)
+    }
+  } catch (error) {
+    console.error('Ticket download failed', error)
+    window.open(source, '_blank', 'noopener,noreferrer')
+  }
+}
+
+function TicketImage({ token, alt = 'Your Assembly Vintage Market ticket' }) {
+  const src = ticketImageUrl(token)
+  if (!src) return null
+  return <img className="ticket-image" src={src} alt={alt} />
+}
+
+function DownloadTicketButton({ token }) {
+  if (!token) return null
   return (
-    <article className={`assembly-ticket ${compact ? 'assembly-ticket--compact' : ''}`} aria-label="Assembly Vintage Market ticket">
-      <div className="assembly-ticket__brand">
-        <img src="/assets/assembly-logo-final.png" alt="Assembly Vintage Market" />
-        <span>FREE ADMISSION</span>
-      </div>
-      <div className="assembly-ticket__event">
-        <p>ASSEMBLY VINTAGE MARKET</p>
-        <h2>{event.displayDate || event.date || 'Upcoming market'}</h2>
-        {event.time && <span className="assembly-ticket__time">{event.time}</span>}
-        {event.venue && <span className="assembly-ticket__venue">{event.venue}</span>}
-        {event.address && <small>{event.address}</small>}
-      </div>
-      <div className="assembly-ticket__footer-line">
-        <span>GOOD TASTE HAS A GATHERING PLACE.</span>
-        {qrUrl && (
-          <div className="assembly-ticket__entry">
-            <img src={qrUrl} alt="Entry QR code for your Assembly Vintage ticket" />
-            <div>
-              <strong>SAVE FOR MARKET DAY</strong>
-              <small>Screenshot or save this ticket and present the QR code at entry.</small>
-            </div>
-          </div>
-        )}
-      </div>
-    </article>
+    <button className="download-ticket-button" type="button" onClick={() => downloadTicketPng(token)}>
+      <DownloadSimple size={20} weight="bold" />
+      <span>DOWNLOAD TICKET</span>
+    </button>
   )
 }
 
 export function TicketConfirmation({ ticket, fallbackEvent, onDone }) {
   const event = ticket?.event || {
+    id: fallbackEvent?.id,
     name: 'Assembly Vintage Market',
     displayDate: fallbackEvent?.date,
     venue: fallbackEvent?.venue,
     address: fallbackEvent?.address,
     time: fallbackEvent?.timeDetailed,
   }
-  const qrUrl = qrImageUrl(ticket?.url)
 
   return (
-    <div className="ticket-confirmation">
+    <div className="ticket-confirmation ticket-confirmation--image">
       <div className="ticket-confirmation__intro">
         <span className="ticket-confirmation__check"><Check size={22} weight="bold" /></span>
         <p className="eyebrow">REGISTRATION COMPLETE</p>
         <h2>You’re in!</h2>
-        <p>Your Assembly ticket is ready. Save or screenshot it for market day, and present the QR code at entry. You can also add the market to your calendar below.</p>
+        <p>This is your ticket. Screenshot it or save it now, then present the QR code at the door on market day. Easy.</p>
       </div>
 
-      <div className="ticket-confirmation__layout">
-        <TicketArtwork ticket={{ ...ticket, event }} compact />
-        <div className="ticket-confirmation__qr">
-          {qrUrl ? <img src={qrUrl} alt="QR code for your Assembly Vintage ticket" /> : <div className="ticket-confirmation__qr-placeholder" aria-hidden="true" />}
-          <strong>SAVE FOR MARKET DAY</strong>
-          <span>Open your ticket, screenshot it, and keep the QR handy for entry.</span>
-        </div>
+      <div className="ticket-image-wrap">
+        <TicketImage token={ticket?.token} />
       </div>
 
-      <div className="ticket-confirmation__details">
-        <div>
-          <CalendarBlank size={25} weight="bold" />
-          <span><strong>{event.displayDate || fallbackEvent?.date}</strong><small>{fallbackEvent?.timeDetailed}</small></span>
-        </div>
-        <div>
-          <MapPin size={25} weight="fill" />
-          <span><strong>{event.venue || fallbackEvent?.venue}</strong><small>{fallbackEvent?.address}</small></span>
-        </div>
-      </div>
-
-      <div className="ticket-confirmation__actions">
+      <div className="ticket-confirmation__actions ticket-confirmation__actions--ticket">
+        <DownloadTicketButton token={ticket?.token} />
         <CalendarButton event={event} />
-        {ticket?.url && <a className="primary-button" href={ticket.url} target="_blank" rel="noopener noreferrer">VIEW TICKET <ArrowRight size={17} /></a>}
         <button className="secondary-button" type="button" onClick={onDone}>DONE</button>
       </div>
     </div>
@@ -159,18 +164,22 @@ export function TicketPage({ token }) {
       </header>
       <main className="ticket-page__main">
         {status === 'loading' && <div className="ticket-page__state"><p className="eyebrow">ASSEMBLY VINTAGE MARKET</p><h1>Loading your ticket…</h1></div>}
-        {status === 'error' && <div className="ticket-page__state"><p className="eyebrow">ASSEMBLY VINTAGE MARKET</p><h1>Ticket not found.</h1><p>Check the QR code or ticket link and try again.</p><a href="/">BACK TO ASSEMBLY</a></div>}
+        {status === 'error' && <div className="ticket-page__state"><p className="eyebrow">ASSEMBLY VINTAGE MARKET</p><h1>Ticket not found.</h1><p>Check the ticket link and try again.</p><a href="/">BACK TO ASSEMBLY</a></div>}
         {status === 'ready' && ticket && (
-          <div className="ticket-page__content">
+          <div className="ticket-page__content ticket-page__content--image">
             <p className="eyebrow">YOU’RE ON THE LIST</p>
             <h1>YOUR<br /><em>ASSEMBLY TICKET.</em></h1>
-            <TicketArtwork ticket={ticket} qrUrl={qrImageUrl(window.location.href)} />
-            <CalendarButton event={ticket.event} className="ticket-page__calendar" />
+            <div className="ticket-image-wrap ticket-image-wrap--page">
+              <TicketImage token={token} />
+            </div>
+            <div className="ticket-page__actions">
+              <DownloadTicketButton token={token} />
+              <CalendarButton event={ticket.event} />
+            </div>
             <div className="ticket-page__save-note">
               <strong>SAVE THIS TICKET</strong>
-              <p>Screenshot this page or keep the ticket link handy. Present the QR code at entry on market day.</p>
+              <p>Screenshot or download this ticket now and present the QR code at the door on market day. Future you says thanks.</p>
             </div>
-            <p className="ticket-page__note">This ticket contains no payment information and is tied only to this Assembly event.</p>
           </div>
         )}
       </main>
