@@ -20,7 +20,7 @@ function calendarUrl(event) {
   return event?.id ? `/api/calendar?event=${encodeURIComponent(event.id)}` : ''
 }
 
-function TicketArtwork({ ticket, compact = false }) {
+function TicketArtwork({ ticket, compact = false, qrUrl = '' }) {
   const event = ticket?.event || {}
 
   return (
@@ -38,6 +38,15 @@ function TicketArtwork({ ticket, compact = false }) {
       </div>
       <div className="assembly-ticket__footer-line">
         <span>GOOD TASTE HAS A GATHERING PLACE.</span>
+        {qrUrl && (
+          <div className="assembly-ticket__entry">
+            <img src={qrUrl} alt="Entry QR code for your Assembly Vintage ticket" />
+            <div>
+              <strong>SAVE FOR MARKET DAY</strong>
+              <small>Screenshot or save this ticket and present the QR code at entry.</small>
+            </div>
+          </div>
+        )}
       </div>
     </article>
   )
@@ -59,15 +68,15 @@ export function TicketConfirmation({ ticket, fallbackEvent, onDone }) {
         <span className="ticket-confirmation__check"><Check size={22} weight="bold" /></span>
         <p className="eyebrow">REGISTRATION COMPLETE</p>
         <h2>You’re in!</h2>
-        <p>Your Assembly ticket is ready. Screenshot it, scan the QR code, or add the market to your calendar below.</p>
+        <p>Your Assembly ticket is ready. Save or screenshot it for market day, and present the QR code at entry. You can also add the market to your calendar below.</p>
       </div>
 
       <div className="ticket-confirmation__layout">
         <TicketArtwork ticket={{ ...ticket, event }} compact />
         <div className="ticket-confirmation__qr">
           {qrUrl ? <img src={qrUrl} alt="QR code for your Assembly Vintage ticket" /> : <div className="ticket-confirmation__qr-placeholder" aria-hidden="true" />}
-          <strong>SCAN FOR YOUR TICKET</strong>
-          <span>The QR opens your unique ticket page.</span>
+          <strong>SAVE FOR MARKET DAY</strong>
+          <span>Open your ticket, screenshot it, and keep the QR handy for entry.</span>
         </div>
       </div>
 
@@ -129,9 +138,13 @@ export function TicketPage({ token }) {
           <div className="ticket-page__content">
             <p className="eyebrow">YOU’RE ON THE LIST</p>
             <h1>YOUR<br /><em>ASSEMBLY TICKET.</em></h1>
-            <TicketArtwork ticket={ticket} />
+            <TicketArtwork ticket={ticket} qrUrl={qrImageUrl(window.location.href)} />
             {calendarUrl(ticket.event) && <a className="calendar-button ticket-page__calendar" href={calendarUrl(ticket.event)}>ADD TO CALENDAR <CalendarBlank size={17} weight="bold" /></a>}
-            <p className="ticket-page__note">Present this screen at the market if requested. This ticket contains no payment information and is tied only to this Assembly event.</p>
+            <div className="ticket-page__save-note">
+              <strong>SAVE THIS TICKET</strong>
+              <p>Screenshot this page or keep the ticket link handy. Present the QR code at entry on market day.</p>
+            </div>
+            <p className="ticket-page__note">This ticket contains no payment information and is tied only to this Assembly event.</p>
           </div>
         )}
       </main>
