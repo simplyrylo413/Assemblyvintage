@@ -16,12 +16,15 @@ function qrImageUrl(ticketUrl) {
   return `https://quickchart.io/qr?${params.toString()}`
 }
 
+function calendarUrl(event) {
+  return event?.id ? `/api/calendar?event=${encodeURIComponent(event.id)}` : ''
+}
+
 function TicketArtwork({ ticket, compact = false }) {
   const event = ticket?.event || {}
-  const displayNumber = ticket?.displayNumber || String(ticket?.number || '').padStart(4, '0')
 
   return (
-    <article className={`assembly-ticket ${compact ? 'assembly-ticket--compact' : ''}`} aria-label={`Assembly ticket ${displayNumber || ''}`}>
+    <article className={`assembly-ticket ${compact ? 'assembly-ticket--compact' : ''}`} aria-label="Assembly Vintage Market ticket">
       <div className="assembly-ticket__brand">
         <img src="/assets/assembly-logo-final.png" alt="Assembly Vintage Market" />
         <span>FREE ADMISSION</span>
@@ -29,11 +32,12 @@ function TicketArtwork({ ticket, compact = false }) {
       <div className="assembly-ticket__event">
         <p>ASSEMBLY VINTAGE MARKET</p>
         <h2>{event.displayDate || event.date || 'Upcoming market'}</h2>
-        {event.venue && <span>{event.venue}</span>}
+        {event.time && <span className="assembly-ticket__time">{event.time}</span>}
+        {event.venue && <span className="assembly-ticket__venue">{event.venue}</span>}
+        {event.address && <small>{event.address}</small>}
       </div>
-      <div className="assembly-ticket__number">
-        <span>TICKET</span>
-        <strong>#{displayNumber}</strong>
+      <div className="assembly-ticket__footer-line">
+        <span>GOOD TASTE HAS A GATHERING PLACE.</span>
       </div>
     </article>
   )
@@ -44,6 +48,8 @@ export function TicketConfirmation({ ticket, fallbackEvent, onDone }) {
     name: 'Assembly Vintage Market',
     displayDate: fallbackEvent?.date,
     venue: fallbackEvent?.venue,
+    address: fallbackEvent?.address,
+    time: fallbackEvent?.timeDetailed,
   }
   const qrUrl = qrImageUrl(ticket?.url)
 
@@ -53,7 +59,7 @@ export function TicketConfirmation({ ticket, fallbackEvent, onDone }) {
         <span className="ticket-confirmation__check"><Check size={22} weight="bold" /></span>
         <p className="eyebrow">REGISTRATION COMPLETE</p>
         <h2>You’re in!</h2>
-        <p>Your Assembly ticket is ready. Screenshot it, save the link, or scan the QR code to open the ticket page.</p>
+        <p>Your Assembly ticket is ready. Screenshot it, scan the QR code, or add the market to your calendar below.</p>
       </div>
 
       <div className="ticket-confirmation__layout">
@@ -77,6 +83,7 @@ export function TicketConfirmation({ ticket, fallbackEvent, onDone }) {
       </div>
 
       <div className="ticket-confirmation__actions">
+        {calendarUrl(event) && <a className="calendar-button" href={calendarUrl(event)}>ADD TO CALENDAR <CalendarBlank size={17} weight="bold" /></a>}
         {ticket?.url && <a className="primary-button" href={ticket.url} target="_blank" rel="noopener noreferrer">VIEW TICKET <ArrowRight size={17} /></a>}
         <button className="secondary-button" type="button" onClick={onDone}>DONE</button>
       </div>
@@ -99,8 +106,8 @@ export function TicketPage({ token }) {
         if (cancelled) return
         setTicket(result.ticket)
         setStatus('ready')
-        document.title = `Ticket #${result.ticket.displayNumber} | Assembly Vintage Market`
-        document.querySelector('meta[name="description"]')?.setAttribute('content', `Assembly Vintage Market ticket #${result.ticket.displayNumber} for ${result.ticket.event?.displayDate || result.ticket.event?.date || 'an upcoming market'}.`)
+        document.title = 'Your Ticket | Assembly Vintage Market'
+        document.querySelector('meta[name="description"]')?.setAttribute('content', `Assembly Vintage Market ticket for ${result.ticket.event?.displayDate || result.ticket.event?.date || 'an upcoming market'}.`)
       } catch {
         if (!cancelled) setStatus('error')
       }
@@ -123,6 +130,7 @@ export function TicketPage({ token }) {
             <p className="eyebrow">YOU’RE ON THE LIST</p>
             <h1>YOUR<br /><em>ASSEMBLY TICKET.</em></h1>
             <TicketArtwork ticket={ticket} />
+            {calendarUrl(ticket.event) && <a className="calendar-button ticket-page__calendar" href={calendarUrl(ticket.event)}>ADD TO CALENDAR <CalendarBlank size={17} weight="bold" /></a>}
             <p className="ticket-page__note">Present this screen at the market if requested. This ticket contains no payment information and is tied only to this Assembly event.</p>
           </div>
         )}

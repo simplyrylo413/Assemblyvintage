@@ -74,6 +74,8 @@ type EventInfo = {
   date: string
   displayDate: string
   venue: string
+  address: string
+  time: string
 }
 
 async function allocateTicket(req: Request, eventId: string, event: EventInfo, email: string) {
@@ -111,6 +113,8 @@ async function allocateTicket(req: Request, eventId: string, event: EventInfo, e
       eventDate: event.date,
       eventDisplayDate: event.displayDate,
       venue: event.venue,
+      address: event.address,
+      time: event.time,
       issuedAt,
     }
 
@@ -156,12 +160,16 @@ export default async (req: Request) => {
       date: '2026-10-25',
       displayDate: 'Sunday, October 25, 2026',
       venue: 'Aloft Delray Beach',
+      address: '202 SE 5th Ave, Delray Beach, FL',
+      time: '11:00 AM – 4:00 PM',
     },
     november: {
       name: 'Assembly Vintage Market',
       date: '2026-11-15',
       displayDate: 'Sunday, November 15, 2026',
       venue: 'Aloft Delray Beach',
+      address: '202 SE 5th Ave, Delray Beach, FL',
+      time: '11:00 AM – 4:00 PM',
     },
   }
   const event = events[eventId]
@@ -297,8 +305,6 @@ export default async (req: Request) => {
   return json({
     ok: true,
     ticket: {
-      number: ticket.ticketNumber,
-      displayNumber: ticket.displayNumber,
       token: ticket.token,
       url: ticketUrl,
       event: {
@@ -307,6 +313,8 @@ export default async (req: Request) => {
         date: event.date,
         displayDate: event.displayDate,
         venue: event.venue,
+        address: event.address,
+        time: event.time,
       },
     },
   })

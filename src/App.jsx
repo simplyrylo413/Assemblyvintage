@@ -434,7 +434,7 @@ function HomePage() {
         content_category: 'Event Registration',
         status: 'completed',
       })
-      if (!result.ticket?.url || !result.ticket?.displayNumber) throw new Error('Your registration was received, but your ticket could not be displayed. Please try again.')
+      if (!result.ticket?.url || !result.ticket?.token) throw new Error('Your registration was received, but your ticket could not be displayed. Please try again.')
       setTicket(result.ticket)
       setRegistered(true)
     } catch (error) {

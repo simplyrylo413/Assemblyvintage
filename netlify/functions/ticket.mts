@@ -32,27 +32,48 @@ export default async (req: Request) => {
   const store = getTicketStore(req)
   const ticket = await store.get(`tickets/${token}`, { type: 'json' }) as {
     ticketNumber?: number
-    displayNumber?: string
     eventId?: string
     eventName?: string
     eventDate?: string
     eventDisplayDate?: string
     venue?: string
+    address?: string
+    time?: string
     issuedAt?: string
   } | null
 
   if (!ticket?.ticketNumber) return json({ error: 'Ticket not found.' }, 404)
 
+  const eventDefaults: Record<string, { name: string; date: string; displayDate: string; venue: string; address: string; time: string }> = {
+    october: {
+      name: 'Assembly Vintage Market',
+      date: '2026-10-25',
+      displayDate: 'Sunday, October 25, 2026',
+      venue: 'Aloft Delray Beach',
+      address: '202 SE 5th Ave, Delray Beach, FL',
+      time: '11:00 AM – 4:00 PM',
+    },
+    november: {
+      name: 'Assembly Vintage Market',
+      date: '2026-11-15',
+      displayDate: 'Sunday, November 15, 2026',
+      venue: 'Aloft Delray Beach',
+      address: '202 SE 5th Ave, Delray Beach, FL',
+      time: '11:00 AM – 4:00 PM',
+    },
+  }
+  const defaults = ticket.eventId ? eventDefaults[ticket.eventId] : undefined
+
   return json({
     ticket: {
-      number: ticket.ticketNumber,
-      displayNumber: ticket.displayNumber || String(ticket.ticketNumber).padStart(4, '0'),
       event: {
         id: ticket.eventId,
-        name: ticket.eventName,
-        date: ticket.eventDate,
-        displayDate: ticket.eventDisplayDate,
-        venue: ticket.venue,
+        name: ticket.eventName || defaults?.name,
+        date: ticket.eventDate || defaults?.date,
+        displayDate: ticket.eventDisplayDate || defaults?.displayDate,
+        venue: ticket.venue || defaults?.venue,
+        address: ticket.address || defaults?.address,
+        time: ticket.time || defaults?.time,
       },
       issuedAt: ticket.issuedAt,
     },
