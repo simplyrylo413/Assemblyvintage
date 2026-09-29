@@ -393,7 +393,10 @@ function HomePage() {
   const closeRegistration = () => {
     setRegisterOpen(false)
     setRegistrationError('')
-    if (!registered) setRegistrationStep('intro')
+    setRegistrationSubmitting(false)
+    setRegistered(false)
+    setTicket(null)
+    setRegistrationStep('intro')
   }
 
   const changeFaqAudience = (audience) => {
