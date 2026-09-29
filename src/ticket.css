@@ -52,3 +52,17 @@
   .ticket-page__header{min-height:94px;margin:0 20px}.ticket-page__main{width:auto;margin:0 20px;padding:48px 0 65px}
   .ticket-page__content>h1,.ticket-page__state h1{font-size:clamp(58px,18vw,84px)}
 }
+
+.assembly-ticket__entry{margin-top:18px;padding-top:18px;border-top:1px solid rgba(17,17,17,.35);display:grid;grid-template-columns:86px 1fr;gap:16px;align-items:center}
+.assembly-ticket__entry img{display:block;width:86px;height:86px;object-fit:contain;background:#fff;border:1px solid var(--ink);padding:5px}
+.assembly-ticket__entry div{display:flex;flex-direction:column;gap:5px}
+.assembly-ticket__entry strong{font-size:10px;letter-spacing:.16em}
+.assembly-ticket__entry small{max-width:330px;font-family:var(--serif);font-size:16px;line-height:1.1}
+.ticket-page__save-note{margin-top:24px;padding:18px 20px;border:1px solid var(--ink);background:#fff;box-shadow:6px 6px 0 var(--accent-blue)}
+.ticket-page__save-note strong{display:block;font-size:10px;letter-spacing:.16em}
+.ticket-page__save-note p{margin:7px 0 0;font-family:var(--serif);font-size:18px;line-height:1.18}
+@media(max-width:760px){
+  .assembly-ticket__entry{grid-template-columns:74px 1fr;gap:12px}
+  .assembly-ticket__entry img{width:74px;height:74px}
+  .assembly-ticket__entry small{font-size:15px}
+}
