@@ -68,6 +68,12 @@
   font-weight:400;
   letter-spacing:-.05em;
 }
+.event-system__count--words{padding-bottom:18px}
+.event-system__count--words>span{
+  font-size:clamp(30px,2.65vw,46px);
+  line-height:.78;
+  letter-spacing:-.045em;
+}
 .event-system__underline{
   position:absolute;
   left:0;
@@ -104,7 +110,7 @@
   line-height:1.2;
   letter-spacing:.14em;
   font-weight:700;
-  white-space:nowrap;
+  white-space:normal;
 }
 
 .event-system__benefits{
@@ -201,6 +207,7 @@
   .event-system__market .event-system__heading{font-size:17px}
   .event-system__market-body{grid-row:auto;min-height:0}
   .event-system__count>span{font-size:64px}
+  .event-system__count--words>span{font-size:40px;line-height:.8}
   .event-system__seller-copy strong,.event-system__seller-copy span{font-size:11px}
   .event-system__meta{grid-row:auto;min-height:0;font-size:10px}
   .event-system__benefits{grid-row:auto;min-height:0}
