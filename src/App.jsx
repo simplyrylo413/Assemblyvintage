@@ -4,6 +4,7 @@ import './styles.css'
 import { VendorLookbook } from './VendorLookbook.jsx'
 import { PostcardGallery } from './PostcardGallery.jsx'
 import { CollaboratePage } from './CollaboratePage.jsx'
+import { TicketConfirmation, TicketPage } from './TicketExperience.jsx'
 
 const vendorMarkets = [
   {
@@ -351,12 +352,14 @@ export function App() {
   const path = window.location.pathname.replace(/\/+$/, '')
   if (path === '/terms') return <TermsPage />
   if (path === '/collaborate') return <CollaboratePage SiteHeader={SiteHeader} SiteFooter={SiteFooter} />
+  if (path.startsWith('/ticket/')) return <TicketPage token={decodeURIComponent(path.slice('/ticket/'.length))} />
   return <HomePage />
 }
 
 function HomePage() {
   const [registerOpen, setRegisterOpen] = useState(false)
   const [registered, setRegistered] = useState(false)
+  const [ticket, setTicket] = useState(null)
   const [registrationSubmitting, setRegistrationSubmitting] = useState(false)
   const [registrationError, setRegistrationError] = useState('')
   const [registrationStep, setRegistrationStep] = useState('intro')
@@ -431,6 +434,8 @@ function HomePage() {
         content_category: 'Event Registration',
         status: 'completed',
       })
+      if (!result.ticket?.url || !result.ticket?.displayNumber) throw new Error('Your registration was received, but your ticket could not be displayed. Please try again.')
+      setTicket(result.ticket)
       setRegistered(true)
     } catch (error) {
       setRegistrationError(error instanceof Error ? error.message : 'We could not complete your registration. Please try again.')
@@ -590,23 +595,7 @@ function HomePage() {
               <p className="eyebrow">{nextMarket.eyebrowDate} · {nextMarket.venue.toUpperCase()}</p>
 
               {registered ? (
-                <div className="register-modal__success">
-                  <span className="register-modal__stamp" aria-hidden="true"><small>ASSEMBLY</small><strong>SPOT SAVED</strong></span>
-                  <h2>You’re in.</h2>
-                  <p className="register-modal__dek">Your spot at Assembly is saved.</p>
-                  <div className="register-modal__details">
-                    <div className="register-modal__detail">
-                      <CalendarBlank size={31} weight="bold" />
-                      <div><strong>{nextMarket.date}</strong><span>{nextMarket.timeDetailed}</span></div>
-                    </div>
-                    <div className="register-modal__detail">
-                      <MapPin size={31} weight="fill" />
-                      <div><strong>{nextMarket.venue}</strong><span>{nextMarket.address}</span></div>
-                    </div>
-                  </div>
-                  <p className="register-modal__confirmation">Registration received. Check your inbox if email confirmation is required.</p>
-                  <button className="primary-button register-modal__cta" type="button" onClick={closeRegistration}>DONE <Check size={18} weight="bold" /></button>
-                </div>
+                <TicketConfirmation ticket={ticket} fallbackEvent={nextMarket} onDone={closeRegistration} />
               ) : registrationStep === 'intro' ? (
                 <div className="register-modal__intro">
                   <h2>Join us at<br />Assembly.</h2>
