@@ -133,13 +133,6 @@ async function allocateTicket(req: Request, eventId: string, event: EventInfo, e
 export default async (req: Request) => {
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405)
 
-  const apiKey = Netlify.env.get('KLAVIYO_PRIVATE_API_KEY')
-  const listId = Netlify.env.get('KLAVIYO_LIST_ID')
-  if (!apiKey || !listId) {
-    console.error('Klaviyo environment variables are missing')
-    return json({ error: 'Registration is temporarily unavailable. Please try again shortly.' }, 503)
-  }
-
   let body: Record<string, unknown>
   try {
     body = await req.json()
@@ -183,123 +176,111 @@ export default async (req: Request) => {
     return json({ error: 'Photo and video consent is required to register for this event.' }, 400)
   }
 
-  const headers = {
-    Authorization: `Klaviyo-API-Key ${apiKey}`,
-    Accept: 'application/vnd.api+json',
-    'Content-Type': 'application/vnd.api+json',
-    revision: KLAVIYO_REVISION,
-  }
-
-  const submittedAt = new Date().toISOString()
-
-  const profileResponse = await fetch(`${KLAVIYO_API}/api/profile-import`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      data: {
-        type: 'profile',
-        attributes: {
-          email,
-          first_name: firstName,
-          last_name: lastName,
-          properties: {
-            'Registration Source': 'Assembly Website',
-            'Registration Event': event.name,
-            'Registration Event Date': event.date,
-            'Registration Venue': event.venue,
-            'Registration Submitted At': submittedAt,
-            'Email Marketing Consent': emailMarketingConsent,
-            'Event Photo Video Consent': true,
-            'Event Photo Video Consent Version': MEDIA_CONSENT_VERSION,
-            'Event Photo Video Consent At': submittedAt,
-          },
-        },
-      },
-    }),
-  })
-
-  if (!profileResponse.ok) {
-    const detail = await profileResponse.text()
-    console.error('Klaviyo profile upsert failed', profileResponse.status, detail)
-    return json({ error: 'We could not complete your registration. Please try again.' }, 502)
-  }
-
-  if (emailMarketingConsent) {
-    const subscribeResponse = await fetch(`${KLAVIYO_API}/api/profile-subscription-bulk-create-jobs/`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        data: {
-          type: 'profile-subscription-bulk-create-job',
-          attributes: {
-            profiles: {
-              data: [
-                {
-                  type: 'profile',
-                  attributes: {
-                    email,
-                    subscriptions: {
-                      email: {
-                        marketing: {
-                          consent: 'SUBSCRIBED',
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-          },
-          relationships: {
-            list: {
-              data: {
-                type: 'list',
-                id: listId,
-              },
-            },
-          },
-        },
-      }),
-    })
-
-    if (!subscribeResponse.ok) {
-      const detail = await subscribeResponse.text()
-      console.error('Klaviyo subscription failed', subscribeResponse.status, detail)
-      return json({ error: 'We could not complete your registration. Please try again.' }, 502)
-    }
-  }
-
+  // Ticket issuance is the primary registration action. Third-party marketing
+  // sync must never prevent an attendee from receiving a valid event ticket.
   let ticket: Record<string, unknown>
   try {
     ticket = await allocateTicket(req, eventId, event, email)
   } catch (error) {
     console.error('Ticket allocation failed', error)
-    return json({ error: 'Your registration was received, but we could not create your ticket. Please try again.' }, 503)
+    return json({ error: 'We could not create your ticket. Please try again.' }, 503)
   }
 
   const ticketUrl = new URL(`/ticket/${ticket.token}`, req.url).toString()
+  const submittedAt = new Date().toISOString()
 
-  // Best-effort: attach the generated ticket details to the Klaviyo profile.
-  const ticketProfileResponse = await fetch(`${KLAVIYO_API}/api/profile-import`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      data: {
-        type: 'profile',
-        attributes: {
-          email,
-          properties: {
-            'Assembly Ticket Number': ticket.ticketNumber,
-            'Assembly Ticket Display Number': ticket.displayNumber,
-            'Assembly Ticket URL': ticketUrl,
+  const apiKey = Netlify.env.get('KLAVIYO_PRIVATE_API_KEY')
+  const listId = Netlify.env.get('KLAVIYO_LIST_ID')
+
+  if (apiKey && listId) {
+    const headers = {
+      Authorization: `Klaviyo-API-Key ${apiKey}`,
+      Accept: 'application/vnd.api+json',
+      'Content-Type': 'application/vnd.api+json',
+      revision: KLAVIYO_REVISION,
+    }
+
+    try {
+      const profileResponse = await fetch(`${KLAVIYO_API}/api/profile-import`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          data: {
+            type: 'profile',
+            attributes: {
+              email,
+              first_name: firstName,
+              last_name: lastName,
+              properties: {
+                'Registration Source': 'Assembly Website',
+                'Registration Event': event.name,
+                'Registration Event Date': event.date,
+                'Registration Venue': event.venue,
+                'Registration Submitted At': submittedAt,
+                'Email Marketing Consent': emailMarketingConsent,
+                'Event Photo Video Consent': true,
+                'Event Photo Video Consent Version': MEDIA_CONSENT_VERSION,
+                'Event Photo Video Consent At': submittedAt,
+                'Assembly Ticket Number': ticket.ticketNumber,
+                'Assembly Ticket Display Number': ticket.displayNumber,
+                'Assembly Ticket URL': ticketUrl,
+              },
+            },
           },
-        },
-      },
-    }),
-  })
+        }),
+      })
 
-  if (!ticketProfileResponse.ok) {
-    console.error('Klaviyo ticket property update failed', ticketProfileResponse.status, await ticketProfileResponse.text())
+      if (!profileResponse.ok) {
+        console.error('Klaviyo profile upsert failed', profileResponse.status, await profileResponse.text())
+      }
+
+      if (emailMarketingConsent) {
+        const subscribeResponse = await fetch(`${KLAVIYO_API}/api/profile-subscription-bulk-create-jobs/`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            data: {
+              type: 'profile-subscription-bulk-create-job',
+              attributes: {
+                profiles: {
+                  data: [
+                    {
+                      type: 'profile',
+                      attributes: {
+                        email,
+                        subscriptions: {
+                          email: {
+                            marketing: {
+                              consent: 'SUBSCRIBED',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+              relationships: {
+                list: {
+                  data: {
+                    type: 'list',
+                    id: listId,
+                  },
+                },
+              },
+            },
+          }),
+        })
+
+        if (!subscribeResponse.ok) {
+          console.error('Klaviyo subscription failed', subscribeResponse.status, await subscribeResponse.text())
+        }
+      }
+    } catch (error) {
+      console.error('Klaviyo sync failed after ticket issuance', error)
+    }
+  } else {
+    console.error('Klaviyo environment variables are missing; ticket issued without Klaviyo sync')
   }
 
   return json({
