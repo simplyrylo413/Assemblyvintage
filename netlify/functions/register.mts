@@ -21,10 +21,10 @@ function clean(value: unknown, max = 200) {
   return typeof value === 'string' ? value.trim().slice(0, max) : ''
 }
 
-function getTicketStore() {
-  if (Netlify.context?.deploy?.context === 'production') {
-    return getStore(TICKET_STORE, { consistency: 'strong' })
-  }
+function getTicketStore(req: Request) {
+  const host = new URL(req.url).hostname.toLowerCase()
+  const isProduction = Netlify.context?.deploy?.context === 'production' || host === 'assemblyvintageco.com' || host === 'www.assemblyvintageco.com'
+  if (isProduction) return getStore(TICKET_STORE, { consistency: 'strong' })
   return getDeployStore(TICKET_STORE)
 }
 
@@ -76,8 +76,8 @@ type EventInfo = {
   venue: string
 }
 
-async function allocateTicket(eventId: string, event: EventInfo, email: string) {
-  const store = getTicketStore()
+async function allocateTicket(req: Request, eventId: string, event: EventInfo, email: string) {
+  const store = getTicketStore(req)
   const emailHash = await hashEmail(email)
   const registrationKey = `registrations/${eventId}/${emailHash}`
 
@@ -263,7 +263,7 @@ export default async (req: Request) => {
 
   let ticket: Record<string, unknown>
   try {
-    ticket = await allocateTicket(eventId, event, email)
+    ticket = await allocateTicket(req, eventId, event, email)
   } catch (error) {
     console.error('Ticket allocation failed', error)
     return json({ error: 'Your registration was received, but we could not create your ticket. Please try again.' }, 503)
