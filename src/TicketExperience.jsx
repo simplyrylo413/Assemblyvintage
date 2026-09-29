@@ -20,6 +20,32 @@ function calendarUrl(event) {
   return event?.id ? `/api/calendar?event=${encodeURIComponent(event.id)}` : ''
 }
 
+function CalendarAppIcon({ event }) {
+  const parts = String(event?.date || '').split('-')
+  const monthIndex = Number(parts[1]) - 1
+  const month = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][monthIndex] || 'CAL'
+  const day = parts[2] ? String(Number(parts[2])) : '•'
+
+  return (
+    <span className="calendar-app-icon" aria-hidden="true">
+      <small>{month}</small>
+      <strong>{day}</strong>
+    </span>
+  )
+}
+
+function CalendarButton({ event, className = '' }) {
+  const href = calendarUrl(event)
+  if (!href) return null
+
+  return (
+    <a className={`calendar-button ${className}`.trim()} href={href}>
+      <CalendarAppIcon event={event} />
+      <span>ADD TO CALENDAR</span>
+    </a>
+  )
+}
+
 function TicketArtwork({ ticket, compact = false, qrUrl = '' }) {
   const event = ticket?.event || {}
 
@@ -92,7 +118,7 @@ export function TicketConfirmation({ ticket, fallbackEvent, onDone }) {
       </div>
 
       <div className="ticket-confirmation__actions">
-        {calendarUrl(event) && <a className="calendar-button" href={calendarUrl(event)}>ADD TO CALENDAR <CalendarBlank size={17} weight="bold" /></a>}
+        <CalendarButton event={event} />
         {ticket?.url && <a className="primary-button" href={ticket.url} target="_blank" rel="noopener noreferrer">VIEW TICKET <ArrowRight size={17} /></a>}
         <button className="secondary-button" type="button" onClick={onDone}>DONE</button>
       </div>
@@ -139,7 +165,7 @@ export function TicketPage({ token }) {
             <p className="eyebrow">YOU’RE ON THE LIST</p>
             <h1>YOUR<br /><em>ASSEMBLY TICKET.</em></h1>
             <TicketArtwork ticket={ticket} qrUrl={qrImageUrl(window.location.href)} />
-            {calendarUrl(ticket.event) && <a className="calendar-button ticket-page__calendar" href={calendarUrl(ticket.event)}>ADD TO CALENDAR <CalendarBlank size={17} weight="bold" /></a>}
+            <CalendarButton event={ticket.event} className="ticket-page__calendar" />
             <div className="ticket-page__save-note">
               <strong>SAVE THIS TICKET</strong>
               <p>Screenshot this page or keep the ticket link handy. Present the QR code at entry on market day.</p>
