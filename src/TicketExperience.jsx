@@ -16,6 +16,10 @@ function qrImageUrl(ticketUrl) {
   return `https://quickchart.io/qr?${params.toString()}`
 }
 
+function calendarUrl(event) {
+  return event?.id ? `/api/calendar?event=${encodeURIComponent(event.id)}` : ''
+}
+
 function TicketArtwork({ ticket, compact = false }) {
   const event = ticket?.event || {}
 
@@ -55,7 +59,7 @@ export function TicketConfirmation({ ticket, fallbackEvent, onDone }) {
         <span className="ticket-confirmation__check"><Check size={22} weight="bold" /></span>
         <p className="eyebrow">REGISTRATION COMPLETE</p>
         <h2>You’re in!</h2>
-        <p>Your Assembly ticket is ready. Screenshot it, save the link, or scan the QR code to open the ticket page.</p>
+        <p>Your Assembly ticket is ready. Screenshot it, scan the QR code, or add the market to your calendar below.</p>
       </div>
 
       <div className="ticket-confirmation__layout">
@@ -79,7 +83,7 @@ export function TicketConfirmation({ ticket, fallbackEvent, onDone }) {
       </div>
 
       <div className="ticket-confirmation__actions">
-        {ticket?.walletUrl && <a className="apple-wallet-button" href={ticket.walletUrl}>ADD TO APPLE WALLET</a>}
+        {calendarUrl(event) && <a className="calendar-button" href={calendarUrl(event)}>ADD TO CALENDAR <CalendarBlank size={17} weight="bold" /></a>}
         {ticket?.url && <a className="primary-button" href={ticket.url} target="_blank" rel="noopener noreferrer">VIEW TICKET <ArrowRight size={17} /></a>}
         <button className="secondary-button" type="button" onClick={onDone}>DONE</button>
       </div>
@@ -126,7 +130,7 @@ export function TicketPage({ token }) {
             <p className="eyebrow">YOU’RE ON THE LIST</p>
             <h1>YOUR<br /><em>ASSEMBLY TICKET.</em></h1>
             <TicketArtwork ticket={ticket} />
-            {ticket?.walletUrl && <a className="apple-wallet-button ticket-page__wallet" href={ticket.walletUrl}>ADD TO APPLE WALLET</a>}
+            {calendarUrl(ticket.event) && <a className="calendar-button ticket-page__calendar" href={calendarUrl(ticket.event)}>ADD TO CALENDAR <CalendarBlank size={17} weight="bold" /></a>}
             <p className="ticket-page__note">Present this screen at the market if requested. This ticket contains no payment information and is tied only to this Assembly event.</p>
           </div>
         )}
