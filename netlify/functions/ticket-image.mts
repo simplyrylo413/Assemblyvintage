@@ -126,6 +126,7 @@ export default async (req: Request) => {
 
     <text x="76" y="88" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" letter-spacing="4">YOUR TICKET</text>
     <text x="746" y="88" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="3" text-anchor="end">FREE ADMISSION</text>
+    <text x="746" y="118" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" letter-spacing="2" text-anchor="end">TICKET NO. ${String(ticket.ticketNumber).padStart(4, '0')}</text>
 
     <image href="${logoData}" x="225" y="125" width="450" height="205" preserveAspectRatio="xMidYMid meet"/>
 
