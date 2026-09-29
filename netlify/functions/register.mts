@@ -32,12 +32,6 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-async function hashEmail(email: string) {
-  const data = new TextEncoder().encode(email)
-  const digest = await crypto.subtle.digest('SHA-256', data)
-  return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('')
-}
-
 async function acquireEventLock(store: ReturnType<typeof getStore>, eventId: string) {
   const lockKey = `locks/${eventId}`
   const token = crypto.randomUUID()
@@ -78,26 +72,11 @@ type EventInfo = {
   time: string
 }
 
-async function allocateTicket(req: Request, eventId: string, event: EventInfo, email: string) {
+async function allocateTicket(req: Request, eventId: string, event: EventInfo) {
   const store = getTicketStore(req)
-  const emailHash = await hashEmail(email)
-  const registrationKey = `registrations/${eventId}/${emailHash}`
-
-  const existing = await store.get(registrationKey, { type: 'json' }) as { token?: string } | null
-  if (existing?.token) {
-    const existingTicket = await store.get(`tickets/${existing.token}`, { type: 'json' })
-    if (existingTicket) return existingTicket as Record<string, unknown>
-  }
-
   const lockToken = await acquireEventLock(store as ReturnType<typeof getStore>, eventId)
 
   try {
-    const recheck = await store.get(registrationKey, { type: 'json' }) as { token?: string } | null
-    if (recheck?.token) {
-      const existingTicket = await store.get(`tickets/${recheck.token}`, { type: 'json' })
-      if (existingTicket) return existingTicket as Record<string, unknown>
-    }
-
     const counterKey = `counters/${eventId}`
     const counter = await store.get(counterKey, { type: 'json' }) as { value?: number } | null
     const ticketNumber = Math.max(0, Number(counter?.value || 0)) + 1
@@ -118,11 +97,9 @@ async function allocateTicket(req: Request, eventId: string, event: EventInfo, e
       issuedAt,
     }
 
-    // Advance the counter before persisting the ticket so a failed write can create
-    // a harmless gap, but can never issue the same sequential number twice.
+    // Every completed registration gets a fresh sequential ticket number.
     await store.setJSON(counterKey, { value: ticketNumber })
     await store.setJSON(`tickets/${ticketToken}`, ticket)
-    await store.setJSON(registrationKey, { token: ticketToken, ticketNumber })
 
     return ticket
   } finally {
@@ -180,7 +157,7 @@ export default async (req: Request) => {
   // sync must never prevent an attendee from receiving a valid event ticket.
   let ticket: Record<string, unknown>
   try {
-    ticket = await allocateTicket(req, eventId, event, email)
+    ticket = await allocateTicket(req, eventId, event)
   } catch (error) {
     console.error('Ticket allocation failed', error)
     return json({ error: 'We could not create your ticket. Please try again.' }, 503)
