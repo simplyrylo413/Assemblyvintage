@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Assembly October Reel Preview</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+:root{--paper:#f9f8f4;--ink:#111;--blue:#c0dceb;--coral:#f37a5d;--serif:'Instrument Serif',Georgia,serif}
+*{box-sizing:border-box}html,body{margin:0;background:#111;color:#111;font-family:'DM Sans',Arial,sans-serif;height:100%;overflow:hidden}
+#stage{position:fixed;inset:0;margin:auto;background:var(--paper);overflow:hidden;aspect-ratio:9/16;height:100dvh;max-width:56.25dvh}
+.scene{position:absolute;inset:0;opacity:0;transform:scale(1.02);transition:opacity .18s linear,transform .65s cubic-bezier(.2,.8,.2,1);pointer-events:none;overflow:hidden}
+.scene.on{opacity:1;transform:scale(1)}
+.full{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.03),rgba(0,0,0,.42))}
+.safe{position:absolute;left:0;right:0;top:14%;bottom:12%;padding:0 6%}
+.kicker{font-size:clamp(9px,2.7vw,14px);font-weight:700;letter-spacing:.17em;text-transform:uppercase}
+.huge{font-family:var(--serif);font-size:clamp(46px,12vw,82px);line-height:.82;letter-spacing:-.045em}
+.big{font-size:clamp(30px,8vw,56px);font-weight:700;line-height:.92;letter-spacing:-.04em}
+.italic{font-style:italic}
+.s1 .safe{display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:8%;color:white}.s1 .sub{margin-top:14px;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.photo{position:absolute;background:white;border:8px solid white;box-shadow:0 18px 45px rgba(0,0,0,.22);overflow:hidden}.photo img{width:100%;height:100%;object-fit:cover}
+.note{position:absolute;background:var(--paper);border:1px solid #333;padding:14px 15px;box-shadow:6px 6px 0 rgba(0,0,0,.14)}
+.hand{font-family:var(--serif);font-style:italic;font-size:clamp(22px,6vw,38px);line-height:1}
+.s2{background:var(--paper)} .p1{left:4%;top:12%;width:49%;height:45%;transform:rotate(-5deg)} .p2{right:2%;top:18%;width:46%;height:43%;transform:rotate(5deg)} .p3{left:20%;top:53%;width:58%;height:34%;transform:rotate(-2deg)} .s2 .note{left:6%;bottom:8%;transform:rotate(-2deg)}
+.s3{background:#f2efe8}.s3 .main{left:8%;top:8%;width:84%;height:54%;transform:rotate(-1deg)}.s3 .d1{left:3%;bottom:8%;width:36%;height:29%;transform:rotate(-6deg)}.s3 .d2{right:2%;bottom:7%;width:37%;height:30%;transform:rotate(5deg)}.s3 .copy{position:absolute;left:8%;top:63%;width:75%}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.chip{background:var(--paper);border:1px solid #111;padding:6px 8px;font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.s4{background:var(--blue)}.datecard{position:absolute;left:6%;right:6%;top:28%;padding:8% 7%;background:var(--paper);border:2px solid #111;box-shadow:8px 8px 0 #111;transform:rotate(-1deg)}.date{font-family:var(--serif);font-size:clamp(76px,22vw,135px);line-height:.72}.venue{margin-top:20px;font-size:20px;font-weight:700}.time{margin-top:8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.s5{background:var(--paper)}.s5 .wide{position:absolute;left:0;top:0;width:100%;height:48%;object-fit:cover}.s5 .n1{left:5%;top:44%;width:44%;transform:rotate(-3deg)}.s5 .n2{right:4%;top:49%;width:46%;transform:rotate(2deg)}.s5 .friends{left:10%;top:67%;width:40%;height:23%;transform:rotate(-4deg)}.s5 .browse{right:7%;top:68%;width:40%;height:23%;transform:rotate(4deg)}
+.s6{background:#e7f4f9}.s6 .site{left:6%;top:12%;width:88%;height:50%;transform:rotate(-1deg)}.s6 .reg{right:6%;top:51%;width:54%;height:31%;transform:rotate(4deg)}.s6 .cta{left:6%;right:14%;bottom:10%;transform:rotate(-2deg)}
+.s7{background:#111;color:white}.s7 .base{filter:saturate(1.08)}.veil{position:absolute;inset:0;background:rgba(0,0,0,.42)}.s7 .r1{left:4%;top:16%;width:36%;height:31%;transform:rotate(-5deg)}.s7 .r2{right:2%;top:20%;width:39%;height:33%;transform:rotate(6deg)}.s7 .r3{left:19%;top:47%;width:45%;height:34%;transform:rotate(-2deg)}.s7 .copy{position:absolute;left:7%;right:7%;bottom:10%}
+.s8{background:var(--paper);display:flex;align-items:center;justify-content:center;text-align:center}.end{width:84%}.logo{width:34%;max-width:170px;margin:0 auto 22px}.event{margin-top:22px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.url{margin-top:10px;font-family:var(--serif);font-size:22px}.rule{width:90px;height:5px;background:var(--coral);margin:18px auto 0}
+#play{position:absolute;z-index:100;inset:0;display:grid;place-items:center;background:rgba(17,17,17,.62);backdrop-filter:blur(8px);color:white;padding:24px;text-align:center}
+#play button{border:0;background:white;color:#111;border-radius:999px;padding:16px 24px;font:700 14px 'DM Sans';letter-spacing:.08em;text-transform:uppercase}
+#play p{max-width:290px;margin:16px auto 0;font-size:13px;line-height:1.4}
+#bar{position:absolute;z-index:90;left:4%;right:4%;bottom:max(18px,env(safe-area-inset-bottom));height:3px;background:rgba(255,255,255,.35)}#bar i{display:block;height:100%;background:white;width:0}
+</style></head>
+<body>
+<div id="stage">
+<section class="scene s1"><img class="full" src="https://assemblyvintageco.com/assets/hero-indoor-v2.jpg"><div class="scrim"></div><div class="safe"><div class="kicker">POV: your Sunday plans just upgraded</div><div class="huge">Vintage, but make it <span class="italic">a whole vibe.</span></div><div class="sub">Assembly · Delray Beach</div></div></section>
+<section class="scene s2"><div class="photo p1"><img src="https://assemblyvintageco.com/assets/market-pink-coat.jpeg"></div><div class="photo p2"><img src="https://assemblyvintageco.com/assets/market-floral-bag.jpeg"></div><div class="photo p3"><img src="https://assemblyvintageco.com/assets/market-purple-outfit.jpeg"></div><div class="note"><div class="kicker">FIT CHECK</div><div class="hand">the market is the moodboard.</div></div></section>
+<section class="scene s3"><div class="photo main"><img src="https://assemblyvintageco.com/assets/market-colorful-rack.jpeg"></div><div class="photo d1"><img src="https://assemblyvintageco.com/assets/market-cream-dresses.jpeg"></div><div class="photo d2"><img src="https://assemblyvintageco.com/assets/market-jewelry.jpg"></div><div class="copy"><div class="kicker">HAND-PICKED VINTAGE</div><div class="huge">Rare finds.<br><span class="italic">No filler.</span></div><div class="chips"><span class="chip">designer</span><span class="chip">archival</span><span class="chip">one-of-one</span></div></div></section>
+<section class="scene s4"><div class="datecard"><div class="kicker">SAVE THE DATE</div><div class="date">OCT<br>25</div><div class="venue">ALOFT DELRAY BEACH</div><div class="time">Sunday · 11 AM — 4 PM</div><div class="chips"><span class="chip">free admission</span><span class="chip">free parking</span><span class="chip">indoors</span></div></div></section>
+<section class="scene s5"><img class="wide" src="https://assemblyvintageco.com/assets/market-crowd.jpg"><div class="note n1"><div class="kicker">FIRST HOUR</div><div class="hand">drinks on us · 11–12</div></div><div class="note n2"><div class="kicker">COME EARLY</div><div class="hand">shop before your group chat gets there.</div></div><div class="photo friends"><img src="https://assemblyvintageco.com/assets/market-friends.jpg"></div><div class="photo browse"><img src="https://assemblyvintageco.com/assets/market-browsing.jpg"></div></section>
+<section class="scene s6"><div class="photo site"><img src="https://assemblyvintageco.com/assets/latest-market-poster.jpg"></div><div class="photo reg"><img src="https://assemblyvintageco.com/assets/hero-indoor-v2.jpg"></div><div class="note cta"><div class="kicker">REGISTER FREE</div><div class="big">Save your spot before you forget.</div></div></section>
+<section class="scene s7"><img class="full base" src="https://assemblyvintageco.com/assets/hero-indoor-v2.jpg"><div class="veil"></div><div class="photo r1"><img src="https://assemblyvintageco.com/assets/market-pink-coat.jpeg"></div><div class="photo r2"><img src="https://assemblyvintageco.com/assets/market-floral-bag.jpeg"></div><div class="photo r3"><img src="https://assemblyvintageco.com/assets/market-friends.jpg"></div><div class="copy"><div class="kicker">SEND THIS TO YOUR VINTAGE FRIEND</div><div class="big">Meet you at Assembly?</div></div></section>
+<section class="scene s8"><div class="end"><img class="logo" src="https://assemblyvintageco.com/assets/assembly-logo-final.png"><div class="huge">October 25.<br><span class="italic">Delray Beach.</span></div><div class="event">Aloft Delray Beach · 11 AM — 4 PM</div><div class="url">assemblyvintageco.com</div><div class="rule"></div></div></section>
+<div id="bar"><i></i></div>
+<div id="play"><div><button>Tap to preview with sound</button><p>26.7-second Reel preview · original upbeat fashion-house bed + UGC-style edit</p></div></div>
+</div>
+<script>
+const scenes=[...document.querySelectorAll('.scene')], times=[0,1.904,5.714,9.524,13.333,17.143,20.952,24.762], total=26.667;
+let start=0,raf=0,ctx=null,timer=[];
+function tone(t,f,d,g=.06,type='sine'){let o=ctx.createOscillator(),a=ctx.createGain();o.type=type;o.frequency.value=f;a.gain.setValueAtTime(0,t);a.gain.linearRampToValueAtTime(g,t+.008);a.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(a).connect(ctx.destination);o.start(t);o.stop(t+d+.02)}
+function music(){
+ let base=ctx.currentTime+.05,bpm=126,beat=60/bpm;
+ for(let i=0;i<56;i++){let t=base+i*beat/2;if(i%2===0){tone(t,62,.12,.10,'sine');tone(t,124,.08,.025,'triangle')} if(i%4===2)tone(t,180,.06,.022,'square'); if(i%2===1)tone(t,4200,.025,.012,'square')}
+ [1.95,2.42,2.90,5.76,9.57,13.38,17.19,21.0,24.85].forEach((x,j)=>timer.push(setTimeout(()=>tone(ctx.currentTime,j===8?880:(j%3===0?360:1300),j===8?.5:.08,j===8?.035:.05,j===8?'sine':'triangle'),x*1000)));
+}
+function run(){
+ document.getElementById('play').style.display='none'; if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)(); ctx.resume(); music(); start=performance.now();
+ function frame(n){let e=(n-start)/1000,idx=0;for(let i=0;i<times.length;i++)if(e>=times[i])idx=i;scenes.forEach((s,i)=>s.classList.toggle('on',i===idx));document.querySelector('#bar i').style.width=Math.min(100,e/total*100)+'%';if(e<total)raf=requestAnimationFrame(frame);else setTimeout(()=>{scenes.forEach(s=>s.classList.remove('on'));document.getElementById('play').style.display='grid';document.querySelector('#bar i').style.width='0'},350)}
+ raf=requestAnimationFrame(frame)
+}
+document.querySelector('#play button').onclick=run; scenes[0].classList.add('on');
+</script>
+</body></html>
