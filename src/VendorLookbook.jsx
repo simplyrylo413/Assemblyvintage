@@ -108,92 +108,132 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
   const captureCompletedApplicationPdf = async () => {
     const html2canvas = window.html2canvas
     const JsPdf = window.jspdf?.jsPDF
-    if (!html2canvas || !JsPdf) throw new Error('PDF capture tools are still loading. Please wait a moment and submit again.')
+    if (!html2canvas || !JsPdf) throw new Error('PDF capture tools are still loading. Please wait a moment and try again.')
     if (!lookbookRef.current) throw new Error('We could not capture your completed application.')
 
     const source = lookbookRef.current
-    const clone = source.cloneNode(true)
-    clone.classList.add('vendor-lookbook--pdf-capture')
-    Object.assign(clone.style, {
-      position: 'fixed',
-      left: '-20000px',
-      top: '0',
-      width: '1180px',
-      maxWidth: '1180px',
-      height: 'auto',
-      maxHeight: 'none',
-      overflow: 'visible',
-      zIndex: '-1',
-      background: '#c0dceb',
-    })
+    const sourceControls = Array.from(source.querySelectorAll('input, textarea, select'))
+    const pdf = new JsPdf({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true })
+    const pageWidth = pdf.internal.pageSize.getWidth()
+    const pageHeight = pdf.internal.pageSize.getHeight()
+    let pdfPageCount = 0
 
-    const sourceControls = source.querySelectorAll('input, textarea, select')
-    const cloneControls = clone.querySelectorAll('input, textarea, select')
-    sourceControls.forEach((control, index) => {
-      const cloned = cloneControls[index]
-      if (!cloned) return
-      if (control instanceof HTMLInputElement && (control.type === 'checkbox' || control.type === 'radio')) {
-        cloned.checked = control.checked
-        if (control.checked) cloned.setAttribute('checked', '')
-        else cloned.removeAttribute('checked')
-      } else {
-        cloned.value = control.value
-        cloned.setAttribute('value', control.value)
-        if (cloned instanceof HTMLTextAreaElement) cloned.textContent = control.value
-        if (cloned instanceof HTMLSelectElement) {
+    const syncControls = (clone) => {
+      const cloneControls = Array.from(clone.querySelectorAll('input, textarea, select'))
+      sourceControls.forEach((control, index) => {
+        const cloned = cloneControls[index]
+        if (!cloned) return
+        if (control instanceof HTMLInputElement && (control.type === 'checkbox' || control.type === 'radio')) {
+          cloned.checked = control.checked
+          if (control.checked) cloned.setAttribute('checked', '')
+          else cloned.removeAttribute('checked')
+        } else if (cloned instanceof HTMLSelectElement) {
+          cloned.value = control.value
           Array.from(cloned.options).forEach((option) => {
             option.selected = option.value === control.value
           })
+        } else {
+          cloned.value = control.value
+          cloned.setAttribute('value', control.value)
+          if (cloned instanceof HTMLTextAreaElement) cloned.textContent = control.value
         }
-      }
-    })
-
-    clone.querySelectorAll('.vendor-lookbook__section').forEach((section) => {
-      section.hidden = false
-      section.removeAttribute('hidden')
-    })
-    clone.querySelectorAll('.vendor-lookbook__nav-item').forEach((item) => item.classList.remove('is-active'))
-    clone.querySelectorAll('.vendor-lookbook__actions').forEach((node) => node.remove())
-    clone.querySelectorAll('.vendor-lookbook__error').forEach((node) => node.remove())
-
-    const captureNote = document.createElement('div')
-    captureNote.className = 'vendor-lookbook__pdf-note'
-    captureNote.textContent = 'COMPLETED VENDOR APPLICATION — CAPTURED AT SUBMISSION'
-    clone.prepend(captureNote)
-
-    document.body.appendChild(clone)
-
-    try {
-      await Promise.all(Array.from(clone.querySelectorAll('img')).map((img) => img.decode?.().catch(() => {})))
-      const canvas = await html2canvas(clone, {
-        scale: 1.25,
-        useCORS: true,
-        backgroundColor: '#c0dceb',
-        logging: false,
-        windowWidth: 1180,
-        width: clone.scrollWidth,
-        height: clone.scrollHeight,
       })
+    }
 
-      const pdf = new JsPdf({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true })
-      const pageWidth = pdf.internal.pageSize.getWidth()
-      const pageHeight = pdf.internal.pageSize.getHeight()
-      const imageData = canvas.toDataURL('image/jpeg', 0.9)
+    const addCanvasToPdf = (canvas) => {
+      const imageData = canvas.toDataURL('image/jpeg', 0.88)
       const imageHeight = canvas.height * pageWidth / canvas.width
       let offset = 0
-      let page = 0
-
-      while (offset < imageHeight) {
-        if (page > 0) pdf.addPage()
+      while (offset < imageHeight - 0.5) {
+        if (pdfPageCount > 0) pdf.addPage()
         pdf.addImage(imageData, 'JPEG', 0, -offset, pageWidth, imageHeight, undefined, 'FAST')
         offset += pageHeight
-        page += 1
+        pdfPageCount += 1
       }
-
-      return pdf.output('blob')
-    } finally {
-      clone.remove()
     }
+
+    for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex += 1) {
+      const clone = source.cloneNode(true)
+      clone.classList.add('vendor-lookbook--pdf-capture')
+      Object.assign(clone.style, {
+        position: 'fixed',
+        left: '-20000px',
+        top: '0',
+        width: '1180px',
+        maxWidth: '1180px',
+        minHeight: '0',
+        height: 'auto',
+        maxHeight: 'none',
+        overflow: 'visible',
+        zIndex: '-1',
+        background: '#c0dceb',
+      })
+
+      syncControls(clone)
+
+      clone.querySelectorAll('.vendor-lookbook__section').forEach((section, index) => {
+        const visible = index === sectionIndex
+        section.hidden = !visible
+        if (visible) section.removeAttribute('hidden')
+        else section.setAttribute('hidden', '')
+      })
+
+      clone.querySelectorAll('.vendor-lookbook__nav-item').forEach((item, index) => {
+        item.classList.toggle('is-active', index === sectionIndex)
+      })
+
+      const progressLabel = clone.querySelector('.vendor-lookbook__progress > span')
+      if (progressLabel) progressLabel.textContent = `${String(sectionIndex + 1).padStart(2, '0')} / 04 SECTIONS`
+      clone.querySelectorAll('.vendor-lookbook__progress i').forEach((bar, index) => {
+        bar.classList.toggle('is-filled', index === sectionIndex)
+      })
+
+      clone.querySelectorAll('.vendor-lookbook__actions').forEach((node) => node.remove())
+      clone.querySelectorAll('.vendor-lookbook__error').forEach((node) => node.remove())
+
+      const captureNote = document.createElement('div')
+      captureNote.className = 'vendor-lookbook__pdf-note'
+      captureNote.textContent = `COMPLETED VENDOR APPLICATION — SECTION ${String(sectionIndex + 1).padStart(2, '0')} OF 04`
+      clone.prepend(captureNote)
+
+      document.body.appendChild(clone)
+
+      try {
+        await Promise.all(Array.from(clone.querySelectorAll('img')).map(async (img) => {
+          try {
+            if (!img.complete) {
+              await new Promise((resolve) => {
+                img.addEventListener('load', resolve, { once: true })
+                img.addEventListener('error', resolve, { once: true })
+                window.setTimeout(resolve, 2500)
+              })
+            }
+            await img.decode?.().catch(() => {})
+          } catch {}
+        }))
+
+        const canvas = await html2canvas(clone, {
+          scale: 1,
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: '#c0dceb',
+          logging: false,
+          windowWidth: 1180,
+          width: 1180,
+          height: clone.scrollHeight,
+          scrollX: 0,
+          scrollY: 0,
+        })
+
+        if (!canvas.width || !canvas.height) throw new Error(`Section ${sectionIndex + 1} capture returned an empty canvas.`)
+        addCanvasToPdf(canvas)
+      } finally {
+        clone.remove()
+      }
+    }
+
+    if (!pdfPageCount) throw new Error('No PDF pages were created.')
+    return pdf.output('blob')
   }
 
   const uploadCompletedApplicationPdf = async (applicationId, pdfBlob) => {
@@ -314,10 +354,31 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
             <h2>Thank you.<br />We’ll be in touch.</h2>
             <p>Your application for {selectedMarkets.length} {selectedMarkets.length === 1 ? 'market' : 'markets'} has been submitted for review. Our team will be in touch after curation.</p>
             {pdfStatus && <p className="vendor-lookbook__pdf-status">{pdfStatus}</p>}
+            {!localPdfUrl && (
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={async () => {
+                  setPdfStatus('Generating your completed application PDF…')
+                  try {
+                    const retryPdf = await captureCompletedApplicationPdf()
+                    const retryUrl = URL.createObjectURL(retryPdf)
+                    setLocalPdfUrl((current) => {
+                      if (current) URL.revokeObjectURL(current)
+                      return retryUrl
+                    })
+                    setPdfStatus('Your completed application PDF is ready.')
+                  } catch (retryError) {
+                    console.error('Vendor PDF retry failed', retryError)
+                    setPdfStatus('We could not generate the PDF in this browser. Your application itself is still submitted.')
+                  }
+                }}
+              >
+                GENERATE APPLICATION PDF <ArrowRight size={17} />
+              </button>
+            )}
             {localPdfUrl ? (
               <a className="secondary-button" href={localPdfUrl} download="assembly-vendor-application.pdf">DOWNLOAD COMPLETED APPLICATION PDF <ArrowRight size={17} /></a>
-            ) : receiptUrl ? (
-              <a className="secondary-button" href={receiptUrl} target="_blank" rel="noopener noreferrer">OPEN APPLICATION PDF <ArrowRight size={17} /></a>
             ) : null}
             <button className="primary-button" type="button" onClick={guardedClose}>CLOSE <ArrowRight size={17} /></button>
           </div>
