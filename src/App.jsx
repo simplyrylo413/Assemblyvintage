@@ -638,7 +638,6 @@ function HomePage() {
           <div className="newsletter-popup">
             <div className="newsletter-popup__image" aria-hidden="true">
               <img src="/assets/market-friends.jpg" alt="" />
-              <div className="newsletter-popup__photo-copy">A BRIGHTER<br />VINTAGE TOMORROW <span /></div>
             </div>
             <div className="newsletter-popup__panel">
               <div className="newsletter-popup__headline">
@@ -665,10 +664,6 @@ function HomePage() {
                 </>
               )}
 
-              <div className="newsletter-popup__footer">
-                <span />
-                <p>PEOPLE&nbsp;&nbsp;/&nbsp;&nbsp;VINTAGE&nbsp;&nbsp;/&nbsp;&nbsp;A BRIGHTER TOMORROW</p>
-              </div>
             </div>
           </div>
         </Modal>
