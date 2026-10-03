@@ -1,4 +1,5 @@
 import { getStore } from '@netlify/blobs'
+import { buildVendorApplicationPdf } from './_shared/vendor-pdf.mts'
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -14,8 +15,27 @@ export default async (req: Request) => {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return json({ error: 'Invalid application receipt.' }, 400)
 
   const store = getStore('vendor-applications', { consistency: 'strong' })
-  const pdf = await store.get(`pdfs/${id}.pdf`, { type: 'blob' })
-  if (!pdf) return json({ error: 'Application receipt not found.' }, 404)
+  let pdf = await store.get(`pdfs/${id}.pdf`, { type: 'blob' })
+
+  if (!pdf) {
+    const backup = await store.get(`applications/${id}`, { type: 'json' })
+    if (!backup?.application || !backup?.submittedAt) {
+      return json({ error: 'Application receipt not found.' }, 404)
+    }
+
+    try {
+      const bytes = buildVendorApplicationPdf({
+        applicationId: id,
+        submittedAt: backup.submittedAt,
+        application: backup.application,
+      })
+      await store.set(`pdfs/${id}.pdf`, bytes)
+      pdf = new Blob([bytes], { type: 'application/pdf' })
+    } catch (error) {
+      console.error('Vendor PDF fallback generation failed', id, error)
+      return json({ error: 'We could not generate your application PDF. Please try again.' }, 502)
+    }
+  }
 
   return new Response(pdf, {
     status: 200,
