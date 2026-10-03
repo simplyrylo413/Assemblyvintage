@@ -59,12 +59,12 @@
   gap:18px;
   min-height:calc(var(--event-meta-row) + var(--event-detail-row) + var(--event-row-gap));
 }
-.event-system__count{position:relative;flex:0 0 auto;padding:0 5px 18px 4px}
+.event-system__count{position:relative;flex:0 0 auto;padding:6px 5px 18px 4px;overflow:visible}
 .event-system__count>span{
   display:block;
   font-family:var(--serif);
   font-size:clamp(58px,5vw,88px);
-  line-height:.72;
+  line-height:.86;
   font-weight:400;
   letter-spacing:-.05em;
 }

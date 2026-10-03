@@ -38,6 +38,7 @@ When implementing from a selected generated mock, treat that image as the source
 Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts/prepare-sites-build.mjs`, and `tests/sites-worker.test.mjs` intact so the same local prototype can be handed to Sites. Before a Sites handoff, run `npm run build` and `npm run test:sites`; the build must leave `dist/client/index.html`, `dist/server/index.js`, and `dist/.openai/hosting.json`.
 
 - The homepage `THE VINTAGE LINEUP` lead visual reads `20+` in the original large serif number style with the existing coral hand-drawn underline, paired with `HAND-PICKED VINTAGE SELLERS` and `DESIGNER + ARCHIVAL + ONE-OF-ONE PIECES`.
+- The `20+` vintage-lineup count must remain fully visible with safe top breathing room; preserve the large serif treatment and coral hand-drawn underline without clipping the numerals.
 
 ## Publish target
 
