@@ -452,6 +452,25 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
                   ))}
                   <small>Select all markets you’d like to join.</small>
                 </fieldset>
+
+                <div className="vendor-lookbook__market-details" aria-label="Market logistics and payment details">
+                  <div className="vendor-lookbook__market-details-main">
+                    <span className="vendor-lookbook__notice-label">MARKET DETAILS</span>
+                    <p><strong>Venue:</strong> Aloft Hotel Delray Beach — 202 SE 5th Ave, Delray Beach, FL 33483</p>
+                    <p><strong>Event Time:</strong> 11:00 AM – 4:00 PM</p>
+                    <p><strong>Load-In:</strong> 9:00 AM</p>
+                    <p><strong>Load-Out:</strong> 4:00 PM – 6:00 PM</p>
+                  </div>
+                  <div className="vendor-lookbook__market-details-rules">
+                    <ul>
+                      <li>All merchandise must be removed by 6:00 PM.</li>
+                      <li>Vendor spaces are not confirmed until payment has been made.</li>
+                      <li>All vendor space payments are final. We do not accept cancellations or issue refunds once payment has been made.</li>
+                      <li>This event takes place rain or shine.</li>
+                    </ul>
+                  </div>
+                </div>
+
                 <div className="vendor-lookbook__fields">
                   <label className="vendor-lookbook__field">Space size <Requirement /><select name="space-size" value={spaceSize} onChange={(event) => setSpaceSize(event.target.value)} required><option value="8x10">8′ × 10′ — $300</option><option value="6x4">6′ × 4′ — $200</option></select></label>
                   <label className="vendor-lookbook__field">Business / shop name <Requirement /><input name="business-name" placeholder="Your business name" required maxLength={150} /></label>
