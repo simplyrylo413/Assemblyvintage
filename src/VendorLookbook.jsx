@@ -29,6 +29,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
   const [error, setError] = useState('')
   const formRef = useRef(null)
   const lookbookRef = useRef(null)
+  const applicationSnapshotRef = useRef(null)
 
   useEffect(() => {
     const previews = photos.map((photo) => ({ name: photo.name, url: URL.createObjectURL(photo) }))
@@ -105,45 +106,62 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
     openSection(activeSection + 1)
   }
 
-  const captureCompletedApplicationPdf = async () => {
+  const createCompletedApplicationSnapshot = () => {
+    const source = lookbookRef.current
+    if (!source) throw new Error('We could not snapshot your completed application.')
+
+    const snapshot = source.cloneNode(true)
+    const sourceControls = Array.from(source.querySelectorAll('input, textarea, select'))
+    const snapshotControls = Array.from(snapshot.querySelectorAll('input, textarea, select'))
+
+    sourceControls.forEach((control, index) => {
+      const cloned = snapshotControls[index]
+      if (!cloned) return
+
+      if (control instanceof HTMLInputElement && (control.type === 'checkbox' || control.type === 'radio')) {
+        cloned.checked = control.checked
+        if (control.checked) cloned.setAttribute('checked', '')
+        else cloned.removeAttribute('checked')
+        return
+      }
+
+      if (cloned instanceof HTMLSelectElement) {
+        cloned.value = control.value
+        Array.from(cloned.options).forEach((option) => {
+          option.selected = option.value === control.value
+          if (option.selected) option.setAttribute('selected', '')
+          else option.removeAttribute('selected')
+        })
+        return
+      }
+
+      cloned.value = control.value
+      cloned.setAttribute('value', control.value)
+      if (cloned instanceof HTMLTextAreaElement) cloned.textContent = control.value
+    })
+
+    snapshot.querySelectorAll('.vendor-lookbook__error').forEach((node) => node.remove())
+    snapshot.querySelectorAll('.vendor-lookbook__actions').forEach((node) => node.remove())
+
+    return snapshot
+  }
+
+  const captureCompletedApplicationPdf = async (frozenSnapshot = applicationSnapshotRef.current) => {
     const html2canvas = window.html2canvas
     const JsPdf = window.jspdf?.jsPDF
     if (!html2canvas || !JsPdf) throw new Error('PDF capture tools are still loading. Please wait a moment and try again.')
-    if (!lookbookRef.current) throw new Error('We could not capture your completed application.')
+    if (!frozenSnapshot) throw new Error('The completed application snapshot is unavailable.')
 
-    const source = lookbookRef.current
-    const sourceControls = Array.from(source.querySelectorAll('input, textarea, select'))
     const pdf = new JsPdf({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true })
     const pageWidth = pdf.internal.pageSize.getWidth()
     const pageHeight = pdf.internal.pageSize.getHeight()
     let pdfPageCount = 0
 
-    const syncControls = (clone) => {
-      const cloneControls = Array.from(clone.querySelectorAll('input, textarea, select'))
-      sourceControls.forEach((control, index) => {
-        const cloned = cloneControls[index]
-        if (!cloned) return
-        if (control instanceof HTMLInputElement && (control.type === 'checkbox' || control.type === 'radio')) {
-          cloned.checked = control.checked
-          if (control.checked) cloned.setAttribute('checked', '')
-          else cloned.removeAttribute('checked')
-        } else if (cloned instanceof HTMLSelectElement) {
-          cloned.value = control.value
-          Array.from(cloned.options).forEach((option) => {
-            option.selected = option.value === control.value
-          })
-        } else {
-          cloned.value = control.value
-          cloned.setAttribute('value', control.value)
-          if (cloned instanceof HTMLTextAreaElement) cloned.textContent = control.value
-        }
-      })
-    }
-
     const addCanvasToPdf = (canvas) => {
-      const imageData = canvas.toDataURL('image/jpeg', 0.88)
+      const imageData = canvas.toDataURL('image/jpeg', 0.9)
       const imageHeight = canvas.height * pageWidth / canvas.width
       let offset = 0
+
       while (offset < imageHeight - 0.5) {
         if (pdfPageCount > 0) pdf.addPage()
         pdf.addImage(imageData, 'JPEG', 0, -offset, pageWidth, imageHeight, undefined, 'FAST')
@@ -153,7 +171,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
     }
 
     for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex += 1) {
-      const clone = source.cloneNode(true)
+      const clone = frozenSnapshot.cloneNode(true)
       clone.classList.add('vendor-lookbook--pdf-capture')
       Object.assign(clone.style, {
         position: 'fixed',
@@ -168,8 +186,6 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
         zIndex: '-1',
         background: '#c0dceb',
       })
-
-      syncControls(clone)
 
       clone.querySelectorAll('.vendor-lookbook__section').forEach((section, index) => {
         const visible = index === sectionIndex
@@ -187,9 +203,6 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
       clone.querySelectorAll('.vendor-lookbook__progress i').forEach((bar, index) => {
         bar.classList.toggle('is-filled', index === sectionIndex)
       })
-
-      clone.querySelectorAll('.vendor-lookbook__actions').forEach((node) => node.remove())
-      clone.querySelectorAll('.vendor-lookbook__error').forEach((node) => node.remove())
 
       const captureNote = document.createElement('div')
       captureNote.className = 'vendor-lookbook__pdf-note'
@@ -255,6 +268,15 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
       if (!validateSection(index, data)) return
     }
 
+    let frozenSnapshot
+    try {
+      frozenSnapshot = createCompletedApplicationSnapshot()
+      applicationSnapshotRef.current = frozenSnapshot
+    } catch (snapshotError) {
+      setError(snapshotError instanceof Error ? snapshotError.message : 'We could not prepare your completed application copy.')
+      return
+    }
+
     setSubmitting(true)
     setError('')
     setPdfStatus('')
@@ -262,7 +284,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
     const applicationId = crypto.randomUUID()
     const pdfPromise = import.meta.env.DEV
       ? Promise.resolve(null)
-      : captureCompletedApplicationPdf().catch((captureError) => {
+      : captureCompletedApplicationPdf(frozenSnapshot).catch((captureError) => {
           console.error('Vendor application PDF capture failed', captureError)
           return null
         })
@@ -361,7 +383,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
                 onClick={async () => {
                   setPdfStatus('Generating your completed application PDF…')
                   try {
-                    const retryPdf = await captureCompletedApplicationPdf()
+                    const retryPdf = await captureCompletedApplicationPdf(applicationSnapshotRef.current)
                     const retryUrl = URL.createObjectURL(retryPdf)
                     setLocalPdfUrl((current) => {
                       if (current) URL.revokeObjectURL(current)
