@@ -183,7 +183,7 @@ const faqs = {
     },
     {
       question: 'What types of vendors are a fit?',
-      answer: 'Vintage apparel, accessories, jewelry, designer resale, home objects, records, art, and adjacent lifestyle goods can all fit if the assortment feels intentional and elevated.',
+      answer: 'Assembly is a curated vintage fashion and jewelry market, with a focus on incredible vintage clothing, designer pieces, jewelry, handbags, and accessories. We love vendors with a strong point of view and collections that feel special, thoughtfully sourced, and fun to discover.\n\nWhile vintage fashion is at the heart of Assembly, we also make room for a small mix of complementary vendors bringing something unique to the market—think great eyewear, barware, art, and other unexpected finds that fit the overall vibe.\n\nIf you think your collection feels like Assembly, we’d love to see it. Apply and show us what you’ve got!',
     },
     {
       question: 'What should my booth setup look like?',
@@ -191,11 +191,11 @@ const faqs = {
     },
     {
       question: 'How much inventory should I bring?',
-      answer: 'Bring enough depth to refresh your rack during the day, but edit tightly. A strong point of view usually performs better than packing every piece you own.',
+      answer: 'A good rule of thumb is to bring 40–60 pieces for clothing vendors, depending on your booth size and how you plan to display your collection.\n\nThe goal is to have enough inventory to offer variety while keeping your booth organized and easy to shop. Well-curated racks, thoughtful displays, and a little breathing room usually make for a better shopping experience.\n\nQuality and presentation matter more than quantity—bring your best pieces and make them easy to discover.',
     },
     {
       question: 'How will vendors be promoted?',
-      answer: 'Assembly can feature vendors through event emails, social posts, reels, and market-day content. Clean photos, strong product stories, and quick details help your brand get highlighted.',
+      answer: 'Assembly promotes each market through our social media channels, email list, digital advertising, and community outreach.\n\nWe also highlight participating vendors leading up to the event so shoppers can discover who will be there and start getting excited about the lineup.\n\nPromotion works best when we all participate, so vendors are expected to help spread the word as well. Vendors are required to begin posting two weeks before the event, with two posts per week (four total) and tag @assemblyvintageco.\n\nThese can be feed posts, Reels, or TikTok videos. Stories are always encouraged too, but they don’t count toward the four required promotional posts.\n\nWe’ll promote the market. You promote your booth. Together, we build the crowd.',
     },
   ],
 }
