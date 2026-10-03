@@ -558,7 +558,7 @@ function HomePage() {
             </div>
 
             <div className="event-system__cta">
-              <button className="primary-button" type="button" onClick={() => setRegisterOpen(true)}>REGISTER FREE <ArrowRight size={17} /></button>
+              <button className="primary-button" type="button" onClick={() => setNewsletterOpen(true)}>SUBSCRIBE <ArrowRight size={17} /></button>
             </div>
           </section>
 
