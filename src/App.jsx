@@ -637,7 +637,7 @@ function HomePage() {
         <Modal label="Subscribe to Assembly Vintage" onClose={closeNewsletter}>
           <div className="newsletter-popup">
             <div className="newsletter-popup__image" aria-hidden="true">
-              <img src="/assets/market-friends.jpg" alt="" />
+              <img src="/assets/newsletter-popup-hero-20261003.webp" alt="" />
             </div>
             <div className="newsletter-popup__panel">
               <div className="newsletter-popup__headline">
