@@ -499,8 +499,8 @@ function HomePage() {
             <div className="event-system__market">
               <div className="event-system__heading">THE VINTAGE LINEUP</div>
               <div className="event-system__market-body">
-                <div className="event-system__count event-system__count--words">
-                  <span>RARE<br />FINDS</span>
+                <div className="event-system__count">
+                  <span>20+</span>
                   <svg className="event-system__underline" viewBox="0 0 126 26" aria-hidden="true">
                     <path pathLength="100" d="M6 12 C25 8 49 9 70 8 C88 7 105 8 119 7" />
                     <path pathLength="100" d="M22 21 C41 16 66 17 98 14" />
