@@ -580,7 +580,7 @@ function HomePage() {
               <div className="vendor-opportunity__intro">
                 <span className="vendor-logo-crop" aria-hidden="true"><img src="/assets/assembly-logo-final.png" alt="" /></span>
                 <p className="eyebrow">BECOME AN ASSEMBLY VENDOR</p>
-                <h2>Application<br />Process With<br />Confidence.</h2>
+                <h2>Good Vintage<br />Deserves Good<br />Company.</h2>
                 <p>One application. Multiple markets. A bigger tomorrow.</p>
                 <button className="primary-button" type="button" onClick={() => setVendorApplicationOpen(true)}>APPLY TO VEND <ArrowRight size={17} /></button>
               </div>
