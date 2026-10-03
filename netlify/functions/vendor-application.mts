@@ -109,16 +109,22 @@ export function createVendorApplication({
       categories,
       photoUrls,
     }
-    const backup = { applicationId, submittedAt, status: 'pending', application }
+    const receiptUrl = new URL(`/api/vendor-application-pdf?id=${encodeURIComponent(applicationId)}`, req.url).toString()
+    const backup = { applicationId, submittedAt, status: 'pending', receiptUrl, application }
     const backupKey = `applications/${applicationId}`
+    const pdfKey = `pdfs/${applicationId}.pdf`
     let store
 
     try {
       store = openStore()
-      await store.setJSON(backupKey, backup)
+      const pdfBytes = buildVendorApplicationPdf({ applicationId, submittedAt, application })
+      await Promise.all([
+        store.setJSON(backupKey, backup),
+        store.set(pdfKey, new Blob([pdfBytes], { type: 'application/pdf' })),
+      ])
     } catch (error) {
-      console.error('Vendor application backup failed', error)
-      return json({ error: 'We could not submit your application. Please try again.' }, 502)
+      console.error('Vendor application receipt backup failed', error)
+      return json({ error: 'We could not create your application record. Please try again.' }, 502)
     }
 
     try {
@@ -145,6 +151,8 @@ export function createVendorApplication({
         vendorTermsAcceptedAt: submittedAt,
         categories,
         photoUrls,
+        applicationPdfUrl: receiptUrl,
+        notificationEmail: 'violet.rylo@gmail.com',
       })
     } catch (error) {
       console.error('Vendor application submission failed', error)
@@ -162,7 +170,7 @@ export function createVendorApplication({
       console.error('Vendor application backup status update failed', applicationId, error)
     }
 
-    return json({ ok: true, applicationId })
+    return json({ ok: true, applicationId, receiptUrl })
   }
 }
 

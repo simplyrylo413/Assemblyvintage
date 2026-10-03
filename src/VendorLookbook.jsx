@@ -21,6 +21,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
   const [photos, setPhotos] = useState([])
   const [photoPreviews, setPhotoPreviews] = useState([])
   const [submitted, setSubmitted] = useState(false)
+  const [receiptUrl, setReceiptUrl] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [dirty, setDirty] = useState(false)
   const [error, setError] = useState('')
@@ -142,6 +143,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
         })
         const result = await response.json().catch(() => ({}))
         if (!response.ok || !result.ok) throw new Error(result.error || 'We could not submit your application.')
+        setReceiptUrl(result.receiptUrl || '')
       }
       setSubmitted(true)
     } catch (submissionError) {
@@ -160,6 +162,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
             <span className="vendor-lookbook__edition">APPLICATION RECEIVED</span>
             <h2>Thank you.<br />We’ll be in touch.</h2>
             <p>Your application for {selectedMarkets.length} {selectedMarkets.length === 1 ? 'market' : 'markets'} has been submitted for review. Our team will be in touch after curation.</p>
+            {receiptUrl && <a className="secondary-button" href={receiptUrl} target="_blank" rel="noopener noreferrer">DOWNLOAD APPLICATION COPY <ArrowRight size={17} /></a>}
             <button className="primary-button" type="button" onClick={guardedClose}>CLOSE <ArrowRight size={17} /></button>
           </div>
         ) : (
