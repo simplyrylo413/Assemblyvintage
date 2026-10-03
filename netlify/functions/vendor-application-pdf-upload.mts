@@ -24,7 +24,8 @@ export default async (req: Request) => {
   const receiptUrl = new URL(`/api/vendor-application-pdf?id=${encodeURIComponent(applicationId)}`, req.url).toString()
 
   try {
-    await store.set(key, new Blob([await pdf.arrayBuffer()], { type: 'application/pdf' }))
+    const bytes = await pdf.arrayBuffer()
+    await store.set(key, bytes)
   } catch (error) {
     console.error('Vendor screen-capture PDF storage failed', error)
     return json({ error: 'We could not save your completed application PDF.' }, 502)

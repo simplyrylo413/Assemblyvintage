@@ -14,7 +14,7 @@ export default async (req: Request) => {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return json({ error: 'Invalid application receipt.' }, 400)
 
   const store = getStore('vendor-applications', { consistency: 'strong' })
-  const pdf = await store.get(`pdfs/${id}.pdf`, { type: 'arrayBuffer' })
+  const pdf = await store.get(`pdfs/${id}.pdf`, { type: 'blob' })
   if (!pdf) return json({ error: 'Application receipt not found.' }, 404)
 
   return new Response(pdf, {
