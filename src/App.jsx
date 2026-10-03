@@ -391,9 +391,6 @@ function HomePage() {
   }, [])
 
   useEffect(() => {
-    const subscribed = window.localStorage.getItem('assembly-newsletter-subscribed') === '1'
-    if (subscribed) return undefined
-
     const timer = window.setTimeout(() => setNewsletterOpen(true), 450)
     return () => window.clearTimeout(timer)
   }, [])
@@ -481,7 +478,6 @@ function HomePage() {
       const result = await response.json().catch(() => ({}))
       if (!response.ok) throw new Error(result.error || 'Subscription failed')
 
-      window.localStorage.setItem('assembly-newsletter-subscribed', '1')
       window.fbq?.('track', 'Lead', {
         content_name: 'Assembly Vintage Newsletter',
         content_category: 'Email Signup',
