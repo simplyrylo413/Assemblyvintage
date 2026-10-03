@@ -566,7 +566,7 @@ function HomePage() {
           <section className="hero" data-reveal>
             <img src="/assets/hero-indoor-v2.jpg" alt="Stylish shoppers browsing an elevated indoor vintage market" />
             <div className="hero-caption"><span className="mini-arch" aria-hidden="true" /><p>COME FOR THE VINTAGE.<br />STAY FOR THE PEOPLE.</p></div>
-            <button className="hero-register" type="button" onClick={() => setRegisterOpen(true)}>{nextMarket.shortDate} · {nextMarket.venue.toUpperCase()} <ArrowRight size={17} /></button>
+            <button className="hero-register" type="button" onClick={() => setNewsletterOpen(true)}>SUBSCRIBE <ArrowRight size={17} /></button>
           </section>
 
           <section className="market-story" id="past-markets" data-reveal>
