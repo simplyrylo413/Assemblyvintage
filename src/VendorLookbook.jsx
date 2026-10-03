@@ -146,8 +146,15 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
         setReceiptUrl(result.receiptUrl || '')
       }
       setSubmitted(true)
+      window.requestAnimationFrame(() => {
+        document.querySelector('.modal')?.scrollTo({ top: 0, behavior: 'smooth' })
+      })
     } catch (submissionError) {
+      setActiveSection(3)
       setError(submissionError instanceof Error ? submissionError.message : 'We could not submit your application. Please try again.')
+      window.requestAnimationFrame(() => {
+        document.querySelector('.vendor-lookbook__footer')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      })
     } finally {
       setSubmitting(false)
     }
@@ -253,6 +260,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
               </section>
 
               <div className="vendor-lookbook__footer">
+                {error && <p className="vendor-lookbook__error vendor-lookbook__error--submit" role="alert">{error}</p>}
                 <div className="vendor-lookbook__fee"><span>ESTIMATED BOOTH FEES</span><strong>${total}</strong><small>{selectedSpace.label} space · {selectedMarkets.length} {selectedMarkets.length === 1 ? 'market' : 'markets'}</small></div>
                 <div className="vendor-lookbook__actions">
                   {activeSection > 0 && <button type="button" className="vendor-lookbook__back" onClick={() => openSection(activeSection - 1)} disabled={submitting}><ArrowLeft size={17} /> BACK</button>}

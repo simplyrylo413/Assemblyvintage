@@ -117,14 +117,10 @@ export function createVendorApplication({
 
     try {
       store = openStore()
-      const pdfBytes = buildVendorApplicationPdf({ applicationId, submittedAt, application })
-      await Promise.all([
-        store.setJSON(backupKey, backup),
-        store.set(pdfKey, new Blob([pdfBytes], { type: 'application/pdf' })),
-      ])
+      await store.setJSON(backupKey, backup)
     } catch (error) {
-      console.error('Vendor application receipt backup failed', error)
-      return json({ error: 'We could not create your application record. Please try again.' }, 502)
+      console.error('Vendor application backup failed', error)
+      return json({ error: 'We could not save your application. Please try again.' }, 502)
     }
 
     try {
@@ -156,21 +152,37 @@ export function createVendorApplication({
       })
     } catch (error) {
       console.error('Vendor application submission failed', error)
-      return json({ error: 'We could not submit your application. Please try again.' }, 502)
+      try {
+        await store.setJSON(backupKey, {
+          ...backup,
+          status: 'google-sync-failed',
+          googleSyncFailedAt: new Date().toISOString(),
+        })
+      } catch {}
+      return json({ error: 'Your application was saved, but we could not finish submitting it to our review list. Please try again in a moment.' }, 502)
     }
 
-    // The pending record remains recoverable if this status update fails.
+    let receiptReady = false
+    try {
+      const pdfBytes = buildVendorApplicationPdf({ applicationId, submittedAt, application })
+      await store.set(pdfKey, new Blob([pdfBytes], { type: 'application/pdf' }))
+      receiptReady = true
+    } catch (error) {
+      console.error('Vendor application PDF generation failed after submission', applicationId, error)
+    }
+
     try {
       await store.setJSON(backupKey, {
         ...backup,
         status: 'google-accepted',
         googleAcceptedAt: new Date().toISOString(),
+        receiptReady,
       })
     } catch (error) {
       console.error('Vendor application backup status update failed', applicationId, error)
     }
 
-    return json({ ok: true, applicationId, receiptUrl })
+    return json({ ok: true, applicationId, receiptUrl: receiptReady ? receiptUrl : '' })
   }
 }
 
