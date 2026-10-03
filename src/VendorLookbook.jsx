@@ -125,6 +125,11 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
         return
       }
 
+      if (control instanceof HTMLInputElement && control.type === 'file') {
+        cloned.removeAttribute('value')
+        return
+      }
+
       if (cloned instanceof HTMLSelectElement) {
         cloned.value = control.value
         Array.from(cloned.options).forEach((option) => {

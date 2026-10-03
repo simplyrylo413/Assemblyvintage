@@ -159,7 +159,6 @@ export function CollaboratePage({ SiteHeader, SiteFooter }) {
               <article><span>02</span><h3>AN ENGAGED AUDIENCE</h3><p>A style-driven community that comes to discover, shop, meet people, and spend time in the places we activate.</p></article>
               <article><span>03</span><h3>A DISTINCT EXPERIENCE</h3><p>Assembly has a recognizable look, feel, vendor mix, and atmosphere — not a generic vendor fair.</p></article>
               <article><span>04</span><h3>MARKETING + CONTENT</h3><p>Promotion around the market plus social-ready moments that give people a reason to share where they are.</p></article>
-              <article><span>05</span><h3>MARKET ORGANIZATION</h3><p>Vendor sourcing, applications, coordination, registration, communication, and the structure behind market day.</p></article>
             </div>
           </section>
 
