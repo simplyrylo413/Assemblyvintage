@@ -8,7 +8,7 @@ const sections = [
   { title: 'Agreement', description: 'Curation notice and vendor terms.' },
 ]
 
-const categories = ['Vintage clothing', 'Designer resale', 'Accessories', 'Home / objects', 'Other']
+const categories = ['Vintage clothing', 'Vintage jewelry', 'Vintage handbags', 'Home / objects', 'Other']
 
 function Requirement({ optional = false }) {
   return <span className={optional ? 'vendor-optional' : 'vendor-required'}>{optional ? 'Optional' : 'Required'}</span>

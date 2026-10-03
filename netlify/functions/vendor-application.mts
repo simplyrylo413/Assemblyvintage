@@ -14,8 +14,8 @@ const SPACES: Record<string, { label: string; price: number }> = {
 
 const ALLOWED_CATEGORIES = new Set([
   'Vintage clothing',
-  'Designer resale',
-  'Accessories',
+  'Vintage jewelry',
+  'Vintage handbags',
   'Home / objects',
   'Other',
 ])
