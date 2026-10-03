@@ -119,7 +119,7 @@ function SiteFooter({ homeHref = '#top', isTerms = false }) {
   return <footer className="site-footer" id={isTerms ? undefined : 'about'}>
     <div className="site-footer__top">
       <Logo href={homeHref} />
-      <p>CURATED IN SOUTH FLORIDA.<br />BUILT FOR GOOD PEOPLE.</p>
+      <p>CURATED IN SOUTH FLORIDA.<br />BUILT FOR FASHIONABLE PEOPLE.</p>
     </div>
     <div className="site-footer__bottom">
       <div className="site-footer__social">
