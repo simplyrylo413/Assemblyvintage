@@ -165,7 +165,6 @@ export function CollaboratePage({ SiteHeader, SiteFooter }) {
           <section className="collaborate-types" aria-labelledby="types-heading">
             <div className="collaborate-types__visual">
               <img src="/assets/hero-indoor-v2.jpg" alt="Assembly Vintage market inside a bright venue" />
-              <div className="collaborate-types__scribble">DIFFERENT<br />PEOPLE.<br />SAME GOOD<br />ENERGY.</div>
             </div>
             <div className="collaborate-types__content">
               <p className="eyebrow">WHO SHOULD REACH OUT</p>
