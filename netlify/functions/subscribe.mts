@@ -27,7 +27,7 @@ export default async (req: Request) => {
   }
 
   const email = clean(body.email).toLowerCase()
-  if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: 'Please enter a valid email address.' }, 400)
   }
 
