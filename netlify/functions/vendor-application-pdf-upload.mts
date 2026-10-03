@@ -21,11 +21,25 @@ export default async (req: Request) => {
 
   const store = getStore('vendor-applications', { consistency: 'strong' })
   const key = `pdfs/${applicationId}.pdf`
+  const queueKey = `email-queue/${applicationId}.json`
   const receiptUrl = new URL(`/api/vendor-application-pdf?id=${encodeURIComponent(applicationId)}`, req.url).toString()
 
   try {
     const bytes = await pdf.arrayBuffer()
     await store.set(key, bytes)
+
+    const backup = await store.get(`applications/${applicationId}`, { type: 'json' })
+    const application = backup?.application || {}
+    await store.setJSON(queueKey, {
+      applicationId,
+      receiptUrl,
+      notificationEmail: 'violet.rylo@gmail.com',
+      businessName: application.businessName || 'Vendor',
+      selectedEvents: application.selectedEvents || '',
+      estimatedTotal: application.estimatedTotal || '',
+      createdAt: new Date().toISOString(),
+      status: 'pending',
+    })
   } catch (error) {
     console.error('Vendor screen-capture PDF storage failed', error)
     return json({ error: 'We could not save your completed application PDF.' }, 502)
