@@ -40,6 +40,8 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - The homepage `THE VINTAGE LINEUP` lead visual reads `20+` in the original large serif number style with the existing coral hand-drawn underline, paired with `HAND-PICKED VINTAGE SELLERS` and `DESIGNER + ARCHIVAL + ONE-OF-ONE PIECES`.
 - The `20+` vintage-lineup count must remain fully visible with safe top breathing room; preserve the large serif treatment and coral hand-drawn underline without clipping the numerals.
 
+- The homepage shows a first-load newsletter popup inspired by the approved split-panel mockup: excited indoor-market shoppers on the left using `market-friends.jpg`; on the right, a bold black Assembly arch sits directly above `LET'S`, with large bold `ASSEMBLE`, a coral brush underline, one email field, and a black `SUBSCRIBE` button. Do not show a separate `ASSEMBLY` word above the headline. Dismissal lasts for the browser session, and a successful subscriber is remembered locally. The popup subscription uses the same Klaviyo private API key and list ID as the attendee ticket-registration flow.
+
 ## Publish target
 
 - When Albert asks to publish or deploy Assembly Vintage without naming a destination, ask whether he means the Sites prototype (`assembly-vintage-prototype`) or the live Netlify site (`assembly-vintage`).

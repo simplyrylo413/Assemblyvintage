@@ -366,6 +366,10 @@ function HomePage() {
   const [vendorApplicationOpen, setVendorApplicationOpen] = useState(false)
   const [faqAudience, setFaqAudience] = useState('shopper')
   const [openFaq, setOpenFaq] = useState(0)
+  const [newsletterOpen, setNewsletterOpen] = useState(false)
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false)
+  const [newsletterError, setNewsletterError] = useState('')
+  const [newsletterSuccess, setNewsletterSuccess] = useState(false)
   const siteRef = useRef(null)
 
   useEffect(() => {
@@ -384,6 +388,15 @@ function HomePage() {
     if (id && /^#[a-z-]+$/.test(id)) {
       window.requestAnimationFrame(() => siteRef.current?.querySelector(id)?.scrollIntoView())
     }
+  }, [])
+
+  useEffect(() => {
+    const dismissed = window.sessionStorage.getItem('assembly-newsletter-popup-dismissed') === '1'
+    const subscribed = window.localStorage.getItem('assembly-newsletter-subscribed') === '1'
+    if (dismissed || subscribed) return undefined
+
+    const timer = window.setTimeout(() => setNewsletterOpen(true), 450)
+    return () => window.clearTimeout(timer)
   }, [])
 
   const scrollTo = (id) => {
@@ -444,6 +457,44 @@ function HomePage() {
       setRegistrationError(error instanceof Error ? error.message : 'We could not complete your registration. Please try again.')
     } finally {
       setRegistrationSubmitting(false)
+    }
+  }
+
+  const closeNewsletter = () => {
+    window.sessionStorage.setItem('assembly-newsletter-popup-dismissed', '1')
+    setNewsletterOpen(false)
+    setNewsletterError('')
+  }
+
+  const handleNewsletterSubscribe = async (event) => {
+    event.preventDefault()
+    setNewsletterError('')
+    setNewsletterSubmitting(true)
+
+    const formData = new FormData(event.currentTarget)
+    const email = String(formData.get('email') || '').trim()
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(result.error || 'Subscription failed')
+
+      window.localStorage.setItem('assembly-newsletter-subscribed', '1')
+      window.sessionStorage.setItem('assembly-newsletter-popup-dismissed', '1')
+      window.fbq?.('track', 'Lead', {
+        content_name: 'Assembly Vintage Newsletter',
+        content_category: 'Email Signup',
+        status: 'subscribed',
+      })
+      setNewsletterSuccess(true)
+    } catch (error) {
+      setNewsletterError(error instanceof Error ? error.message : 'We could not subscribe you right now. Please try again.')
+    } finally {
+      setNewsletterSubmitting(false)
     }
   }
 
@@ -588,6 +639,47 @@ function HomePage() {
           <SiteFooter />
         </div>
       </main>
+
+      {newsletterOpen && (
+        <Modal label="Subscribe to Assembly Vintage" onClose={closeNewsletter}>
+          <div className="newsletter-popup">
+            <div className="newsletter-popup__image" aria-hidden="true">
+              <img src="/assets/market-friends.jpg" alt="" />
+              <div className="newsletter-popup__photo-copy">A BRIGHTER<br />VINTAGE TOMORROW <span /></div>
+            </div>
+            <div className="newsletter-popup__panel">
+              <div className="newsletter-popup__headline">
+                <span className="newsletter-popup__arch" aria-hidden="true" />
+                <h2><span>LET'S</span><strong>ASSEMBLE</strong></h2>
+                <span className="newsletter-popup__brush" aria-hidden="true" />
+              </div>
+
+              {newsletterSuccess ? (
+                <div className="newsletter-popup__success" role="status">
+                  <p className="newsletter-popup__success-kicker">YOU'RE IN.</p>
+                  <p>Good vintage news is headed your way.</p>
+                  <button className="newsletter-popup__done" type="button" onClick={closeNewsletter}>BACK TO THE MARKET</button>
+                </div>
+              ) : (
+                <>
+                  <form className="newsletter-popup__form" onSubmit={handleNewsletterSubscribe}>
+                    <label className="sr-only" htmlFor="newsletter-popup-email">Email address</label>
+                    <input id="newsletter-popup-email" type="email" name="email" autoComplete="email" placeholder="Email" required />
+                    <button type="submit" disabled={newsletterSubmitting}>{newsletterSubmitting ? 'SUBSCRIBING…' : 'SUBSCRIBE'}</button>
+                    {newsletterError && <p className="newsletter-popup__error" role="alert">{newsletterError}</p>}
+                  </form>
+                  <p className="newsletter-popup__dek">Get exclusive content &amp; be the first<br />to know when tickets drop.</p>
+                </>
+              )}
+
+              <div className="newsletter-popup__footer">
+                <span />
+                <p>PEOPLE&nbsp;&nbsp;/&nbsp;&nbsp;VINTAGE&nbsp;&nbsp;/&nbsp;&nbsp;A BRIGHTER TOMORROW</p>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {registerOpen && (
         <Modal label={`Register for Assembly Vintage on ${nextMarket.date}`} onClose={closeRegistration}>
