@@ -391,9 +391,8 @@ function HomePage() {
   }, [])
 
   useEffect(() => {
-    const dismissed = window.sessionStorage.getItem('assembly-newsletter-popup-dismissed') === '1'
     const subscribed = window.localStorage.getItem('assembly-newsletter-subscribed') === '1'
-    if (dismissed || subscribed) return undefined
+    if (subscribed) return undefined
 
     const timer = window.setTimeout(() => setNewsletterOpen(true), 450)
     return () => window.clearTimeout(timer)
@@ -461,7 +460,6 @@ function HomePage() {
   }
 
   const closeNewsletter = () => {
-    window.sessionStorage.setItem('assembly-newsletter-popup-dismissed', '1')
     setNewsletterOpen(false)
     setNewsletterError('')
   }
@@ -484,7 +482,6 @@ function HomePage() {
       if (!response.ok) throw new Error(result.error || 'Subscription failed')
 
       window.localStorage.setItem('assembly-newsletter-subscribed', '1')
-      window.sessionStorage.setItem('assembly-newsletter-popup-dismissed', '1')
       window.fbq?.('track', 'Lead', {
         content_name: 'Assembly Vintage Newsletter',
         content_category: 'Email Signup',
