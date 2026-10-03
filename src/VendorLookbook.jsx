@@ -26,6 +26,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
   const [dirty, setDirty] = useState(false)
   const [error, setError] = useState('')
   const formRef = useRef(null)
+  const lookbookRef = useRef(null)
 
   useEffect(() => {
     const previews = photos.map((photo) => ({ name: photo.name, url: URL.createObjectURL(photo) }))
@@ -98,6 +99,109 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
     openSection(activeSection + 1)
   }
 
+  const captureCompletedApplicationPdf = async () => {
+    const html2canvas = window.html2canvas
+    const JsPdf = window.jspdf?.jsPDF
+    if (!html2canvas || !JsPdf) throw new Error('PDF capture tools are still loading. Please wait a moment and submit again.')
+    if (!lookbookRef.current) throw new Error('We could not capture your completed application.')
+
+    const source = lookbookRef.current
+    const clone = source.cloneNode(true)
+    clone.classList.add('vendor-lookbook--pdf-capture')
+    Object.assign(clone.style, {
+      position: 'fixed',
+      left: '-20000px',
+      top: '0',
+      width: '1180px',
+      maxWidth: '1180px',
+      height: 'auto',
+      maxHeight: 'none',
+      overflow: 'visible',
+      zIndex: '-1',
+      background: '#c0dceb',
+    })
+
+    const sourceControls = source.querySelectorAll('input, textarea, select')
+    const cloneControls = clone.querySelectorAll('input, textarea, select')
+    sourceControls.forEach((control, index) => {
+      const cloned = cloneControls[index]
+      if (!cloned) return
+      if (control instanceof HTMLInputElement && (control.type === 'checkbox' || control.type === 'radio')) {
+        cloned.checked = control.checked
+        if (control.checked) cloned.setAttribute('checked', '')
+        else cloned.removeAttribute('checked')
+      } else {
+        cloned.value = control.value
+        cloned.setAttribute('value', control.value)
+        if (cloned instanceof HTMLTextAreaElement) cloned.textContent = control.value
+        if (cloned instanceof HTMLSelectElement) {
+          Array.from(cloned.options).forEach((option) => {
+            option.selected = option.value === control.value
+          })
+        }
+      }
+    })
+
+    clone.querySelectorAll('.vendor-lookbook__section').forEach((section) => {
+      section.hidden = false
+      section.removeAttribute('hidden')
+    })
+    clone.querySelectorAll('.vendor-lookbook__nav-item').forEach((item) => item.classList.remove('is-active'))
+    clone.querySelectorAll('.vendor-lookbook__actions').forEach((node) => node.remove())
+    clone.querySelectorAll('.vendor-lookbook__error').forEach((node) => node.remove())
+
+    const captureNote = document.createElement('div')
+    captureNote.className = 'vendor-lookbook__pdf-note'
+    captureNote.textContent = 'COMPLETED VENDOR APPLICATION — CAPTURED AT SUBMISSION'
+    clone.prepend(captureNote)
+
+    document.body.appendChild(clone)
+
+    try {
+      await Promise.all(Array.from(clone.querySelectorAll('img')).map((img) => img.decode?.().catch(() => {})))
+      const canvas = await html2canvas(clone, {
+        scale: 1.25,
+        useCORS: true,
+        backgroundColor: '#c0dceb',
+        logging: false,
+        windowWidth: 1180,
+        width: clone.scrollWidth,
+        height: clone.scrollHeight,
+      })
+
+      const pdf = new JsPdf({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true })
+      const pageWidth = pdf.internal.pageSize.getWidth()
+      const pageHeight = pdf.internal.pageSize.getHeight()
+      const imageData = canvas.toDataURL('image/jpeg', 0.9)
+      const imageHeight = canvas.height * pageWidth / canvas.width
+      let offset = 0
+      let page = 0
+
+      while (offset < imageHeight) {
+        if (page > 0) pdf.addPage()
+        pdf.addImage(imageData, 'JPEG', 0, -offset, pageWidth, imageHeight, undefined, 'FAST')
+        offset += pageHeight
+        page += 1
+      }
+
+      return pdf.output('blob')
+    } finally {
+      clone.remove()
+    }
+  }
+
+  const uploadCompletedApplicationPdf = async (applicationId, pdfBlob) => {
+    const payload = new FormData()
+    payload.append('applicationId', applicationId)
+    payload.append('pdf', pdfBlob, `assembly-vendor-application-${applicationId}.pdf`)
+    const response = await fetch('/api/vendor-application-pdf-upload', { method: 'POST', body: payload })
+    const result = await response.json().catch(() => ({}))
+    if (!response.ok || !result.ok || !result.receiptUrl) {
+      throw new Error(result.error || 'We could not save the completed application PDF.')
+    }
+    return result.receiptUrl
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     const data = new FormData(formRef.current)
@@ -109,6 +213,10 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
     setError('')
     try {
       if (!import.meta.env.DEV) {
+        const applicationId = crypto.randomUUID()
+        const completedPdf = await captureCompletedApplicationPdf()
+        const capturedReceiptUrl = await uploadCompletedApplicationPdf(applicationId, completedPdf)
+
         const photoUrls = []
         for (const photo of photos) {
           const uploadData = new FormData()
@@ -125,6 +233,8 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            applicationId,
+            applicationPdfUrl: capturedReceiptUrl,
             markets: selectedMarkets,
             spaceSize,
             businessName: data.get('business-name'),
@@ -143,7 +253,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
         })
         const result = await response.json().catch(() => ({}))
         if (!response.ok || !result.ok) throw new Error(result.error || 'We could not submit your application.')
-        setReceiptUrl(result.receiptUrl || '')
+        setReceiptUrl(capturedReceiptUrl || result.receiptUrl || '')
       }
       setSubmitted(true)
       window.requestAnimationFrame(() => {
@@ -162,7 +272,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
 
   return (
     <Modal label="Assembly Vintage vendor application" onClose={guardedClose}>
-      <div className="vendor-lookbook">
+      <div className="vendor-lookbook" ref={lookbookRef}>
         <div className="vendor-lookbook__masthead"><span>ASSEMBLY VINTAGE</span><span>VENDOR APPLICATION</span></div>
         {submitted ? (
           <div className="vendor-lookbook__success" role="status">

@@ -1,0 +1,49 @@
+import { getStore } from '@netlify/blobs'
+import { json, sendToGoogle } from './_shared/vendor-google.mts'
+
+const MAX_PDF_BYTES = 18 * 1024 * 1024
+
+export default async (req: Request) => {
+  if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405)
+
+  let formData: FormData
+  try {
+    formData = await req.formData()
+  } catch {
+    return json({ error: 'Invalid PDF upload.' }, 400)
+  }
+
+  const applicationId = String(formData.get('applicationId') || '').trim()
+  const pdf = formData.get('pdf')
+  if (!/^[0-9a-f-]{36}$/i.test(applicationId)) return json({ error: 'Invalid application ID.' }, 400)
+  if (!(pdf instanceof File) || pdf.type !== 'application/pdf') return json({ error: 'A PDF application copy is required.' }, 400)
+  if (pdf.size > MAX_PDF_BYTES) return json({ error: 'The completed application PDF is too large. Please try again.' }, 413)
+
+  const store = getStore('vendor-applications', { consistency: 'strong' })
+  const key = `pdfs/${applicationId}.pdf`
+  const receiptUrl = new URL(`/api/vendor-application-pdf?id=${encodeURIComponent(applicationId)}`, req.url).toString()
+
+  try {
+    await store.set(key, new Blob([await pdf.arrayBuffer()], { type: 'application/pdf' }))
+  } catch (error) {
+    console.error('Vendor screen-capture PDF storage failed', error)
+    return json({ error: 'We could not save your completed application PDF.' }, 502)
+  }
+
+  try {
+    await sendToGoogle({
+      action: 'application-pdf-ready',
+      applicationId,
+      applicationPdfUrl: receiptUrl,
+      notificationEmail: 'violet.rylo@gmail.com',
+    })
+  } catch (error) {
+    console.warn('Google webhook did not accept PDF-ready update', applicationId, error)
+  }
+
+  return json({ ok: true, applicationId, receiptUrl })
+}
+
+export const config = {
+  path: '/api/vendor-application-pdf-upload',
+}

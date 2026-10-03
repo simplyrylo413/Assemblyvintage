@@ -84,7 +84,9 @@ export function createVendorApplication({
 
     const eventCount = marketIds.length
     const selectedEvents = marketIds.map((id) => `${MARKETS[id].name} — ${MARKETS[id].date}`).join(', ')
-    const applicationId = randomUUID()
+    const requestedApplicationId = clean(body.applicationId, 64)
+    const applicationId = /^[0-9a-f-]{36}$/i.test(requestedApplicationId) ? requestedApplicationId : randomUUID()
+    const applicationPdfUrl = clean(body.applicationPdfUrl, 500)
     const submittedAt = new Date().toISOString()
     const application = {
       marketIds,
@@ -109,10 +111,9 @@ export function createVendorApplication({
       categories,
       photoUrls,
     }
-    const receiptUrl = new URL(`/api/vendor-application-pdf?id=${encodeURIComponent(applicationId)}`, req.url).toString()
+    const receiptUrl = applicationPdfUrl || new URL(`/api/vendor-application-pdf?id=${encodeURIComponent(applicationId)}`, req.url).toString()
     const backup = { applicationId, submittedAt, status: 'pending', receiptUrl, application }
     const backupKey = `applications/${applicationId}`
-    const pdfKey = `pdfs/${applicationId}.pdf`
     let store
 
     try {
@@ -127,6 +128,7 @@ export function createVendorApplication({
       await deliver({
         action: 'submit-application',
         applicationId,
+        applicationPdfUrl: receiptUrl,
         selectedEvents,
         spaceSize,
         spaceLabel: space.label,
@@ -147,7 +149,6 @@ export function createVendorApplication({
         vendorTermsAcceptedAt: submittedAt,
         categories,
         photoUrls,
-        applicationPdfUrl: receiptUrl,
         notificationEmail: 'violet.rylo@gmail.com',
       })
     } catch (error) {
@@ -162,27 +163,18 @@ export function createVendorApplication({
       return json({ error: 'Your application was saved, but we could not finish submitting it to our review list. Please try again in a moment.' }, 502)
     }
 
-    let receiptReady = false
-    try {
-      const pdfBytes = buildVendorApplicationPdf({ applicationId, submittedAt, application })
-      await store.set(pdfKey, new Blob([pdfBytes], { type: 'application/pdf' }))
-      receiptReady = true
-    } catch (error) {
-      console.error('Vendor application PDF generation failed after submission', applicationId, error)
-    }
-
     try {
       await store.setJSON(backupKey, {
         ...backup,
         status: 'google-accepted',
         googleAcceptedAt: new Date().toISOString(),
-        receiptReady,
+        receiptReady: Boolean(applicationPdfUrl),
       })
     } catch (error) {
       console.error('Vendor application backup status update failed', applicationId, error)
     }
 
-    return json({ ok: true, applicationId, receiptUrl: receiptReady ? receiptUrl : '' })
+    return json({ ok: true, applicationId, receiptUrl })
   }
 }
 
