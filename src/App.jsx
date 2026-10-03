@@ -191,11 +191,11 @@ const faqs = {
     },
     {
       question: 'How much inventory should I bring?',
-      answer: 'A good rule of thumb is to bring 40–60 pieces for clothing vendors, depending on your booth size and how you plan to display your collection.\n\nThe goal is to have enough inventory to offer variety while keeping your booth organized and easy to shop. Well-curated racks, thoughtful displays, and a little breathing room usually make for a better shopping experience.\n\nQuality and presentation matter more than quantity—bring your best pieces and make them easy to discover.',
+      answer: 'Bring enough inventory to keep your space feeling full throughout the day, but remember—curation is what makes a great booth. We love a well-edited mix of standout pieces at different price points. Quality over quantity always wins at Assembly.',
     },
     {
       question: 'How will vendors be promoted?',
-      answer: 'Assembly promotes each market through our social media channels, email list, digital advertising, and community outreach.\n\nWe also highlight participating vendors leading up to the event so shoppers can discover who will be there and start getting excited about the lineup.\n\nPromotion works best when we all participate, so vendors are expected to help spread the word as well. Vendors are required to begin posting two weeks before the event, with two posts per week (four total) and tag @assemblyvintageco.\n\nThese can be feed posts, Reels, or TikTok videos. Stories are always encouraged too, but they don’t count toward the four required promotional posts.\n\nWe’ll promote the market. You promote your booth. Together, we build the crowd.',
+      answer: 'We love showing off our vendors! Assembly features participating vendors across our social channels, event emails, reels, and market-day content. We also occasionally partner with local influencers and content creators to help share the market and spotlight our vendor community. Great photos, videos, and product stories give us even more to share.',
     },
   ],
 }
