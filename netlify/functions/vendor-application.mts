@@ -153,7 +153,7 @@ export function createVendorApplication({
         vendorTermsAcceptedAt: submittedAt,
         categories,
         photoUrls,
-        notificationEmail: 'simplyrylo@gmail.com',
+        notificationEmail: 'assemblyvintageco@gmail.com',
       })
     } catch (error) {
       console.error('Vendor application Google sync failed; application remains safely stored', error)
