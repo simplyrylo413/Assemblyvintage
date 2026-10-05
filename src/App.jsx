@@ -565,8 +565,7 @@ function HomePage() {
           <Countdown />
           <section className="hero" data-reveal>
             <img src="/assets/hero-indoor-v2.jpg" alt="Stylish shoppers browsing an elevated indoor vintage market" />
-            <div className="hero-caption"><span className="mini-arch" aria-hidden="true" /><p>COME FOR THE VINTAGE.<br />STAY FOR THE PEOPLE.</p></div>
-            <button className="hero-register" type="button" onClick={() => setNewsletterOpen(true)}>SUBSCRIBE <ArrowRight size={17} /></button>
+            <div className="hero-caption hero-caption--impact"><span className="mini-arch" aria-hidden="true" /><p>COME FOR THE VINTAGE.<br />STAY FOR THE PEOPLE.</p></div>
           </section>
 
           <section className="market-story" id="past-markets" data-reveal>

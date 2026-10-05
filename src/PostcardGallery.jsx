@@ -4,9 +4,10 @@ import './postcard-gallery.css'
 
 const photos = [
   { image: '/assets/market-jewelry.jpg', alt: 'Shopper trying on layered vintage jewelry' },
-  { image: '/assets/market-browsing.jpg', alt: 'Shopper browsing colorful vintage clothing' },
-  { image: '/assets/market-vintage-racks.jpg', alt: 'Shopper exploring a rack of vintage clothes at an indoor market' },
-  { image: '/assets/market-friends.jpg', alt: 'Two shoppers together at an indoor vintage market' },
+  { image: '/assets/market-new-2214.jpg', alt: 'Vintage rack with a pink tulle dress and black leather jacket' },
+  { image: '/assets/market-new-2192.jpg', alt: 'Colorful vintage rack styled with a yellow designer look' },
+  { image: '/assets/market-new-1488.jpg', alt: 'Shopper browsing embellished vintage clothing and accessories' },
+  { image: '/assets/market-new-2426.jpg', alt: 'Colorful market guest posing beside vintage clothing displays' },
   { image: '/assets/market-purple-outfit.jpeg', alt: 'Shopper in a purple floral outfit browsing vintage pieces' },
   { image: '/assets/market-pink-coat.jpeg', alt: 'Shoppers looking at a pink vintage coat at the market' },
   { image: '/assets/market-floral-bag.jpeg', alt: 'Shopper with a floral bag browsing colorful vintage dresses' },
@@ -16,8 +17,8 @@ const photos = [
   { image: '/assets/market-sunflower-tote.jpeg', alt: 'Shopper with a sunflower tote browsing vintage clothing' },
 ]
 
-const tilts = ['-4deg', '2.5deg', '-2deg', '3deg', '-3deg', '2deg', '-2.5deg', '3.5deg', '-1.5deg', '2.5deg', '-3deg']
-const drops = ['12px', '-6px', '9px', '-3px', '8px', '-5px', '10px', '-6px', '7px', '-4px', '9px']
+const tilts = ['-4deg', '2.5deg', '-2deg', '3deg', '-3deg', '2deg', '-2.5deg', '3.5deg', '-1.5deg', '2.5deg', '-3deg', '2deg']
+const drops = ['12px', '-6px', '9px', '-3px', '8px', '-5px', '10px', '-6px', '7px', '-4px', '9px', '-5px']
 
 export function PostcardGallery() {
   const [selected, setSelected] = useState(null)
