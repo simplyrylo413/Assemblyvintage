@@ -11,11 +11,17 @@ function json(body: unknown, status = 200) {
 export default async (req: Request) => {
   if (req.method !== 'GET') return json({ error: 'Method not allowed' }, 405)
 
-  const id = new URL(req.url).searchParams.get('id') || ''
+  const url = new URL(req.url)
+  const id = url.searchParams.get('id') || ''
+  const requireCaptured = url.searchParams.get('requireCaptured') === '1'
   if (!/^[0-9a-f-]{36}$/i.test(id)) return json({ error: 'Invalid application receipt.' }, 400)
 
   const store = getStore('vendor-applications', { consistency: 'strong' })
   let pdf = await store.get(`pdfs/${id}.pdf`, { type: 'blob' })
+
+  if (!pdf && requireCaptured) {
+    return json({ error: 'The completed visual application PDF is still processing.' }, 409)
+  }
 
   if (!pdf) {
     const backup = await store.get(`applications/${id}`, { type: 'json' })
