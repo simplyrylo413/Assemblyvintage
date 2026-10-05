@@ -24,12 +24,17 @@ export default async (req: Request) => {
   const queueKey = `email-queue/${applicationId}.json`
   const receiptUrl = new URL(`/api/vendor-application-pdf?id=${encodeURIComponent(applicationId)}`, req.url).toString()
 
+  let application: Record<string, any> = {}
+  let pdfBase64 = ''
+
   try {
     const bytes = await pdf.arrayBuffer()
+    pdfBase64 = Buffer.from(bytes).toString('base64')
     await store.set(key, bytes)
 
     const backup = await store.get(`applications/${applicationId}`, { type: 'json' })
-    const application = backup?.application || {}
+    application = backup?.application || {}
+
     await store.setJSON(queueKey, {
       applicationId,
       receiptUrl,
@@ -44,7 +49,8 @@ export default async (req: Request) => {
       businessDescription: application.businessDescription || '',
       inventoryPriceRange: application.inventoryPriceRange || '',
       selectedEvents: application.selectedEvents || '',
-      spaceLabel: application.spaceLabel || '',
+      spaceLabel: application.spaceLabel || application.spaceSize || '',
+      spaceSize: application.spaceSize || '',
       spacePrice: application.spacePrice || '',
       eventCount: application.eventCount || '',
       estimatedTotal: application.estimatedTotal || '',
@@ -60,14 +66,44 @@ export default async (req: Request) => {
   }
 
   try {
-    await sendToGoogle({
+    const estimatedTotal = application.estimatedTotal === '' || application.estimatedTotal == null
+      ? ''
+      : `$${application.estimatedTotal}`
+
+    const delivery = await sendToGoogle({
       action: 'application-pdf-ready',
       applicationId,
       applicationPdfUrl: receiptUrl,
+      applicationPdfBase64: pdfBase64,
+      applicationPdfFilename: `assembly-vendor-application-${applicationId}.pdf`,
+      businessName: application.businessName || 'Vendor',
+      contactName: application.contactName || '',
+      email: application.email || '',
+      phone: application.phone || '',
+      website: application.website || '',
+      instagram: application.instagram || '',
+      selectedEvents: application.selectedEvents || '',
+      spaceLabel: application.spaceLabel || application.spaceSize || '',
+      spaceSize: application.spaceSize || '',
+      estimatedTotal,
+      categories: application.categories || [],
+      photoUrls: application.photoUrls || [],
       notificationEmail: 'assemblyvintageco@gmail.com',
     })
+
+    if (delivery.emailSent === true || delivery.alreadySent === true) {
+      const queued = await store.get(queueKey, { type: 'json' })
+      if (queued) {
+        await store.setJSON(queueKey, {
+          ...queued,
+          status: 'sent',
+          sentAt: new Date().toISOString(),
+          deliveryMethod: 'assembly-apps-script-complete-email',
+        })
+      }
+    }
   } catch (error) {
-    console.warn('Google webhook did not accept PDF-ready update', applicationId, error)
+    console.warn('Immediate completed application email failed; leaving queue item pending', applicationId, error)
   }
 
   return json({ ok: true, applicationId, receiptUrl })
