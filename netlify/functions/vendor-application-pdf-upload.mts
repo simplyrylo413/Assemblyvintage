@@ -52,6 +52,15 @@ export default async (req: Request) => {
       applicationPdfUrl: receiptUrl,
       notificationEmail: 'simplyrylo@gmail.com',
     })
+    const queued = await store.get(queueKey, { type: 'json' })
+    if (queued) {
+      await store.setJSON(queueKey, {
+        ...queued,
+        status: 'sent',
+        sentAt: new Date().toISOString(),
+        deliveryMethod: 'google-webhook',
+      })
+    }
   } catch (error) {
     console.warn('Google webhook did not accept PDF-ready update', applicationId, error)
   }
