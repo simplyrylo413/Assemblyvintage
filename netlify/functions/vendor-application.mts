@@ -65,7 +65,11 @@ export function createVendorApplication({
     const categories = cleanList(body.categories, 5, ALLOWED_CATEGORIES)
     const photoUrls = cleanList(body.photoUrls, 5).filter((url) => {
       try {
-        return new URL(url).hostname === 'drive.google.com'
+        const parsed = new URL(url)
+        const isDrive = parsed.hostname === 'drive.google.com'
+        const isAssemblyPhoto = parsed.pathname === '/api/vendor-photo'
+          && (parsed.hostname === new URL(req.url).hostname || parsed.hostname.endsWith('.netlify.app'))
+        return isDrive || isAssemblyPhoto
       } catch {
         return false
       }
@@ -152,7 +156,7 @@ export function createVendorApplication({
         notificationEmail: 'simplyrylo@gmail.com',
       })
     } catch (error) {
-      console.error('Vendor application submission failed', error)
+      console.error('Vendor application Google sync failed; application remains safely stored', error)
       try {
         await store.setJSON(backupKey, {
           ...backup,
@@ -160,7 +164,7 @@ export function createVendorApplication({
           googleSyncFailedAt: new Date().toISOString(),
         })
       } catch {}
-      return json({ error: 'Your application was saved, but we could not finish submitting it to our review list. Please try again in a moment.' }, 502)
+      return json({ ok: true, applicationId, receiptUrl, googleSynced: false })
     }
 
     try {
@@ -174,7 +178,7 @@ export function createVendorApplication({
       console.error('Vendor application backup status update failed', applicationId, error)
     }
 
-    return json({ ok: true, applicationId, receiptUrl })
+    return json({ ok: true, applicationId, receiptUrl, googleSynced: true })
   }
 }
 

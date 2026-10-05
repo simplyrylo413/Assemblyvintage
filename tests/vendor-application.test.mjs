@@ -144,7 +144,7 @@ test('requires a durable backup before forwarding anything to Google', async () 
   }
 })
 
-test('keeps a complete pending backup when the Google handoff fails', async () => {
+test('accepts the application and preserves it when the Google handoff fails', async () => {
   const store = memoryStore()
   const handler = createVendorApplication({
     openStore: () => store,
@@ -154,13 +154,17 @@ test('keeps a complete pending backup when the Google handoff fails', async () =
   console.error = () => {}
   try {
     const response = await submit(validApplication(), handler)
-    assert.equal(response.status, 502)
-    assert.equal(store.writes.length, 1)
+    assert.equal(response.status, 200)
+    const result = await response.json()
+    assert.equal(result.ok, true)
+    assert.equal(result.googleSynced, false)
+    assert.equal(store.writes.length, 2)
     const backup = store.writes[0].value
     assert.equal(backup.status, 'pending')
     assert.equal(backup.application.email, 'vendor@example.com')
     assert.equal(backup.application.businessDescription, validApplication().businessDescription)
     assert.equal(backup.application.vendorTermsAgreed, true)
+    assert.equal(store.writes[1].value.status, 'google-sync-failed')
   } finally {
     console.error = originalError
   }
