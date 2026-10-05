@@ -149,7 +149,7 @@ export function createVendorApplication({
         vendorTermsAcceptedAt: submittedAt,
         categories,
         photoUrls,
-        notificationEmail: 'violet.rylo@gmail.com',
+        notificationEmail: 'simplyrylo@gmail.com',
       })
     } catch (error) {
       console.error('Vendor application submission failed', error)

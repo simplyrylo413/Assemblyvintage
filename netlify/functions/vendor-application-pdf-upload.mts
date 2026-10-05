@@ -33,7 +33,7 @@ export default async (req: Request) => {
     await store.setJSON(queueKey, {
       applicationId,
       receiptUrl,
-      notificationEmail: 'violet.rylo@gmail.com',
+      notificationEmail: 'simplyrylo@gmail.com',
       businessName: application.businessName || 'Vendor',
       selectedEvents: application.selectedEvents || '',
       estimatedTotal: application.estimatedTotal || '',
@@ -50,7 +50,7 @@ export default async (req: Request) => {
       action: 'application-pdf-ready',
       applicationId,
       applicationPdfUrl: receiptUrl,
-      notificationEmail: 'violet.rylo@gmail.com',
+      notificationEmail: 'simplyrylo@gmail.com',
     })
   } catch (error) {
     console.warn('Google webhook did not accept PDF-ready update', applicationId, error)
