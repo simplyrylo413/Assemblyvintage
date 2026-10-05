@@ -565,7 +565,21 @@ function HomePage() {
           <Countdown />
           <section className="hero" data-reveal>
             <img src="/assets/hero-indoor-v2.jpg" alt="Stylish shoppers browsing an elevated indoor vintage market" />
-            <div className="hero-caption hero-caption--impact"><span className="mini-arch" aria-hidden="true" /><p>COME FOR THE VINTAGE.<br />STAY FOR THE PEOPLE.</p></div>
+            <div className="hero-caption hero-caption--editorial">
+              <span className="mini-arch" aria-hidden="true" />
+              <div className="hero-editorial-copy" aria-label="Come for the vintage. Stay for the people.">
+                <div className="hero-editorial-line">
+                  <span className="hero-editorial-lead">COME</span>
+                  <span className="hero-editorial-connector">FOR THE</span>
+                  <span className="hero-editorial-feature">VINTAGE.</span>
+                </div>
+                <div className="hero-editorial-line">
+                  <span className="hero-editorial-lead">STAY</span>
+                  <span className="hero-editorial-connector">FOR THE</span>
+                  <span className="hero-editorial-feature hero-editorial-feature--people">PEOPLE.</span>
+                </div>
+              </div>
+            </div>
           </section>
 
           <section className="market-story" id="past-markets" data-reveal>
