@@ -19,8 +19,11 @@ export default async (req: Request) => {
   const store = getStore('vendor-applications', { consistency: 'strong' })
   let pdf = await store.get(`pdfs/${id}.pdf`, { type: 'blob' })
 
-  if (!pdf && requireCaptured) {
-    return json({ error: 'The completed visual application PDF is still processing.' }, 409)
+  if (requireCaptured) {
+    const queueItem = await store.get(`email-queue/${id}.json`, { type: 'json' })
+    if (!pdf || !queueItem) {
+      return json({ error: 'The completed visual application PDF is still processing.' }, 409)
+    }
   }
 
   if (!pdf) {
