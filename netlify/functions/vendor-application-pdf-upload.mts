@@ -91,14 +91,14 @@ export default async (req: Request) => {
       notificationEmail: 'assemblyvintageco@gmail.com',
     })
 
-    if (delivery.emailSent === true || delivery.alreadySent === true) {
+    if (delivery.allEmailsSent === true || delivery.alreadySent === true) {
       const queued = await store.get(queueKey, { type: 'json' })
       if (queued) {
         await store.setJSON(queueKey, {
           ...queued,
           status: 'sent',
           sentAt: new Date().toISOString(),
-          deliveryMethod: 'assembly-apps-script-complete-email',
+          deliveryMethod: 'assembly-apps-script-instant-dual-email',
         })
       }
     }
