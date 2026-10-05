@@ -152,7 +152,7 @@ export function createVendorApplication({
         vendorTermsVersion: VENDOR_TERMS_VERSION,
         vendorTermsAcceptedAt: submittedAt,
         categories,
-        photoUrls,
+        photoUrls: [...photoUrls, receiptUrl],
         notificationEmail: 'assemblyvintageco@gmail.com',
       })
     } catch (error) {
