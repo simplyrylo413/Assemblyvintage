@@ -515,7 +515,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
                 <label className="vendor-lookbook__consent"><input type="checkbox" name="vendor-terms-agreement" value="agreed" required /><span>I have read and agree to the Assembly Vintage Market Vendor Terms &amp; Conditions. By checking this box, I confirm that I am the responsible party for this application and agree to comply with all market rules, guidelines, and requirements. <Requirement /></span></label>
                 <div className="vendor-lookbook__submit-note" role="note">
                   <strong>PLEASE KEEP THIS WINDOW OPEN</strong>
-                  <span>Your application is fully submitted only when the confirmation screen appears and your downloadable application copy is ready. Please do not close this window while your application and PDF are being processed.</span>
+                  <span>Your application is fully submitted only when the confirmation screen appears and your downloadable application copy is ready. Please do not close this window while your application and PDF are being processed. Please do not exceed 4 MB per image.</span>
                 </div>
               </section>
 
