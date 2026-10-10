@@ -33,3 +33,16 @@ The expanded form sends six additional keys. The `Applications` tab has matching
 | U | Vendor Terms Accepted At | `vendorTermsAcceptedAt` |
 
 After editing and redeploying the Apps Script, verify one authorized application writes all six columns and all three photo links. Do not assume a successful webhook response proves the new values were saved.
+
+## Vendor email styling
+
+When the completed application PDF is uploaded, `vendor-application-pdf-upload` sends the Google Apps Script webhook both plain-text and inline-HTML email bodies:
+
+- `applicantEmailSubject`
+- `applicantEmailHtml`
+- `applicantEmailText`
+- `internalEmailSubject`
+- `internalEmailHtml`
+- `internalEmailText`
+
+The Apps Script sender must use `htmlBody` for both recipient emails and attach the captured `applicationPdfBase64` PDF as the file attachment. If it only uses a plain `body` field, Gmail will send a text-only message and the approved Assembly styling will not render.
