@@ -1,5 +1,6 @@
 const LOGO_URL = 'https://assemblyvintageco.com/assets/assembly-logo-final.png'
 const INSTAGRAM_URL = 'https://www.instagram.com/assemblyvintageco/'
+const INSTAGRAM_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png'
 
 type TemplateInput = {
   applicationId?: string
@@ -48,7 +49,7 @@ function linkList(urls: string[]) {
 }
 
 function footer() {
-  return `<div class="email-footer" style="margin-top:24px;padding:16px;background:#111111;color:#f9f8f4;text-align:center;"><div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;margin-bottom:10px;">Stay connected</div><a class="cta" href="${INSTAGRAM_URL}" style="display:inline-block;background:#f37a5d;color:#111111;text-decoration:none;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:12px 16px;">Follow @assemblyvintageco</a><p style="font-size:12px;line-height:1.4;color:#d8d2c7;margin:12px 0 0;">Vendor drops, market updates, and event photos.</p></div>`
+  return `<div class="email-footer" style="margin-top:24px;padding:18px;background:#111111;color:#f9f8f4;text-align:center;"><div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;margin-bottom:12px;">Follow us on Instagram</div><a class="cta" href="${INSTAGRAM_URL}" style="display:inline-block;background:#f37a5d;color:#111111;text-decoration:none;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;padding:12px 16px;"><img src="${INSTAGRAM_ICON_URL}" alt="Instagram" width="18" height="18" style="display:inline-block;width:18px;height:18px;vertical-align:middle;margin:0 8px 2px 0;border:0;">@assemblyvintageco</a><p style="font-size:12px;line-height:1.4;color:#d8d2c7;margin:12px 0 0;">Vendor drops, market updates, and event photos.</p></div>`
 }
 
 function responsiveStyle() {
