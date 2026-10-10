@@ -28,7 +28,8 @@ test('applicant email is branded HTML and excludes internal review links', () =>
   const html = buildApplicantEmailHtml(application)
   const plain = buildApplicantEmailText(application)
 
-  assert.match(html, /<img src="https:\/\/assemblyvintageco\.com\/assets\/assembly-logo-final\.png"/)
+  assert.match(html, /<img class="email-logo" src="https:\/\/assemblyvintageco\.com\/assets\/assembly-logo-final\.png"/)
+  assert.match(html, /@media only screen and \(max-width: 520px\)/)
   assert.match(html, /APPLICATION RECEIVED/)
   assert.match(html, /Thank you<br>for applying\./)
   assert.match(html, /Follow @assemblyvintageco/)
@@ -45,6 +46,7 @@ test('internal email is branded HTML and includes review-only links', () => {
   const plain = buildInternalEmailText(application)
 
   assert.match(html, /INTERNAL REVIEW/)
+  assert.match(html, /@media only screen and \(max-width: 520px\)/)
   assert.match(html, /New vendor<br>application\./)
   assert.match(html, /Uploaded photo links/)
   assert.match(html, /vendor-photo/)
