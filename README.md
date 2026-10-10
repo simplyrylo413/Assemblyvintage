@@ -21,6 +21,8 @@ Netlify publishes the static site from `dist/client`.
 
 Vendor applications post through Netlify Functions to a Google Apps Script receiver. Set `VENDOR_APPLICATION_WEBHOOK_URL` to the deployed Apps Script `/exec` URL and `VENDOR_APPLICATION_WEBHOOK_SECRET` to the matching Apps Script `WEBHOOK_SECRET` value before publishing. Photos upload individually to the configured Drive folder, and the final application is added to Google Sheets.
 
+The durable workflow and email requirements are documented in `docs/vendor-application-workflow.md`.
+
 The expanded form sends six additional keys. The `Applications` tab has matching columns P:U, but the deployed Apps Script must explicitly write these values into each new row. Its source is not in this repository. The Netlify Function stores a complete copy of each validated application in the site-scoped `vendor-applications` Blob store before forwarding it to Google, so missing webhook mappings can be recovered. Preserve the existing A:O mapping and append:
 
 | Column | Sheet header | Webhook key |
@@ -47,4 +49,14 @@ When the completed application PDF is uploaded, `vendor-application-pdf-upload` 
 
 The Apps Script sender must use `htmlBody` for both recipient emails and attach the captured `applicationPdfBase64` PDF as the file attachment. If it only uses a plain `body` field, Gmail will send a text-only message and the approved Assembly styling will not render.
 
-After changing Netlify webhook environment variables, publish a fresh production deploy before testing. Existing deployed functions may continue using the prior webhook configuration until the new deploy is live.
+The production workflow is:
+
+- save the vendor application to the existing Google Sheet workflow
+- generate/store the completed application PDF
+- send the styled applicant confirmation plus PDF attachment to the vendor-provided email address
+- send the styled internal review email plus PDF attachment to `assemblyvintageco@gmail.com`
+- keep existing photo links, receipt URL, and recovery behavior intact
+
+Both emails use the approved Assembly editorial style from `netlify/functions/_shared/vendor-email-templates.mts`: Assembly logo at the top, cream/pale-blue editorial layout, coral accents, Gmail-compatible inline styles, readable plain-text fallback, and a responsive mobile layout. The footer must say `Follow us on Instagram`, include an Instagram logo/icon, show `@assemblyvintageco`, link to `https://www.instagram.com/assemblyvintageco/`, and include `Vendor drops, market updates, and event photos.`
+
+The formatted emails are sent by the Assembly-owned Apps Script account, `assemblyvintageco@gmail.com`. Netlify production must set `VENDOR_APPLICATION_WEBHOOK_URL` to that Apps Script `/exec` deployment and `VENDOR_APPLICATION_WEBHOOK_SECRET` to the matching Apps Script `WEBHOOK_SECRET` script property. Do not commit the secret value.
