@@ -1,5 +1,11 @@
 import { getStore } from '@netlify/blobs'
 import { json, sendToGoogle } from './_shared/vendor-google.mts'
+import {
+  buildApplicantEmailHtml,
+  buildApplicantEmailText,
+  buildInternalEmailHtml,
+  buildInternalEmailText,
+} from './_shared/vendor-email-templates.mts'
 
 const MAX_PDF_BYTES = 18 * 1024 * 1024
 
@@ -69,6 +75,23 @@ export default async (req: Request) => {
     const estimatedTotal = application.estimatedTotal === '' || application.estimatedTotal == null
       ? ''
       : `$${application.estimatedTotal}`
+    const emailTemplateData = {
+      applicationId,
+      receiptUrl,
+      submittedAt: application.vendorTermsAcceptedAt || '',
+      businessName: application.businessName || 'Vendor',
+      contactName: application.contactName || '',
+      email: application.email || '',
+      phone: application.phone || '',
+      website: application.website || '',
+      instagram: application.instagram || '',
+      selectedEvents: application.selectedEvents || '',
+      spaceLabel: application.spaceLabel || application.spaceSize || '',
+      spaceSize: application.spaceSize || '',
+      estimatedTotal,
+      categories: application.categories || [],
+      photoUrls: application.photoUrls || [],
+    }
 
     const delivery = await sendToGoogle({
       action: 'application-pdf-ready',
@@ -76,6 +99,12 @@ export default async (req: Request) => {
       applicationPdfUrl: receiptUrl,
       applicationPdfBase64: pdfBase64,
       applicationPdfFilename: `assembly-vendor-application-${applicationId}.pdf`,
+      applicantEmailSubject: 'Thank you for applying to Assembly Vintage Market',
+      applicantEmailHtml: buildApplicantEmailHtml(emailTemplateData),
+      applicantEmailText: buildApplicantEmailText(emailTemplateData),
+      internalEmailSubject: `New Assembly Vendor Application - ${application.businessName || 'Vendor'} - Complete Copy`,
+      internalEmailHtml: buildInternalEmailHtml(emailTemplateData),
+      internalEmailText: buildInternalEmailText(emailTemplateData),
       businessName: application.businessName || 'Vendor',
       contactName: application.contactName || '',
       email: application.email || '',
