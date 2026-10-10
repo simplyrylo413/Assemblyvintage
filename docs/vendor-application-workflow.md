@@ -33,6 +33,8 @@ The vendor copy should include:
 - attached PDF copy of their submitted application
 - a short confirmation that Assembly Vintage received the application
 
+The vendor confirmation page should not show a PDF-ready message, a generate-PDF button, or a download-completed-application-PDF button. The completed PDF copy is delivered through the confirmation email.
+
 ## Required Email Style
 
 Use the approved Option 1 / Editorial Confirmation email style for both the vendor-facing copy and the internal Assembly copy.
