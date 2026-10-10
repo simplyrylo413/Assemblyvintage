@@ -21,9 +21,6 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
   const [photos, setPhotos] = useState([])
   const [photoPreviews, setPhotoPreviews] = useState([])
   const [submitted, setSubmitted] = useState(false)
-  const [receiptUrl, setReceiptUrl] = useState('')
-  const [localPdfUrl, setLocalPdfUrl] = useState('')
-  const [pdfStatus, setPdfStatus] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [dirty, setDirty] = useState(false)
   const [error, setError] = useState('')
@@ -36,10 +33,6 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
     setPhotoPreviews(previews)
     return () => previews.forEach((preview) => URL.revokeObjectURL(preview.url))
   }, [photos])
-
-  useEffect(() => () => {
-    if (localPdfUrl) URL.revokeObjectURL(localPdfUrl)
-  }, [localPdfUrl])
 
   const selectedSpace = spaces[spaceSize]
   const total = selectedSpace.price * selectedMarkets.length
@@ -284,7 +277,6 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
 
     setSubmitting(true)
     setError('')
-    setPdfStatus('')
 
     const applicationId = crypto.randomUUID()
     const pdfPromise = import.meta.env.DEV
@@ -332,7 +324,6 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
         const result = await response.json().catch(() => ({}))
         if (!response.ok || !result.ok) throw new Error(result.error || 'We could not submit your application.')
 
-        setReceiptUrl(result.receiptUrl || '')
         setSubmitted(true)
         window.requestAnimationFrame(() => {
           document.querySelector('.modal')?.scrollTo({ top: 0, behavior: 'smooth' })
@@ -340,22 +331,11 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
 
         const completedPdf = await pdfPromise
         if (completedPdf) {
-          const objectUrl = URL.createObjectURL(completedPdf)
-          setLocalPdfUrl((current) => {
-            if (current) URL.revokeObjectURL(current)
-            return objectUrl
-          })
-
           try {
-            const storedReceiptUrl = await uploadCompletedApplicationPdf(applicationId, completedPdf)
-            setReceiptUrl(storedReceiptUrl)
-            setPdfStatus('Your completed application PDF is ready.')
+            await uploadCompletedApplicationPdf(applicationId, completedPdf)
           } catch (pdfUploadError) {
             console.error('Vendor PDF upload failed after application submission', pdfUploadError)
-            setPdfStatus('Your application was submitted. Your PDF is available to download here, but the archive copy could not be uploaded automatically.')
           }
-        } else {
-          setPdfStatus('Your application was submitted, but the PDF copy could not be generated automatically.')
         }
       } else {
         setSubmitted(true)
@@ -380,33 +360,6 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
             <span className="vendor-lookbook__edition">APPLICATION RECEIVED</span>
             <h2>Thank you.<br />We’ll be in touch.</h2>
             <p>Your application for {selectedMarkets.length} {selectedMarkets.length === 1 ? 'market' : 'markets'} has been submitted for review. Our team will be in touch after curation.</p>
-            {pdfStatus && <p className="vendor-lookbook__pdf-status">{pdfStatus}</p>}
-            {!localPdfUrl && (
-              <button
-                className="secondary-button"
-                type="button"
-                onClick={async () => {
-                  setPdfStatus('Generating your completed application PDF…')
-                  try {
-                    const retryPdf = await captureCompletedApplicationPdf(applicationSnapshotRef.current)
-                    const retryUrl = URL.createObjectURL(retryPdf)
-                    setLocalPdfUrl((current) => {
-                      if (current) URL.revokeObjectURL(current)
-                      return retryUrl
-                    })
-                    setPdfStatus('Your completed application PDF is ready.')
-                  } catch (retryError) {
-                    console.error('Vendor PDF retry failed', retryError)
-                    setPdfStatus('We could not generate the PDF in this browser. Your application itself is still submitted.')
-                  }
-                }}
-              >
-                GENERATE APPLICATION PDF <ArrowRight size={17} />
-              </button>
-            )}
-            {localPdfUrl ? (
-              <a className="secondary-button" href={localPdfUrl} download="assembly-vendor-application.pdf">DOWNLOAD COMPLETED APPLICATION PDF <ArrowRight size={17} /></a>
-            ) : null}
             <button className="primary-button" type="button" onClick={guardedClose}>CLOSE <ArrowRight size={17} /></button>
           </div>
         ) : (
@@ -515,7 +468,7 @@ export function VendorLookbook({ Modal, markets, spaces, onClose }) {
                 <label className="vendor-lookbook__consent"><input type="checkbox" name="vendor-terms-agreement" value="agreed" required /><span>I have read and agree to the Assembly Vintage Market Vendor Terms &amp; Conditions. By checking this box, I confirm that I am the responsible party for this application and agree to comply with all market rules, guidelines, and requirements. <Requirement /></span></label>
                 <div className="vendor-lookbook__submit-note" role="note">
                   <strong>PLEASE KEEP THIS WINDOW OPEN</strong>
-                  <span>Your application is fully submitted only when the confirmation screen appears and your downloadable application copy is ready. Please do not close this window while your application and PDF are being processed. Please do not exceed 4 MB per image.</span>
+                  <span>Your application is fully submitted only when the confirmation screen appears. Please do not close this window while your application and PDF are being processed. Please do not exceed 4 MB per image.</span>
                 </div>
               </section>
 
