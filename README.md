@@ -46,3 +46,5 @@ When the completed application PDF is uploaded, `vendor-application-pdf-upload` 
 - `internalEmailText`
 
 The Apps Script sender must use `htmlBody` for both recipient emails and attach the captured `applicationPdfBase64` PDF as the file attachment. If it only uses a plain `body` field, Gmail will send a text-only message and the approved Assembly styling will not render.
+
+After changing Netlify webhook environment variables, publish a fresh production deploy before testing. Existing deployed functions may continue using the prior webhook configuration until the new deploy is live.
