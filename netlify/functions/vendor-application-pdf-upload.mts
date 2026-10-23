@@ -41,7 +41,18 @@ export default async (req: Request) => {
     const backup = await store.get(`applications/${applicationId}`, { type: 'json' })
     application = backup?.application || {}
 
+    const existingQueue = await store.get(queueKey, { type: 'json' })
+    if (existingQueue?.status === 'sent') {
+      await store.setJSON(queueKey, {
+        ...existingQueue,
+        capturedPdfStoredAt: new Date().toISOString(),
+        pdfSource: 'browser-capture',
+      })
+      return json({ ok: true, applicationId, receiptUrl, emailDeliveryStatus: 'already-sent' })
+    }
+
     await store.setJSON(queueKey, {
+      ...(existingQueue || {}),
       applicationId,
       receiptUrl,
       notificationEmail: 'assemblyvintageco@gmail.com',
@@ -65,6 +76,7 @@ export default async (req: Request) => {
       vendorTermsAgreed: Boolean(application.vendorTermsAgreed),
       createdAt: new Date().toISOString(),
       status: 'pending',
+      pdfSource: 'browser-capture',
     })
   } catch (error) {
     console.error('Vendor screen-capture PDF storage failed', error)
