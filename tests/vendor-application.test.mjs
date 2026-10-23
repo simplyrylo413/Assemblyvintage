@@ -27,14 +27,23 @@ function submit(body, handler = vendorApplication) {
 
 function memoryStore() {
   const writes = []
+  const binaryWrites = []
   const records = new Map()
   return {
     writes,
+    binaryWrites,
     records,
+    async set(key, value) {
+      binaryWrites.push({ key, value })
+      records.set(key, value)
+    },
     async setJSON(key, value) {
       const snapshot = structuredClone(value)
       writes.push({ key, value: snapshot })
       records.set(key, snapshot)
+    },
+    async get(key) {
+      return records.get(key) ?? null
     },
   }
 }
@@ -71,7 +80,7 @@ test('requires a description, price range, and both affirmative agreements', asy
 test('forwards the new fields with safe text and server-controlled terms metadata', async () => {
   const originalFetch = globalThis.fetch
   const originalNetlify = globalThis.Netlify
-  let payload
+  const payloads = []
   const store = memoryStore()
   const handler = createVendorApplication({ openStore: () => store })
 
@@ -80,8 +89,8 @@ test('forwards the new fields with safe text and server-controlled terms metadat
     VENDOR_APPLICATION_WEBHOOK_SECRET: 'test-secret',
   })[key] } }
   globalThis.fetch = async (_url, options) => {
-    payload = JSON.parse(options.body)
-    return new Response(JSON.stringify({ ok: true }), { status: 200 })
+    payloads.push(JSON.parse(options.body))
+    return new Response(JSON.stringify({ ok: true, allEmailsSent: true }), { status: 200 })
   }
 
   try {
@@ -95,20 +104,31 @@ test('forwards the new fields with safe text and server-controlled terms metadat
     assert.equal(response.status, 200)
     const result = await response.json()
     assert.equal(result.ok, true)
+    assert.equal(result.emailDeliveryStatus, 'sent')
     assert.match(result.applicationId, /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/)
-    assert.equal(payload.businessDescription, "'=1+1")
-    assert.equal(payload.inventoryPriceRange, "'+75–300")
-    assert.equal(payload.promotionAgreed, true)
-    assert.equal(payload.vendorTermsAgreed, true)
-    assert.equal(payload.vendorTermsVersion, 'vendor-agreement-2026-09-25')
-    assert.equal(Number.isNaN(Date.parse(payload.vendorTermsAcceptedAt)), false)
-    assert.equal(payload.secret, 'test-secret')
-    assert.equal(payload.applicationId, result.applicationId)
+    const submissionPayload = payloads.find((payload) => payload.action === 'submit-application')
+    const emailPayload = payloads.find((payload) => payload.action === 'application-pdf-ready')
+    assert.equal(submissionPayload.businessDescription, "'=1+1")
+    assert.equal(submissionPayload.inventoryPriceRange, "'+75–300")
+    assert.equal(submissionPayload.promotionAgreed, true)
+    assert.equal(submissionPayload.vendorTermsAgreed, true)
+    assert.equal(submissionPayload.vendorTermsVersion, 'vendor-agreement-2026-09-25')
+    assert.equal(Number.isNaN(Date.parse(submissionPayload.vendorTermsAcceptedAt)), false)
+    assert.equal(submissionPayload.secret, 'test-secret')
+    assert.equal(submissionPayload.applicationId, result.applicationId)
+    assert.equal(emailPayload.notificationEmail, 'assemblyvintageco@gmail.com')
+    assert.equal(emailPayload.email, 'vendor@example.com')
+    assert.match(emailPayload.applicationPdfBase64, /^[A-Za-z0-9+/]+=*$/)
 
-    assert.equal(store.writes.length, 2)
+    assert.equal(store.writes.length, 4)
     assert.equal(store.writes[0].key, `applications/${result.applicationId}`)
     assert.equal(store.writes[0].value.status, 'pending')
-    assert.equal(store.writes[1].value.status, 'google-accepted')
+    assert.equal(store.writes[1].key, `email-queue/${result.applicationId}.json`)
+    assert.equal(store.writes[1].value.status, 'pending')
+    assert.equal(store.writes[2].value.status, 'sent')
+    assert.equal(store.writes[3].value.status, 'google-accepted')
+    assert.equal(store.writes[3].value.emailDeliveryStatus, 'sent')
+    assert.equal(store.binaryWrites[0].key, `pdfs/${result.applicationId}.pdf`)
     assert.equal(store.writes[0].value.application.businessName, 'The Vintage Shop')
     assert.equal(store.writes[0].value.application.contactName, 'Vendor Name')
     assert.equal(store.writes[0].value.application.selectedEvents, 'Aloft Delray Beach — Sunday, October 25, 2026')
@@ -118,7 +138,7 @@ test('forwards the new fields with safe text and server-controlled terms metadat
     assert.equal(store.writes[0].value.application.promotionAgreed, true)
     assert.equal(store.writes[0].value.application.vendorTermsAgreed, true)
     assert.equal(store.writes[0].value.application.vendorTermsVersion, 'vendor-agreement-2026-09-25')
-    assert.equal(store.writes[0].value.application.vendorTermsAcceptedAt, payload.vendorTermsAcceptedAt)
+    assert.equal(store.writes[0].value.application.vendorTermsAcceptedAt, submissionPayload.vendorTermsAcceptedAt)
     assert.equal(JSON.stringify(store.writes).includes('test-secret'), false)
   } finally {
     globalThis.fetch = originalFetch
@@ -188,7 +208,7 @@ test('returns success after Google accepts even if the backup status update fail
     const response = await submit(validApplication(), handler)
     assert.equal(response.status, 200)
     assert.equal((await response.json()).ok, true)
-    assert.equal(forwardCount, 1)
+    assert.equal(forwardCount, 2)
     assert.equal(store.writes[0].value.status, 'pending')
   } finally {
     console.error = originalError
