@@ -1,6 +1,13 @@
 import { getStore } from '@netlify/blobs'
 import { randomUUID } from 'node:crypto'
 import { clean, json, sendToGoogle } from './_shared/vendor-google.mts'
+import { buildVendorApplicationPdf } from './_shared/vendor-pdf.mts'
+import {
+  buildApplicantEmailHtml,
+  buildApplicantEmailText,
+  buildInternalEmailHtml,
+  buildInternalEmailText,
+} from './_shared/vendor-email-templates.mts'
 
 const MARKETS: Record<string, { name: string; date: string }> = {
   october: { name: 'Aloft Delray Beach', date: 'Sunday, October 25, 2026' },
@@ -167,18 +174,115 @@ export function createVendorApplication({
       return json({ ok: true, applicationId, receiptUrl, googleSynced: false })
     }
 
+    let emailDeliveryStatus = 'pending'
+    const queueKey = `email-queue/${applicationId}.json`
+
+    try {
+      // Email delivery must not depend on html2canvas/jsPDF succeeding inside
+      // an Instagram or mobile browser. Generate a complete server-side PDF
+      // immediately, then let the later visual browser capture replace it.
+      const pdfBytes = buildVendorApplicationPdf({ applicationId, submittedAt, application })
+      await store.set(`pdfs/${applicationId}.pdf`, pdfBytes)
+
+      const queueItem = {
+        applicationId,
+        receiptUrl,
+        notificationEmail: 'assemblyvintageco@gmail.com',
+        businessName,
+        contactName,
+        email,
+        phone,
+        website,
+        instagram,
+        categories,
+        businessDescription,
+        inventoryPriceRange,
+        selectedEvents,
+        spaceLabel: space.label,
+        spaceSize,
+        spacePrice: space.price,
+        eventCount,
+        estimatedTotal: space.price * eventCount,
+        photoUrls,
+        promotionAgreed: true,
+        vendorTermsAgreed: true,
+        createdAt: submittedAt,
+        status: 'pending',
+        pdfSource: 'server-fallback',
+      }
+      await store.setJSON(queueKey, queueItem)
+
+      const estimatedTotalLabel = `$${space.price * eventCount}`
+      const emailTemplateData = {
+        applicationId,
+        receiptUrl,
+        submittedAt,
+        businessName,
+        contactName,
+        email,
+        phone,
+        website,
+        instagram,
+        selectedEvents,
+        spaceLabel: space.label,
+        spaceSize,
+        estimatedTotal: estimatedTotalLabel,
+        categories,
+        photoUrls,
+      }
+      const delivery = await deliver({
+        action: 'application-pdf-ready',
+        applicationId,
+        applicationPdfUrl: receiptUrl,
+        applicationPdfBase64: Buffer.from(pdfBytes).toString('base64'),
+        applicationPdfFilename: `assembly-vendor-application-${applicationId}.pdf`,
+        applicantEmailSubject: 'Thank you for applying to Assembly Vintage Market',
+        applicantEmailHtml: buildApplicantEmailHtml(emailTemplateData),
+        applicantEmailText: buildApplicantEmailText(emailTemplateData),
+        internalEmailSubject: `New Assembly Vendor Application - ${businessName} - Complete Copy`,
+        internalEmailHtml: buildInternalEmailHtml(emailTemplateData),
+        internalEmailText: buildInternalEmailText(emailTemplateData),
+        businessName,
+        contactName,
+        email,
+        phone,
+        website,
+        instagram,
+        selectedEvents,
+        spaceLabel: space.label,
+        spaceSize,
+        estimatedTotal: estimatedTotalLabel,
+        categories,
+        photoUrls,
+        notificationEmail: 'assemblyvintageco@gmail.com',
+      })
+
+      if (delivery?.allEmailsSent === true || delivery?.alreadySent === true) {
+        emailDeliveryStatus = 'sent'
+        await store.setJSON(queueKey, {
+          ...queueItem,
+          status: 'sent',
+          sentAt: new Date().toISOString(),
+          deliveryMethod: 'assembly-apps-script-server-fallback',
+        })
+      }
+    } catch (error) {
+      console.warn('Immediate server-side vendor application email failed; queue remains pending', applicationId, error)
+    }
+
     try {
       await store.setJSON(backupKey, {
         ...backup,
         status: 'google-accepted',
         googleAcceptedAt: new Date().toISOString(),
-        receiptReady: Boolean(applicationPdfUrl),
+        receiptReady: true,
+        emailDeliveryStatus,
       })
     } catch (error) {
       console.error('Vendor application backup status update failed', applicationId, error)
     }
 
-    return json({ ok: true, applicationId, receiptUrl, googleSynced: true })
+    return json({ ok: true, applicationId, receiptUrl, googleSynced: true, emailDeliveryStatus })
   }
 }
 
