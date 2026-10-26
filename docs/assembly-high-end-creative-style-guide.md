@@ -2,6 +2,21 @@
 
 Use this system for Assembly event carousels, paid-social ads, posters, vendor announcements, and other image-led campaign creative unless Albert asks for a different direction.
 
+## Default static-image style — approved October 26, 2026
+
+Use the approved `GO OFF RACK.` clothing-focused poster with the white, transparent-background Assembly brandmark as the default for ALL future Assembly static images, including standalone event posts and carousel covers. This latest direction supersedes the older quiet, boxed carousel treatment where they conflict.
+
+- Make the clothes the star: full-bleed real Assembly photography, close decisive crops, rich garment color, visible fabric and styling details. Remove floor, bags and dead space when they distract. Do not invent inventory or replace supplied clothes.
+- Build a dynamic, scroll-stopping first frame: oversized Bodoni-style headline, asymmetric but disciplined placement, strong contrast and minimal empty panels. Retain the premium editorial character rather than generic social templates.
+- ALWAYS use the actual Assembly brandmark: upright arch above the official Assembly wordmark, with Vintage Market beneath. Never substitute a typeset Assembly name alone. Retrieve the official logo asset from `public/assets/assembly-logo-final.png` and preserve its exact geometry and proportions; composite the actual asset when needed for fidelity.
+- Render the brandmark WHITE with a TRANSPARENT background directly over the photograph. No ivory rectangle, plaque, badge or background box. Maintain breathing room and readable contrast.
+- Keep the ink / ivory / oxblood visual system, oversized high-contrast serif display type and clean sans-serif event information. Use a compact oxblood event band so photography dominates.
+- Include date, time, venue and admission on the opening event card. Standalone posters must contain all required event details and the current ticket CTA. For this November campaign use `FREE TICKETS: EVENTBRITE LINK IN BIO`, not the earlier website CTA.
+- Standalone images have no carousel page number; use numbering only when actually building a carousel.
+- Vary taglines and close crops while retaining this same brandmark, typography hierarchy, photograph-first energy and event band.
+- Do not freeze November's date into future campaigns: verify current event information for every new event.
+- QA the actual final export for official logo fidelity, white mark with no background box, clothes prominence, readable event details and correct CTA.
+
 ## Positioning
 
 Assembly should feel like a curated fashion and culture event—not a craft fair, flea-market flyer, or cheerful neighborhood pop-up.
@@ -96,7 +111,7 @@ Use Bricolage Grotesque for mastheads, labels, dates, venue details, and calls t
 
 - Default canvas: 1080 × 1350.
 - Keep critical copy at least 60 px from outer edges.
-- Use a repeatable top masthead: `ASSEMBLY` / `VINTAGE MARKET` with a thin horizontal rule.
+- Use the actual white Assembly arch-and-wordmark brandmark on a transparent background over the photograph, with `VINTAGE MARKET` beneath and a thin horizontal rule. Do not replace the brandmark with a typeset name.
 - Optional page numbers: `01 / 04`, `02 / 04`, etc.
 - Use thin 1–2 px rules rather than stickers, outlines, or decorative blobs.
 - Use full-bleed photographs or one deliberate editorial split.
