@@ -8,6 +8,8 @@ When implementing from a selected generated mock, treat that image as the source
 
 ## Assembly prototype decisions
 
+- For event carousels, paid-social ads, posters, vendor announcements, and other image-led campaign creative, use `docs/assembly-high-end-creative-style-guide.md` as the default reusable style guide and the `Assembly November High-End Carousel` as the reference template. The intended visual position is a curated fashion and culture event: image-first, restrained, editorial, black/ivory/oxblood, and grounded in real Assembly photography. Do not return to bright sticker graphics, scrapbook collage, or cheerful flea-market flyer styling unless Albert explicitly requests a different direction.
+
 - The selected visual target is the supplied black-and-white "Up Next" Assembly homepage.
 - All event imagery must depict an indoor, elevated vintage market with stylish shoppers and vendors in a festive but shopping-focused atmosphere.
 - The client demo must include a Desktop/Mobile preview switch.
