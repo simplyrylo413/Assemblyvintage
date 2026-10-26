@@ -8,6 +8,9 @@ When implementing from a selected generated mock, treat that image as the source
 
 ## Assembly prototype decisions
 
+- Default ALL future Assembly static event images and carousel covers to the latest clothing-focused `GO OFF RACK.` editorial style in `docs/assembly-high-end-creative-style-guide.md`: dynamic close crops of real clothes, oversized serif hook, compact oxblood event band, and readable event details on the first card. Always use the actual upright Assembly arch-and-wordmark brandmark in WHITE on a TRANSPARENT background directly over the photo, with Vintage Market beneath; never a plain typeset Assembly name or an ivory logo box. Standalone images have no carousel numbering. Use the current ticket CTA; November 2026 uses Eventbrite link in bio.
+
+
 - For event carousels, paid-social ads, posters, vendor announcements, and other image-led campaign creative, use `docs/assembly-high-end-creative-style-guide.md` as the default reusable style guide and the `Assembly November High-End Carousel` as the reference template. The intended visual position is a curated fashion and culture event: image-first, restrained, editorial, black/ivory/oxblood, and grounded in real Assembly photography. Do not return to bright sticker graphics, scrapbook collage, or cheerful flea-market flyer styling unless Albert explicitly requests a different direction.
 
 - The selected visual target is the supplied black-and-white "Up Next" Assembly homepage.
