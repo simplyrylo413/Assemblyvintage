@@ -2,12 +2,27 @@
 
 Use this system for Assembly event carousels, paid-social ads, posters, vendor announcements, and other image-led campaign creative unless Albert asks for a different direction.
 
+## Locked hero typography — Editorial Italic, choice 3
+
+Albert explicitly selected **choice 3, Editorial Italic** on October 26, 2026 as part of Assembly's design language for static images. This selection supersedes experimental sculpted 3D, whimsical swash, and offset-upright type mockups.
+
+- Use oversized, tall, high-contrast fashion-editorial **italic serif** hero lettering, close to Bodoni Moda Italic.
+- Give the headline a gentle rising/off-axis angle of about 2–4 degrees and a **slight, soft charcoal drop shadow** for separation from the photo.
+- Keep clean letterforms and tight, intentional stacking. Convey fun through witty short copy, italic movement and subtle composition; retain elegance for Assembly's core audience of Florida women aged 35–50.
+- Do not add ornate swashes/curls, cartoon bounce, chunky 3D extrusion, red side faces, inflated letters, or deep theatrical shadows. Those explorations were rejected as insufficiently elegant.
+- Keep every italic letter and period within safe margins; never clip the left edge of an italic R or its descender/terminal.
+- Use the actual WHITE Assembly arch-and-wordmark brandmark with Vintage Market beneath, on a transparent background directly over the photo. This rule remains mandatory.
+- Use a different supplied source photo for each of a four-image set unless Albert asks otherwise. Preserve real people, outfits and merchandise; do not fabricate poses or stock.
+- Run NEW hero copy by Albert before making artwork. Once approved, retain the exact wording and proceed without asking again.
+- Current approved four-line campaign set: `GO OFF RACK.`; `JUST LOOKING? SURE.`; `TRY. TWIRL. REPEAT.`; `SUNDAY, WELL SPENT.`.
+- Keep event information in clean upright sans-serif type, so the headline is distinct from the supporting copy. Keep the compact oxblood event band and current Eventbrite CTA.
+
 ## Default static-image style — approved October 26, 2026
 
 Use the approved `GO OFF RACK.` clothing-focused poster with the white, transparent-background Assembly brandmark as the default for ALL future Assembly static images, including standalone event posts and carousel covers. This latest direction supersedes the older quiet, boxed carousel treatment where they conflict.
 
 - Make the clothes the star: full-bleed real Assembly photography, close decisive crops, rich garment color, visible fabric and styling details. Remove floor, bags and dead space when they distract. Do not invent inventory or replace supplied clothes.
-- Build a dynamic, scroll-stopping first frame: oversized Bodoni-style headline, asymmetric but disciplined placement, strong contrast and minimal empty panels. Retain the premium editorial character rather than generic social templates.
+- Build a dynamic, scroll-stopping first frame: oversized Editorial Italic headline, asymmetric but disciplined placement, strong contrast and minimal empty panels. Retain the premium editorial character rather than generic social templates.
 - ALWAYS use the actual Assembly brandmark: upright arch above the official Assembly wordmark, with Vintage Market beneath. Never substitute a typeset Assembly name alone. Retrieve the official logo asset from `public/assets/assembly-logo-final.png` and preserve its exact geometry and proportions; composite the actual asset when needed for fidelity.
 - Render the brandmark WHITE with a TRANSPARENT background directly over the photograph. No ivory rectangle, plaque, badge or background box. Maintain breathing room and readable contrast.
 - Keep the ink / ivory / oxblood visual system, oversized high-contrast serif display type and clean sans-serif event information. Use a compact oxblood event band so photography dominates.
