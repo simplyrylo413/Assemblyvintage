@@ -8,6 +8,9 @@ When implementing from a selected generated mock, treat that image as the source
 
 ## Assembly prototype decisions
 
+- LOCKED static-image headline treatment: choice 3, **Editorial Italic** (approved October 26, 2026). Use tall high-contrast elegant italic serif, a gentle 2–4-degree rising/off-axis angle, and only a slight soft charcoal drop shadow. Reject ornate swashes, cartoon bounce, heavy 3D extrusion/red sides and theatrical depth. Target the core Florida women 35–50 audience with elegant, playful editorial energy. Retain the actual white transparent Assembly arch+wordmark, real photos and compact oxblood event footer. Ask for approval of new hero copy before making artwork; the current approved four lines are GO OFF RACK. / JUST LOOKING? SURE. / TRY. TWIRL. REPEAT. / SUNDAY, WELL SPENT. See the style guide for the full latest rules.
+
+
 - Default ALL future Assembly static event images and carousel covers to the latest clothing-focused `GO OFF RACK.` editorial style in `docs/assembly-high-end-creative-style-guide.md`: dynamic close crops of real clothes, oversized serif hook, compact oxblood event band, and readable event details on the first card. Always use the actual upright Assembly arch-and-wordmark brandmark in WHITE on a TRANSPARENT background directly over the photo, with Vintage Market beneath; never a plain typeset Assembly name or an ivory logo box. Standalone images have no carousel numbering. Use the current ticket CTA; November 2026 uses Eventbrite link in bio.
 
 
