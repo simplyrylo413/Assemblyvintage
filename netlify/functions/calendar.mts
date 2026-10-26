@@ -1,13 +1,4 @@
 const events = {
-  october: {
-    id: 'october',
-    name: 'Assembly Vintage Market',
-    date: 'Sunday, October 25, 2026',
-    startISO: '2026-10-25T11:00:00-04:00',
-    endISO: '2026-10-25T16:00:00-04:00',
-    venue: 'Aloft Delray Beach',
-    address: '202 SE 5th Ave, Delray Beach, FL',
-  },
   november: {
     id: 'november',
     name: 'Assembly Vintage Market',

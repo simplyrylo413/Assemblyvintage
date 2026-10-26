@@ -10,7 +10,6 @@ import {
 } from './_shared/vendor-email-templates.mts'
 
 const MARKETS: Record<string, { name: string; date: string }> = {
-  october: { name: 'Aloft Delray Beach', date: 'Sunday, October 25, 2026' },
   november: { name: 'Aloft Delray Beach', date: 'Sunday, November 15, 2026' },
 }
 

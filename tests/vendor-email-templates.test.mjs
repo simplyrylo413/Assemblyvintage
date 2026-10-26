@@ -16,7 +16,7 @@ const application = {
   phone: '555-555-1212',
   website: 'https://example.com',
   instagram: '@rylovintage',
-  selectedEvents: 'Aloft Delray Beach - Sunday, October 25, 2026',
+  selectedEvents: 'Aloft Delray Beach - Sunday, November 15, 2026',
   spaceLabel: '8 x 10',
   estimatedTotal: '$300',
   categories: ['Vintage jewelry'],

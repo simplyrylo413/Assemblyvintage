@@ -125,14 +125,6 @@ export default async (req: Request) => {
   const eventId = clean(body.eventId, 40)
 
   const events: Record<string, EventInfo> = {
-    october: {
-      name: 'Assembly Vintage Market',
-      date: '2026-10-25',
-      displayDate: 'Sunday, October 25, 2026',
-      venue: 'Aloft Delray Beach',
-      address: '202 SE 5th Ave, Delray Beach, FL',
-      time: '11:00 AM – 4:00 PM',
-    },
     november: {
       name: 'Assembly Vintage Market',
       date: '2026-11-15',

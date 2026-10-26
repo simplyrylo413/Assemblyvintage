@@ -3,7 +3,7 @@ import test from 'node:test'
 import vendorApplication, { createVendorApplication } from '../netlify/functions/vendor-application.mts'
 
 const validApplication = () => ({
-  markets: ['october'],
+  markets: ['november'],
   spaceSize: '8x10',
   businessName: 'The Vintage Shop',
   contactName: 'Vendor Name',
@@ -48,10 +48,12 @@ function memoryStore() {
   }
 }
 
-test('does not accept applications for the completed September market', async () => {
-  const response = await submit({ ...validApplication(), markets: ['september'] })
-  assert.equal(response.status, 400)
-  assert.match((await response.json()).error, /Choose at least one market/)
+test('does not accept applications for completed markets', async (t) => {
+  for (const market of ['september', 'october']) await t.test(market, async () => {
+    const response = await submit({ ...validApplication(), markets: [market] })
+    assert.equal(response.status, 400)
+    assert.match((await response.json()).error, /Choose at least one market/)
+  })
 })
 
 test('requires a description, price range, and both affirmative agreements', async (t) => {
@@ -131,7 +133,7 @@ test('forwards the new fields with safe text and server-controlled terms metadat
     assert.equal(store.binaryWrites[0].key, `pdfs/${result.applicationId}.pdf`)
     assert.equal(store.writes[0].value.application.businessName, 'The Vintage Shop')
     assert.equal(store.writes[0].value.application.contactName, 'Vendor Name')
-    assert.equal(store.writes[0].value.application.selectedEvents, 'Aloft Delray Beach — Sunday, October 25, 2026')
+    assert.equal(store.writes[0].value.application.selectedEvents, 'Aloft Delray Beach — Sunday, November 15, 2026')
     assert.deepEqual(store.writes[0].value.application.photoUrls, validApplication().photoUrls)
     assert.equal(store.writes[0].value.application.businessDescription, '=1+1')
     assert.equal(store.writes[0].value.application.inventoryPriceRange, '+75–300')

@@ -8,21 +8,6 @@ import { TicketConfirmation, TicketPage } from './TicketExperience.jsx'
 
 const vendorMarkets = [
   {
-    id: 'october',
-    name: 'Aloft Delray Beach',
-    date: 'Sunday, October 25, 2026',
-    eyebrowDate: 'SUNDAY, OCTOBER 25',
-    shortDate: 'OCT 25',
-    startISO: '2026-10-25T11:00:00-04:00',
-    endISO: '2026-10-25T16:00:00-04:00',
-    time: '11 AM – 4 PM',
-    timeDetailed: '11:00 AM – 4:00 PM',
-    venue: 'Aloft Delray Beach',
-    location: 'Aloft Delray Beach',
-    cityState: 'Delray Beach, FL',
-    address: '202 SE 5th Ave, Delray Beach, FL',
-  },
-  {
     id: 'november',
     name: 'Aloft Delray Beach',
     date: 'Sunday, November 15, 2026',
@@ -498,8 +483,8 @@ function HomePage() {
           <SiteHeader onNavigate={scrollTo} />
 
           <section className="intro" id="next-market">
-            <h1 aria-label="October edition">
-              {['OCTOBER', 'EDITION'].map((word, wordIndex) => (
+            <h1 aria-label="November edition">
+              {['NOVEMBER', 'EDITION'].map((word, wordIndex) => (
                 <span className="intro-word" aria-hidden="true" key={word}>
                   {[...word].map((letter, index) => (
                     <span className="intro-letter" style={{ '--letter-index': index + (wordIndex ? 9 : 0) }} key={`${word}-${index}`}>{letter}</span>
